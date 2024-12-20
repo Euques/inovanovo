@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="estilo.css">
+</head>
+<body>
+    <div class="container">
+        <h2 class="mt-4">Club Restrito</h2>
+        <div class="row" id="eventCardList">
+            <!-- Os cartões de eventos serão inseridos aqui dinamicamente -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
+            authDomain: "blacknight-600de.firebaseapp.com",
+            databaseURL: "https://blacknight-600de.firebaseio.com",
+            projectId: "blacknight-600de",
+            storageBucket: "blacknight-600de.appspot.com",
+            messagingSenderId: "588926432348",
+            appId: "1:588926432348:web:47b2b4a1b421d4b2a0e299",
+            measurementId: "G-559VYPVJ5Q"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        const cliente = "vemsambar";
+        const eventCardList = document.getElementById("eventCardList");
+
+        function listEvents() {
+            const eventosRef = firebase.database().ref(`${cliente}/eventos`);
+            eventosRef.orderByChild("data").on("value", (snapshot) => {
+                eventCardList.innerHTML = "";
+
+                snapshot.forEach((childSnapshot) => {
+                    const evento = childSnapshot.val();
+                    const eventDateTime = new Date(evento.data);
+                    const eventDateTimePlus7Hours = new Date(eventDateTime.getTime() + 7 * 60 * 60 * 1000); // Adiciona 7 horas
+
+                    if (eventDateTimePlus7Hours >= new Date() && evento.club === true) { // Compara com a data e hora atuais e verifica se a chave "club" é true
+                        const card = createEventCard(evento);
+                        eventCardList.appendChild(card);
+                    }
+                });
+            });
+        }
+
+        function createEventCard(evento) {
+            const card = document.createElement("div");
+            card.classList.add("card", "col-md-4", "col-sm-6", "mb-4");
+
+            const eventDate = new Date(evento.data);
+            const dayOfWeek = eventDate.toLocaleDateString('pt-BR', { weekday: 'long' });
+            const formattedDate = eventDate.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            card.innerHTML = `
+                <img src="${evento.foto}" class="card-img-top" alt="Flyer do Evento">
+                <div class="card-body">
+                    <h5 class="card-title">${evento.descricao}</h5>
+                    <p class="card-day">${dayOfWeek}</p>
+                    <p class="card-text">Dia: ${formattedDate}</p>
+                    <p class="card-time">Hora: ${eventDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                    <p class="card-text">Promoção: ${evento.promocao}</p>
+                    <p class="card-text"> ${evento.regra}</p>
+            `;
+
+            if (evento.link && evento.link.trim() !== "") {
+                const hr = document.createElement("hr");
+                card.querySelector(".card-body").appendChild(hr);
+
+                const button = document.createElement("a");
+                button.href = evento.link;
+                button.target = "_blank";
+                button.className = "btn btn-primary w-100";
+                button.innerText = evento.buttonTitle || "Ver detalhes";
+                card.querySelector(".card-body").appendChild(button);
+            }
+
+            card.innerHTML += `</div>`;
+            return card;
+        }
+
+        listEvents();
+    </script>
+</body>
+</html>
+

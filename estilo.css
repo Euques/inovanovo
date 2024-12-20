@@ -1,0 +1,152 @@
+
+/* Cadastra */
+
+body {
+    background-color: #121212;
+    color: #fff;
+}
+
+.form-control {
+    background-color: #333;
+    border-color: #292929;
+    color: #fff;
+}
+
+.form-label {
+    color: #ffffff;
+}
+
+.btn-primary {
+    background-color: #007BFF;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+
+
+.custom-placeholder {
+    color: #ffffff;
+
+}
+
+
+/* ler cards */
+
+body {
+    background-color: #121212;
+    color: #fff;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+.card {
+    background-color: #333;
+    color: #fff;
+    border: 2px solid #121212;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.card-title {
+    color: #fff;
+}
+
+.card-text {
+    color: #fff;
+}
+
+.card-img {
+    border-radius: 10px;
+
+    margin: 0;
+}
+
+.row {
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+.card-day {
+    color: #007BFF;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.card-time {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.card-img-top {
+    border-radius: 10px;
+}
+
+/* Edita */
+
+
+
+.form-control, .custom-select {
+    background-color: #333;
+    color: #fff;
+}
+
+.form-label {
+    color: #fff;
+}
+
+.btn-primary {
+    background-color: #007BFF;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+
+
+.event-card {
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #444;
+}
+
+.event-card img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.custom-select {
+    font-weight: bold;
+   
+    width: 100%; /* Mesma largura do campo Nova Promoção */
+    background-color: #333; /* Cor de fundo igual aos demais campos */
+    padding: 15px;
+    border-radius: 10px;
+}
+
+hr {
+    background-color: #bfbfbf;
+    height: 1px;
+    border: none;
+}
+
+.event-description {
+    font-size: 18px;
+    margin-top: 10px;
+    word-wrap: break-word;
+}
+
+.form-group {
+    margin-top: 10px; /* Espaçamento entre os campos */
+}

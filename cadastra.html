@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Eventos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="estilo.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">Cadastro de Eventos</h1>
+        <form id="eventoForm">
+            <div class="form-group mt-4">
+                <label for="dataEvento" class="form-label">Data do Evento</label>
+                <input type="date" class="form-control" id="dataEvento" required>
+            </div>
+            <div class="form-group">
+                <label for="horaEvento" class="form-label">Hora do Evento</label>
+                <input type="time" class="form-control" id="horaEvento" required>
+            </div>
+            <div class="form-group">
+                <label for="fotoEvento" class="form-label">Foto do Flyer</label>
+                <input type="file" class="form-control" id="fotoEvento" accept="image/*" required>
+            </div>
+            <div class="form-group">
+                <label for="descricao" class="form-label">Descrição</label>
+                <textarea class="form-control" id="descricao" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="promocao" class="form-label">Promoção</label>
+                <input type="text" class="form-control" id="promocao">
+            </div>
+            <div class="form-group">
+                <label for="regra" class="form-label">Regra</label>
+                <input type="text" class="form-control" id="regra">
+            </div>
+            <button type="button" class="btn btn-secondary mt-2" id="toggleLink">Adicionar Link e Título</button>
+            <div id="linkAndTitleFields" style="display: none;">
+                <div class="form-group">
+                    <label for="link" class="form-label">Link</label>
+                    <input type="url" class="form-control custom-placeholder" id="link" placeholder="Link do Destino">
+                </div>
+                <div class="form-group">
+                    <label for="buttonTitle" class="form-label">Título do Botão</label>
+                    <input type="text" class="form-control custom-placeholder" id="buttonTitle" placeholder="Título do Botão">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Cadastrar Evento</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+    <script>
+        // Configure o Firebase com as suas credenciais
+        var firebaseConfig = {
+            apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
+            authDomain: "blacknight-600de.firebaseapp.com",
+            databaseURL: "https://blacknight-600de.firebaseio.com",
+            projectId: "blacknight-600de",
+            storageBucket: "blacknight-600de.appspot.com",
+            messagingSenderId: "588926432348",
+            appId: "1:588926432348:web:47b2b4a1b421d4b2a0e299",
+            measurementId: "G-559VYPVJ5Q"
+        };
+
+        // Inicialize o Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Defina a constante cliente para reutilização
+        const cliente = "vemsambar"; // Substitua pelo nome do cliente
+
+        const eventoForm = document.getElementById("eventoForm");
+        const linkAndTitleFields = document.getElementById("linkAndTitleFields");
+        const toggleLink = document.getElementById("toggleLink");
+
+        toggleLink.addEventListener("click", function () {
+            if (linkAndTitleFields.style.display === "none") {
+                linkAndTitleFields.style.display = "block";
+            } else {
+                linkAndTitleFields.style.display = "none";
+            }
+        });
+
+        eventoForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const dataEvento = document.getElementById("dataEvento").value;
+            const horaEvento = document.getElementById("horaEvento").value;
+            const fotoEvento = document.getElementById("fotoEvento").files[0];
+            const descricao = document.getElementById("descricao").value;
+            const promocao = document.getElementById("promocao").value;
+            const regra = document.getElementById("regra").value;
+            const link = document.getElementById("link").value;
+            const buttonTitle = document.getElementById("buttonTitle").value;
+
+            // Converter a data e hora para um timestamp (em milissegundos)
+            const dataTimestamp = new Date(`${dataEvento}T${horaEvento}:00`).getTime();
+
+            // Enviar a imagem para o Firebase Storage
+            const storageRef = firebase.storage().ref(`${new Date().getFullYear()}/${cliente}/${fotoEvento.name}`);
+            const snapshot = await storageRef.put(fotoEvento);
+            const downloadURL = await snapshot.ref.getDownloadURL();
+
+            // Salvar os dados do evento no Firebase Realtime Database
+            const eventosRef = firebase.database().ref(`${cliente}/eventos/${dataTimestamp}`);
+            eventosRef.set({
+                data: dataTimestamp,
+                foto: downloadURL,
+                descricao: descricao,
+                promocao: promocao,
+                regra: regra,
+                link: link,
+                buttonTitle: buttonTitle
+            })
+            .then(function () {
+                alert("Evento cadastrado com sucesso!");
+                location.reload();
+                
+            })
+            .catch(function (error) {
+                alert("Erro ao cadastrar evento: " + error.message);
+            });
+        });
+    </script>
+</body>
+</html>

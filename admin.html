@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Estiloso com Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Estilize o fundo preto */
+        body {
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Estilize o formulário de login */
+        .login-container {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            width: 80%;
+        }
+
+        .login-container h2 {
+            color: #fff;
+        }
+
+        .form-control {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            margin-bottom: 10px;
+        }
+
+        /* Estilize o menu */
+        .menu {
+            display: none;
+            width: 100%;
+        }
+
+        .menu ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu ul li {
+            margin: 10px;
+            text-align: center;
+        }
+
+        .menu ul li a {
+            display: block;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 15px;
+            font-size: 24px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="login-form">
+            <div class="form-group">
+                <input type="text" class="form-control" id="username" placeholder="Nome de Usuário">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" id="password" placeholder="Senha">
+            </div>
+            <button type="submit" class="btn btn-primary">Entrar</button>
+        </form>
+    </div>
+    <div class="menu">
+        <ul>
+            <li><a href="index.html">Ver Festas</a></li>
+            <li><a href="cadastra.html">Cadastrar Festa</a></li>
+            <li><a href="./edita.html">Editar Festa</a></li>
+            <li><a href="./deleta.html">Deletar Festa</a></li>
+        </ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#login-form").submit(function (e) {
+                e.preventDefault();
+                var username = $("#username").val();
+                var password = $("#password").val();
+
+                if (username === "adn" && password === "adn") {
+                    // Login bem-sucedido, exibir o menu
+                    $(".login-container").hide();
+                    $(".menu").show();
+                } else {
+                    alert("Nome de usuário ou senha incorretos");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

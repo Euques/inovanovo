@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD Firebase</title>
+  <!-- Adicione a folha de estilo do Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+  <div class="container mt-5">
+    <h2 class="mb-4">Formulário CRUD Firebase</h2>
+
+    <!-- Formulário usando Bootstrap -->
+    <form id="promoForm">
+      <div class="form-group">
+        <label for="chave">Escolha ou Insira uma Nova Chave:</label>
+        <select class="form-control" id="chaveSelecao" onchange="carregarDados()">
+          <!-- As opções serão preenchidas dinamicamente pelo JavaScript -->
+        </select>
+        <input type="text" class="form-control mt-2" id="novaChave" placeholder="Digite uma nova chave">
+      </div>
+
+      <div class="form-group">
+        <label for="ativo">Ativo:</label>
+        <input type="checkbox" class="form-check-input" id="ativo">
+      </div>
+
+      <div class="form-group">
+        <label for="atracao">Atração:</label>
+        <input type="text" class="form-control" id="atracao" required>
+      </div>
+
+      <div class="form-group">
+        <label for="foto">Foto URL:</label>
+        <input type="text" class="form-control" id="foto" required>
+      </div>
+
+      <div class="form-group">
+        <label for="info">Informação:</label>
+        <input type="text" class="form-control" id="info" required>
+      </div>
+
+      <div class="form-group">
+        <label for="preco">Preço:</label>
+        <input type="number" class="form-control" id="preco" required>
+      </div>
+
+      <div class="form-group">
+        <label for="produto">Produto:</label>
+        <input type="text" class="form-control" id="produto" required>
+      </div>
+
+      <div class="form-group">
+        <label for="whats">WhatsApp:</label>
+        <input type="text" class="form-control" id="whats" required>
+      </div>
+
+      <button type="button" class="btn btn-success" onclick="salvarDados()">Salvar</button>
+      <button type="button" class="btn btn-danger" onclick="excluirDados()">Excluir</button>
+    </form>
+  </div>
+
+  <!-- Adicione os scripts do Bootstrap e do Firebase -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
+      authDomain: "blacknight-600de.firebaseapp.com",
+      databaseURL: "https://blacknight-600de.firebaseio.com",
+      projectId: "blacknight-600de",
+      storageBucket: "blacknight-600de.appspot.com",
+      messagingSenderId: "588926432348",
+      appId: "1:588926432348:web:47b2b4a1b421d4b2a0e299",
+      measurementId: "G-559VYPVJ5Q"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    const database = firebase.database();
+    const promoRef = database.ref('/vemsambar/promo');
+
+    function carregarChaves() {
+      const chaveSelecao = document.getElementById('chaveSelecao');
+
+      promoRef.once('value')
+        .then((snapshot) => {
+          chaveSelecao.innerHTML = '<option value="">Escolha ou Insira uma Nova Chave</option>';
+          snapshot.forEach((childSnapshot) => {
+            const chave = childSnapshot.key;
+            chaveSelecao.innerHTML += `<option value="${chave}">${chave}</option>`;
+          });
+        })
+        .catch((error) => {
+          console.error('Erro ao carregar chaves:', error);
+        });
+    }
+
+    function carregarDados() {
+      const chaveSelecao = document.getElementById('chaveSelecao');
+      const novaChaveInput = document.getElementById('novaChave');
+      const chaveInput = document.getElementById('chave');
+      const chave = chaveSelecao.value || novaChaveInput.value;
+
+      if (chave) {
+        promoRef.child(chave).once('value')
+          .then((snapshot) => {
+            const dados = snapshot.val();
+
+            if (dados) {
+              document.getElementById('ativo').checked = dados.ativo || false;
+              document.getElementById('atracao').value = dados.atracao || '';
+              document.getElementById('foto').value = dados.foto || '';
+              document.getElementById('info').value = dados.info || '';
+              document.getElementById('preco').value = dados.preco || '';
+              document.getElementById('produto').value = dados.produto || '';
+              document.getElementById('whats').value = dados.whats || '';
+            } else {
+              alert('Nenhum dado encontrado para a chave fornecida.');
+            }
+          })
+          .catch((error) => {
+            console.error('Erro ao carregar dados:', error);
+          });
+      } else {
+        // Limpar os campos para criar uma nova chave
+        novaChaveInput.value = '';
+        chaveInput.value = '';
+        document.getElementById('ativo').checked = false;
+        document.getElementById('atracao').value = '';
+        document.getElementById('foto').value = '';
+        document.getElementById('info').value = '';
+        document.getElementById('preco').value = '';
+        document.getElementById('produto').value = '';
+        document.getElementById('whats').value = '';
+      }
+    }
+
+    function salvarDados() {
+      const chaveSelecao = document.getElementById('chaveSelecao');
+      const novaChaveInput = document.getElementById('novaChave');
+      const chaveInput = document.getElementById('chave');
+      const chave = chaveSelecao.value || novaChaveInput.value;
+      const ativo = document.getElementById('ativo').checked;
+      const atracao = document.getElementById('atracao').value;
+      const foto = document.getElementById('foto').value;
+      const info = document.getElementById('info').value;
+      const preco = parseFloat(document.getElementById('preco').value);
+      const produto = document.getElementById('produto').value;
+      const whats = document.getElementById('whats').value;
+
+      const dadosPromo = {
+        ativo: ativo,
+        atracao: atracao,
+        foto: foto,
+        info: info,
+        preco: preco,
+        produto: produto,
+        whats: whats
+      };
+
+      promoRef.child(chave).set(dadosPromo)
+        .then(() => {
+          alert('Dados salvos com sucesso!');
+          carregarChaves();
+        })
+        .catch((error) => {
+          console.error('Erro ao salvar dados:', error);
+        });
+    }
+
+    function excluirDados() {
+      const chaveSelecao = document.getElementById('chaveSelecao');
+      const chave = chaveSelecao.value;
+
+      if (chave) {
+        promoRef.child(chave).remove()
+          .then(() => {
+            alert('Dados excluídos com sucesso!');
+            carregarChaves();
+          })
+          .catch((error) => {
+            console.error('Erro ao excluir dados:', error);
+          });
+      }
+    }
+
+    // Carregar chaves ao iniciar a página
+    document.addEventListener('DOMContentLoaded', carregarChaves);
+  </script>
+</body>
+</html>

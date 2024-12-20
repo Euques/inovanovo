@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <!-- Inclua os scripts do Firebase Authentication aqui -->
+</head>
+<body>
+    <h1>Login</h1>
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+    <p>Ou faça login com:</p>
+    <!-- Adicione botões de autenticação social aqui, se desejar -->
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+
+    <script>
+        // Configuração do Firebase com as credenciais fornecidas
+        var firebaseConfig = {
+            apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
+            authDomain: "blacknight-600de.firebaseapp.com",
+            projectId: "blacknight-600de",
+            storageBucket: "blacknight-600de.appspot.com",
+            messagingSenderId: "588926432348",
+            appId: "1:588926432348:web:47b2b4a1b421d4b2a0e299",
+            measurementId: "G-559VYPVJ5Q"
+        };
+
+        // Inicialize o Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Evento para o formulário de login
+        const loginForm = document.getElementById("loginForm");
+
+        loginForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            // Autenticar o usuário com email e senha
+            auth.signInWithEmailAndPassword(email, password)
+                .then(function () {
+                    alert("Login bem-sucedido!");
+                    // Redirecionar para a página de cadastro de eventos ou outra página desejada
+                })
+                .catch(function (error) {
+                    alert("Erro no login: " + error.message);
+                });
+        });
+    </script>
+</body>
+</html>

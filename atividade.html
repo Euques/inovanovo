@@ -1,0 +1,363 @@
+
+<!DOCTYPE html>
+<html lang="pt_BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tempo Real</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@200;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+
+var firebaseConfig = {
+apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
+authDomain: "blacknight-600de.firebaseapp.com",
+databaseURL: "https://blacknight-600de.firebaseio.com",
+projectId: "blacknight-600de",
+storageBucket: "blacknight-600de.appspot.com",
+messagingSenderId: "588926432348",
+appId: "1:588926432348:web:47b2b4a1b421d4b2a0e299",
+measurementId: "G-559VYPVJ5Q"
+
+};
+
+        firebase.initializeApp(firebaseConfig);
+
+
+    </script>
+
+
+    <style>
+        body {
+
+            background-color: #000;
+            margin: 0px;
+
+        }
+
+        .divFoto {
+            width: 60px;
+
+
+        }
+
+        .foto {
+
+            width: 50px;
+            height: 50px;
+            border-radius: 50px;
+            border: rgb(55, 55, 55) solid 5px;
+            background-color: rgba(255, 255, 255, 0.706);
+            ;
+        }
+
+        .lista {
+            display: block;
+            background-color: blue;
+            border: 1px;
+            border-color: blue;
+            border: 1px solid blue;
+        }
+
+        .promoter {
+
+            display: flex;
+            align-content: stretch;
+            flex-direction: row;
+            align-items: center;
+
+
+            background-color: aquamarine;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 5px;
+
+            border: 1px solid blue;
+
+        }
+
+        .conteiner {
+            border: 1px;
+
+            border: 1px solid rgb(0, 255, 51);
+
+        }
+
+        .conteudo {
+            width: 80%;
+            position: relative;
+            display: inline;
+            padding: 10px;
+            margin: 5px;
+
+
+        }
+
+        .url {
+
+            width: 15%;
+            position: relative;
+            float: right;
+            display: inline;
+            padding: 10px 0px;
+            margin: 0px;
+
+            text-align: right;
+        }
+
+
+        .mostraRegras {}
+
+        #contaPromoter{
+            text-align: center;
+            align-content: center;
+        }
+
+        ul {
+
+            padding: 0%;
+            margin: 0px;
+
+        }
+
+        #mostraRegras>ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #mostraRegras>li>span {
+            vertical-align: sub;
+
+        }
+
+        .pApelido {
+            color: rgba(255, 255, 255, 0.706);
+            font-size: 14px;
+            margin: 2px;
+            font-weight: 100;
+        }
+
+        p {
+            font-size: 20px;
+            font-family: 'Roboto Condensed';
+            font-weight: 200;
+
+
+            color: rgba(255, 255, 255, 0.44);
+
+            margin: 2px;
+        }
+
+        .pNome {
+
+            color: rgba(255, 255, 255, 0.44);
+            font-size: 14px;
+            margin: 2px;
+        }
+
+        .pConvidado {
+            color: rgba(62, 155, 255, 0.743);
+            font-size: 16px;
+            margin: 2px;
+        }
+
+        .pSaldo {
+            
+            font-size: 20px;
+            margin: px;
+            color: rgba(62, 255, 117, 0.567);
+            
+        }
+
+        .pBtn {
+
+            background-color: rgba(237, 237, 237, 0.05);
+            border-radius: 25px;
+            border-width: 0;
+            color: #ece5e5;
+            cursor: pointer;
+            display: inline-block;
+
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 20px;
+            list-style: none;
+            margin: 3px;
+            padding: 10px 12px;
+            text-align: center;
+            transition: all 200ms;
+            vertical-align: center;
+            white-space: nowrap;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            display: flex;
+            touch-action: manipulation;
+            text-decoration: none;
+            align-content: center;
+            flex-wrap: nowrap;
+            flex-direction: row-reverse;
+            justify-content: center;
+
+
+        }
+
+        #mostraRegras>li {
+
+            display: flex;
+            color: rgba(255, 255, 255, 0.743);
+
+            padding: 0px 15px;
+            font-size: 14px;
+            font-family: 'Roboto Condensed';
+            font-weight: 200;
+            text-align: left;
+            background: rgba(40, 40, 40, 0.743);
+            border-radius: 15px;
+
+            margin: 5px 0px;
+            align-items: center;
+            line-height: normal;
+        }
+    </style>
+
+
+    <p id="contaPromoter"></p>
+    <ul id="mostraRegras"></ul>
+
+    <div id="lista"></div>
+
+    <script>
+
+
+//pega id do promoter
+const { search } = window.location
+const params = new URLSearchParams(search)
+const pegaA = params.get('a')
+
+        //Mostra lista ausentes promoter
+
+        //${diaEventoBd}
+        //`${apelido}`
+
+
+
+
+
+
+
+
+        //----Fim mostra lista promoter-------
+
+
+        //Mostra Regras
+
+        var mostraRegras = document.getElementById('mostraRegras')
+
+        var dadosMostraRegras = ""
+
+
+        firebase.database().ref(`${pegaA}/promo/`)
+            .orderByChild('apelido')
+            //.equalTo(true)
+            .on('child_added', (snapshot) => {
+
+                var resultado = snapshot.val()
+                var chave = snapshot.key
+
+                let ativado = ""
+
+                if (resultado.ativo == true) {
+                    ativado = ""
+                    
+
+                } else {
+                    ativado = "⭕"
+                    
+                }
+
+
+                firebase.database()
+                    .ref(`${pegaA}/listas/${resultado.apelido}`)
+                    .orderByChild('nome')
+                    .on('value', (nome) => {
+
+                        let resultado2 = nome.val()
+                        let chave2 = nome.key
+                        let conta = nome.numChildren()
+
+
+
+
+                        firebase.database()
+                            .ref(`${pegaA}/listas/geral/ausentes`)
+                            .orderByChild('promoter')
+                            .equalTo(`${resultado.apelido}`)
+                            .on('value', (total) => {
+
+                                let convidados = total.val()
+                                let chave3 = total.key
+                                let conta2 = total.numChildren()
+
+
+                                var atual = resultado.comicao * conta;
+
+                                //com R$
+                                var f = atual.toLocaleString('pt-br', { minimumFractionDigits: 2 });
+
+
+
+                                dadosMostraRegras = ` 
+                
+        <li class="mostraRegras"><div class="divFoto"><img src= ${resultado.foto} class="foto" ></div> <div class="conteudo"> <p class="pApelido"><b>  ${resultado.apelido.toUpperCase()} </b>${ativado}</p> <p class="pConvidado"> <b>${conta}</b> check-in / ${conta2} convidados</p></p> </div>
+            <div class="url"><p class="pNome">R$</p><p class="pSaldo">  ${f} </div>   
+            </li>` + dadosMostraRegras
+
+
+                                mostraRegras.innerHTML = dadosMostraRegras
+
+                                // conta numeros de lista   
+                                let count = window.document.getElementById("mostraRegras").childElementCount;
+                                window.document.getElementById("contaPromoter").innerHTML = `Essa lista tem ${count} atividades`;
+
+
+                            })
+                    })
+            })
+
+
+
+    </script>
+
+
+
+</body>
+
+
+
+</html>

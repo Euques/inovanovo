@@ -1,0 +1,548 @@
+
+
+
+<!DOCTYPE html>
+<html lang="pt_BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Comemore seu aniversário conosco">
+  <meta property="og:title" content="B-Day Vem Sambar">
+  <meta property="og:description" content="Comemore seu aniversário conosco">
+  <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/vemsambar%2Fbday.png?alt=media&token=ac248fbc-a495-4dc5-ba03-74cdd0ce2502">
+    
+    <title>B-day Vem Sambar Prime</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="crooper/cropper.css">
+
+
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            background-color: rgb(0, 0, 0);
+            color: aliceblue;
+           
+
+
+        }
+
+        h1 {
+            color: aliceblue;
+        }
+
+        label {
+            color: rgb(135, 135, 135);
+        }
+
+        .label {
+            cursor: pointer;
+
+        }
+
+        .progress {
+            display: none;
+            margin-bottom: 1rem;
+        }
+
+        .alert {
+            display: none;
+        }
+
+        .img-container img {
+            max-width: 100%;
+
+        }
+
+
+
+        .container,
+        .container-fluid,
+        .container-lg,
+        .container-md,
+        .container-sm,
+        .container-xl {
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+           
+        }
+
+        .cropper-view-box,
+        .cropper-face {
+            border-radius: 50%;
+        }
+
+
+        .cropper-point.point-se {
+            bottom: -3px;
+            cursor: nwse-resize;
+            height: 30px;
+            opacity: 1;
+            right: -3px;
+            width: 30px;
+            border-radius: 50%;
+        }
+
+        .rounded {
+            border-radius: 50% !important;
+            height: 160px;
+        }
+
+
+        .modal-content {
+
+            background-color: #1f1f1f;
+
+        }
+        
+        .modal-dialog {
+    position: relative;
+    width: auto;
+                margin: 0px;
+   
+    pointer-events: none;
+}
+        
+        .modal-body {
+    position: relative;
+    flex: 1 1 auto;
+        padding: 1rem 2rem 1rem 2rem;
+}
+
+        .modal-header {
+
+            border-bottom: 2px solid #424141;
+
+        }
+
+        .modal-footer {
+            border-top: 2px solid #424141;
+
+        }
+
+
+
+        .form-outline .form-control~.form-label {
+
+            color: #e0e0e0;
+
+        }
+
+        .cropper-modal {
+            background-color: #000000;
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 90%;
+            padding: 20px;
+
+            margin-top: 20px;
+
+            
+            border: 1px solid rgb(43, 43, 43);
+            border-radius: 20px;
+
+        }
+        
+        
+        .cropper-wrap-box, .cropper-canvas, .cropper-drag-box, .cropper-crop-box, .cropper-modal {
+    border-radius: 20px;
+}
+        .cropper-container {
+
+    border-radius: 20px;
+}
+
+
+    </style>
+
+    <style type="text/css">
+        @font-face {
+            font-family: Roboto;
+            src: url("chrome-extension://mcgbeeipkmelnpldkobichboakdfaeon/css/Roboto-Regular.ttf");
+        }
+    </style>
+</head>
+
+<body>
+    
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script>
+
+  var firebaseConfig = {
+        apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
+        authDomain: "blacknight-600de.firebaseapp.com",
+        databaseURL: "https://blacknight-600de.firebaseio.com",
+        projectId: "blacknight-600de",
+        storageBucket: "blacknight-600de.appspot.com",
+        messagingSenderId: "588926432348",
+        appId: "1:588926432348:web:47b2b4a1b421d4b2a0e299",
+        measurementId: "G-559VYPVJ5Q"
+
+    };
+
+    // Initialize Firebase
+
+    firebase.initializeApp(firebaseConfig);
+
+</script>
+    
+    
+    
+    
+    <div class="container text-center ">
+        <h1 id="mApelido" class="display-4">Escolha uma foto</h1>
+
+        <label class="label" data-toggle="tooltip" title="" data-original-title="Escolha sua foto">
+            <img class="rounded" id="avatar" src="https://firebasestorage.googleapis.com/v0/b/inovabarapp.appspot.com/o/promo%2Fcamera2.jpeg?alt=media&token=cab19dad-ab65-4b83-ba69-8cd97513237c" alt="avatar">
+            <input type="file" class="sr-only" id="input" name="image" accept="image/*">
+        </label>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0"
+                aria-valuemin="0" aria-valuemax="100">0%</div>
+        </div>
+        <div class="alert" role="alert"></div>
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Preencha seus dados</h5>
+
+                        <button type="button" class="btn-close btn-close-white" data-mdb-dismiss="modal"
+                            aria-label="Close"></button>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="img-container">
+                            <img id="image" src="https://avatars0.githubusercontent.com/u/3456749">
+                        </div>
+                    </div>
+
+
+                    <div class="form-outline form-white modal-body">
+
+                        <form role="form" id="newModalForm" class="needs-validation" novalidate>
+                            <div class="form-outline mb-4">
+                                <input type="text" class="form-control" id="apelido" name="apelido" required>
+                                <label class="form-label" for="apelido">Seu Apelido</label>
+                                <div class="form-helper">O apelido aparecerá pra seus convidados</div>
+                                <div class="invalid-feedback">
+                                    Voce precisa por um Apelido.
+                                </div>
+
+                            </div>
+                            <div class="form-outline mb-4">
+
+                                <input type="text" class="form-control" id="nome">
+                                <label class="form-label" for="nome">Seu Nome Completo:</label>
+                            </div>
+                            <div class="form-outline mb-4">
+
+                                <input type="date" class="form-control" id="data">
+                                <label class="form-label" for="data">Seu Aniversário</label>
+                            </div>
+
+                            <div class="form-outline mb-4">
+
+                                <input type="number" class="form-control" id="whats">
+                                <label class="form-label" for="whats">Seu Whatsapp:</label>
+                                <div class="form-helper">Você será identificado por esse número</div>
+                            </div>
+
+
+
+                    </div>
+
+
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary"
+                            data-mdb-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="crop" disabled>Cadastrar Aniversário</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <div id="container" class="container text-left">
+        <div class="wrapper">
+            <div class="inner">
+                <h4 id="text04">Olha o que vc ganha</h4>
+                <div id="" class="style1 list">
+                    <ul>
+                        <li>
+                            Link para convidar seus amigos
+                        </li>
+                        
+                        <li>
+                            Flyer c/ sua foto
+                        </li>
+                        <li>
+                             Reserva de mesa
+                        </li>
+
+                            <li>
+                               01 Drink
+                        </li>
+                      
+                    </ul>
+                </div>
+                <h4 id="" >Com 20 convidados pagantes</h4>
+                <div id="" class="">
+                    <ul class="">
+                        <li >
+                            01 Garrafa de Red Label ou Absolut ou Tanqueray
+                        </li>
+
+                          <li >
+                            01 Balde de Heineken (Long nek com 6 unidades)
+                        </li>
+
+                         <li >
+                            R$100 em consumação a escolha
+                        </li>
+
+
+
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+<br>
+    <!-- MDB -->
+
+
+
+    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap@4/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="crooper/cropper.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
+
+    <script>
+        
+        
+        const { search } = window.location
+const params = new URLSearchParams(search)
+const pegaA = params.get('a')
+
+
+
+
+
+        $(document).ready(function () {
+            $('#whats').on('input', function () {
+                $('#crop').prop('disabled', $('#apelido').val().length < 2 || $('#whats').val().length < 3 );
+            });
+        });
+
+        window.addEventListener('DOMContentLoaded', function () {
+            var avatar = document.getElementById('avatar');
+            var image = document.getElementById('image');
+            var input = document.getElementById('input');
+
+
+
+            var $progress = $('.progress');
+            var $progressBar = $('.progress-bar');
+            var $alert = $('.alert');
+            var $modal = $('#modal');
+            var cropper;
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            input.addEventListener('change', function (e) {
+                var files = e.target.files;
+                var done = function (url) {
+                    input.value = '';
+                    image.src = url;
+                    $alert.hide();
+                    $modal.modal('show');
+                };
+                var reader;
+                var file;
+                var url;
+
+                if (files && files.length > 0) {
+                    file = files[0];
+
+                    if (URL) {
+                        done(URL.createObjectURL(file));
+                    } else if (FileReader) {
+                        reader = new FileReader();
+                        reader.onload = function (e) {
+                            done(reader.result);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            });
+
+            $modal.on('shown.bs.modal', function () {
+                cropper = new Cropper(image, {
+                    aspectRatio: 1,
+                    viewMode: 3,
+                });
+            }).on('hidden.bs.modal', function () {
+                cropper.destroy();
+                cropper = null;
+            });
+
+            document.getElementById('crop').addEventListener('click', function () {
+                var initialAvatarURL;
+                var canvas;
+
+                $modal.modal('hide');
+
+                if (cropper) {
+                    canvas = cropper.getCroppedCanvas({
+                        width: 160,
+                        height: 160,
+                    });
+
+                    initialAvatarURL = avatar.src;
+                    avatar.src = canvas.toDataURL();
+                    $progress.hide();
+                    $alert.removeClass('alert-success alert-warning');
+                    canvas.toBlob(function (blob) {
+                        var formData = new FormData();
+
+                        formData.append('avatar', blob, 'avatar.jpg');
+
+
+                        firebase
+                            .database()
+                            .ref(`${pegaA}/bday`)
+                            .push(
+
+                                {
+                                    aprovado: false,
+                                    apelido: 'apelido'
+
+                                }
+                            ).once('value', (snap) => {
+                                var idVal = snap.val()
+                                var idFoto = snap.Key
+
+
+                                console.log(`id foto é ${snap.key}`)
+
+                                const anoAtual = new Date().getFullYear()
+
+
+                                const base64 = avatar.src.split('base64,')[1]
+                                firebase.storage().ref(`bday${anoAtual}/${snap.key}.png`).putString(base64, 'base64', { contentType: 'image/png' }).then(snapshot => {
+                                    console.log('snapshot', snapshot)
+
+                                    firebase.storage().ref(`bday${anoAtual}/${snap.key}.png`).getDownloadURL().then(url => {
+                                        console.log('endereço', url)
+
+
+                                        var apelido = document.getElementById('apelido').value
+                                        var nome = document.getElementById('nome').value
+                                        var data = document.getElementById('data').value
+                                        var whats = document.getElementById('whats').value
+
+                                        var promo1 = `Com 20 convidados pagantes, ${apelido} ganha 1 Garrafa (Red ou Absolut ou Tanqueray) 1 Balde de Heineken e R$100 em consumo`
+                                       
+
+                                        firebase.database()
+                                            .ref(`${pegaA}/bday/${snap.key}`)
+                                            .set(
+
+                                                
+                                                {
+                                                    foto: url,
+                                                    aprovado: false,
+                                                    apelido: 'B-day ' + apelido,
+                                                    nome: nome,
+                                                   
+                                                    bday: data,
+                                                    whats: whats,
+                                                    status: 'Aniversariante',
+                                                    regra: promo1
+
+                                                }
+                                            )
+                                        
+                                        window.open(`https://lista.vemsambar.club/?p=${pegaA}/bday/${snap.key}`, '_top')
+
+                                    })
+
+                                })
+
+
+                            })
+
+
+
+
+                            .then(() => {
+                                console.log('Foi Gravado')
+                            
+                            
+
+                                document.getElementById('mApelido').innerHTML = apelido.value
+
+
+
+
+
+                            })
+                            .catch(error => {
+                                console.error('Hi fodeu!: ', error)
+                            })
+
+
+
+
+
+
+
+
+
+
+                    });
+                }
+            });
+        });
+
+
+
+
+
+    </script>
+
+  
+
+
+</body>
+
+
+
+</html>
+

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt_BR">
+
+    
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Promoters</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="crooper/cropper.css">
+
+
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            background-color: rgb(0, 0, 0);
+            color: aliceblue;
+           
+
+
+        }
+
+        h1 {
+            color: aliceblue;
+        }
+
+        label {
+            color: rgb(135, 135, 135);
+        }
+
+        .label {
+            cursor: pointer;
+
+        }
+
+        .progress {
+            display: none;
+            margin-bottom: 1rem;
+        }
+
+        .alert {
+            display: none;
+        }
+
+        .img-container img {
+            max-width: 100%;
+
+        }
+
+
+
+        .container,
+        .container-fluid,
+        .container-lg,
+        .container-md,
+        .container-sm,
+        .container-xl {
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+           
+        }
+
+        .cropper-view-box,
+        .cropper-face {
+            border-radius: 50%;
+        }
+
+
+        .cropper-point.point-se {
+            bottom: -3px;
+            cursor: nwse-resize;
+            height: 30px;
+            opacity: 1;
+            right: -3px;
+            width: 30px;
+            border-radius: 50%;
+        }
+
+        .rounded {
+            border-radius: 50% !important;
+            height: 160px;
+        }
+
+
+        .modal-content {
+
+            background-color: #1f1f1f;
+
+        }
+        
+        .modal-dialog {
+    position: relative;
+    width: auto;
+                margin: 0px;
+   
+    pointer-events: none;
+}
+        
+        .modal-body {
+    position: relative;
+    flex: 1 1 auto;
+        padding: 1rem 2rem 1rem 2rem;
+}
+
+        .modal-header {
+
+            border-bottom: 2px solid #424141;
+
+        }
+
+        .modal-footer {
+            border-top: 2px solid #424141;
+
+        }
+
+
+
+        .form-outline .form-control~.form-label {
+
+            color: #e0e0e0;
+
+        }
+
+        .cropper-modal {
+            background-color: #000000;
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 90%;
+            padding: 20px;
+
+            margin-top: 20px;
+
+            
+            border: 1px solid rgb(43, 43, 43);
+            border-radius: 20px;
+
+        }
+        
+        
+        .cropper-wrap-box, .cropper-canvas, .cropper-drag-box, .cropper-crop-box, .cropper-modal {
+    border-radius: 20px;
+}
+        .cropper-container {
+
+    border-radius: 20px;
+}
+
+
+    </style>
+
+    <style type="text/css">
+        @font-face {
+            font-family: Roboto;
+            src: url("chrome-extension://mcgbeeipkmelnpldkobichboakdfaeon/css/Roboto-Regular.ttf");
+        }
+    </style>
+</head>
+
+<body>
+    
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script>
+
+var firebaseConfig = {
+        apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
+        authDomain: "blacknight-600de.firebaseapp.com",
+        databaseURL: "https://blacknight-600de.firebaseio.com",
+        projectId: "blacknight-600de",
+        storageBucket: "blacknight-600de.appspot.com",
+        messagingSenderId: "588926432348",
+        appId: "1:588926432348:web:47b2b4a1b421d4b2a0e299",
+        measurementId: "G-559VYPVJ5Q"
+
+    };
+
+    // Initialize Firebase
+
+    firebase.initializeApp(firebaseConfig);
+
+</script>
+    
+    
+    
+    
+    <div class="container text-center ">
+        <h1 id="mApelido" class="display-4">Cadastrar Promoter</h1>
+
+        <label class="label" data-toggle="tooltip" title="" data-original-title="Cadastrar Promoter">
+            <img class="rounded" id="avatar" src="https://firebasestorage.googleapis.com/v0/b/inovabarapp.appspot.com/o/promo%2Fcamera2.jpeg?alt=media&token=cab19dad-ab65-4b83-ba69-8cd97513237c" alt="avatar">
+            <input type="file" class="sr-only" id="input" name="image" accept="image/*">
+        </label>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0"
+                aria-valuemin="0" aria-valuemax="100">0%</div>
+        </div>
+        <div class="alert" role="alert"></div>
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Preencha seus dados</h5>
+
+                        <button type="button" class="btn-close btn-close-white" data-mdb-dismiss="modal"
+                            aria-label="Close"></button>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="img-container">
+                            <img id="image" src="https://avatars0.githubusercontent.com/u/3456749">
+                        </div>
+                    </div>
+
+
+                    <div class="form-outline form-white modal-body">
+
+                        <form role="form" id="newModalForm" class="needs-validation" novalidate>
+                            <div class="form-outline mb-4">
+                                <input type="text" class="form-control" id="apelido" name="apelido" required>
+                                <label class="form-label" for="apelido">Seu Apelido</label>
+                                <div class="form-helper">O apelido aparecerá pra seus convidados</div>
+                                <div class="invalid-feedback">
+                                    Voce precisa por um Apelido.
+                                </div>
+
+                            </div>
+                            <div class="form-outline mb-4">
+
+                                <input type="text" class="form-control" id="nome">
+                                <label class="form-label" for="nome">Seu Nome Completo:</label>
+                            </div>
+                       
+
+                            <div class="form-outline mb-4">
+
+                                <input type="number" class="form-control" id="whats">
+                                <label class="form-label" for="whats">Seu Whatsapp:</label>
+                                <div class="form-helper">Você será identificado por esse número</div>
+                            </div>
+
+
+
+                    </div>
+
+
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary"
+                            data-mdb-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="crop" disabled>Cadastrar Aniversário</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="container" class="container text-left">
+        <div class="wrapper">
+            <div class="inner">
+                <h4 id="text04">Para registrar um promoter você vai precisar:</h4>
+                <div id="" class="style1 list">
+                    <ul>
+                        <li>
+                            <p><strong>Apelido</strong></p>
+                        </li>
+                        <li>
+                            <p><strong>Nome e Sobrenome</strong> c/ sua foto</p>
+                        </li>
+                        <li>
+                            <p><strong>WhatsApp</strong></p>
+                        </li>
+                        <li>
+                            <p><strong>Regra da Festa</strong></p>
+                        </li>
+                    </ul>
+                </div>
+                <h4 id="" >Tenha em mãos</h4>
+                <div id="" class="">
+                    <ul class="">
+                        <li >
+                            <p>1 <strong>Dia dos Promoters</strong></p>
+                        </li>
+                        <li>
+                            <p>1 <strong>Regra de cada dia</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+<br>
+    <!-- MDB -->
+
+
+
+    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap@4/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="crooper/cropper.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
+
+    <script>
+        
+        
+        const { search } = window.location
+const params = new URLSearchParams(search)
+const pegaA = params.get('a')
+
+var parentURL = window != window.parent ? document.referrer : null;
+
+
+        $(document).ready(function () {
+            $('#whats').on('input', function () {
+                $('#crop').prop('disabled', $('#apelido').val().length < 2 || $('#whats').val().length < 3 );
+            });
+        });
+
+        window.addEventListener('DOMContentLoaded', function () {
+            var avatar = document.getElementById('avatar');
+            var image = document.getElementById('image');
+            var input = document.getElementById('input');
+
+
+
+            var $progress = $('.progress');
+            var $progressBar = $('.progress-bar');
+            var $alert = $('.alert');
+            var $modal = $('#modal');
+            var cropper;
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            input.addEventListener('change', function (e) {
+                var files = e.target.files;
+                var done = function (url) {
+                    input.value = '';
+                    image.src = url;
+                    $alert.hide();
+                    $modal.modal('show');
+                };
+                var reader;
+                var file;
+                var url;
+
+                if (files && files.length > 0) {
+                    file = files[0];
+
+                    if (URL) {
+                        done(URL.createObjectURL(file));
+                    } else if (FileReader) {
+                        reader = new FileReader();
+                        reader.onload = function (e) {
+                            done(reader.result);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            });
+
+            $modal.on('shown.bs.modal', function () {
+                cropper = new Cropper(image, {
+                    aspectRatio: 1,
+                    viewMode: 3,
+                });
+            }).on('hidden.bs.modal', function () {
+                cropper.destroy();
+                cropper = null;
+            });
+
+            document.getElementById('crop').addEventListener('click', function () {
+                var initialAvatarURL;
+                var canvas;
+
+                $modal.modal('hide');
+
+                if (cropper) {
+                    canvas = cropper.getCroppedCanvas({
+                        width: 160,
+                        height: 160,
+                    });
+
+                    initialAvatarURL = avatar.src;
+                    avatar.src = canvas.toDataURL();
+                    $progress.hide();
+                    $alert.removeClass('alert-success alert-warning');
+                    canvas.toBlob(function (blob) {
+                        var formData = new FormData();
+
+                        formData.append('avatar', blob, 'avatar.jpg');
+
+
+                        firebase
+                            .database()
+                            .ref('vemsambar/promo')
+                            .push(
+
+                                {
+                                    aprovado: false,
+                                    apelido: 'apelido'
+
+                                }
+                            ).once('value', (snap) => {
+                                var idVal = snap.val()
+                                var idFoto = snap.Key
+
+
+                                console.log(`id foto é ${snap.key}`)
+
+                                const anoAtual = new Date().getFullYear()
+
+
+                                const base64 = avatar.src.split('base64,')[1]
+                                firebase.storage().ref(`vemsambar/promo${anoAtual}/${snap.key}.png`).putString(base64, 'base64', { contentType: 'image/png' }).then(snapshot => {
+                                    console.log('snapshot', snapshot)
+
+                                    firebase.storage().ref(`vemsambar/promo${anoAtual}/${snap.key}.png`).getDownloadURL().then(url => {
+                                        console.log('endereço', url)
+
+
+                                        var apelido = document.getElementById('apelido').value
+                                        var nome = document.getElementById('nome').value
+                                      
+                                        var whats = document.getElementById('whats').value
+
+                                        firebase.database()
+                                            .ref(`vemsambar/promo/${snap.key}`)
+                                            .set(
+
+                                                {
+                                                    foto: url,
+                                                    ativo: false,
+                                                    aprovado: false,
+                                                    apelido: apelido,
+                                                    nome: nome,
+                                                   
+                                                    whats: whats,
+                                                    comicao: 5,
+                                                    status: 'Promoter',
+                                                    
+                                                    segunda: false,
+                                                    terca: false,
+                                                    quarta: false,
+                                                    quinta: false,
+                                                    sexta: false,
+                                                    sabado: true,
+                                                    domingo: false,
+                                                    
+                                                    regra: 'Desconto especial para lista de promoter',
+                                                    segRegra: 'Vip até 21H com o nome nessa lista, aproveite!',
+                                                    terRegra: 'Vip até 22H com o nome nessa lista, aproveite!',
+                                                    quaRegra: 'Vip até 21H com o nome nessa lista, aproveite!',
+                                                    quiRegra: 'Vip até 21H com o nome nessa lista, aproveite!',
+                                                    sexRegra: 'Vip até 22H com o nome nessa lista, aproveite!',
+                                                    sabRegra: 'Com o nome na lista, Entrada e Open Império das 14 às 16H por R$20, Aproveite!',
+                                                    domRegra: 'Vip até 19H com o nome nessa lista, aproveite!'
+
+                                                }
+                                            )
+                                        
+                                        
+                                      
+                                        alert(`O promoter foi Criado com Sucesso!`);
+                                        window.location.reload();
+
+                                    })
+
+                                })
+
+
+                            })
+
+
+
+
+                            .then(() => {
+                                console.log('Foi Gravado')
+                            
+                            
+
+                                document.getElementById('mApelido').innerHTML = apelido.value
+
+
+
+
+
+                            })
+                            .catch(error => {
+                                console.error('Hi fodeu!: ', error)
+                            })
+
+
+
+
+
+
+
+
+
+
+                    });
+                }
+            });
+        });
+
+
+
+
+
+    </script>
+
+    <script>
+
+
+    </script>
+
+
+</body>
+
+
+
+</html>
