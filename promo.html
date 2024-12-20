@@ -410,7 +410,7 @@ var parentURL = window != window.parent ? document.referrer : null;
 
                         firebase
                             .database()
-                            .ref('vemsambar/promo')
+                            .ref('inovabar/promo')
                             .push(
 
                                 {
@@ -429,10 +429,10 @@ var parentURL = window != window.parent ? document.referrer : null;
 
 
                                 const base64 = avatar.src.split('base64,')[1]
-                                firebase.storage().ref(`vemsambar/promo${anoAtual}/${snap.key}.png`).putString(base64, 'base64', { contentType: 'image/png' }).then(snapshot => {
+                                firebase.storage().ref(`inovabar/promo${anoAtual}/${snap.key}.png`).putString(base64, 'base64', { contentType: 'image/png' }).then(snapshot => {
                                     console.log('snapshot', snapshot)
 
-                                    firebase.storage().ref(`vemsambar/promo${anoAtual}/${snap.key}.png`).getDownloadURL().then(url => {
+                                    firebase.storage().ref(`inovabar/promo${anoAtual}/${snap.key}.png`).getDownloadURL().then(url => {
                                         console.log('endereço', url)
 
 
@@ -442,7 +442,7 @@ var parentURL = window != window.parent ? document.referrer : null;
                                         var whats = document.getElementById('whats').value
 
                                         firebase.database()
-                                            .ref(`vemsambar/promo/${snap.key}`)
+                                            .ref(`inovabar/promo/${snap.key}`)
                                             .set(
 
                                                 {
