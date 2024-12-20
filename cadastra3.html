@@ -69,7 +69,7 @@
 
     firebase.initializeApp(firebaseConfig);
 
-    const cliente = "vemsambar";
+    const cliente = "inovabar";
     const eventoForm = document.getElementById("eventoForm");
 
     eventoForm.addEventListener("submit", async function (e) {
@@ -99,7 +99,7 @@
             // Cria um objeto com todos os dados do evento, incluindo 'promo'
             const eventoData = {
                 data: dataTimestamp,
-                foto: "https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/vemsambar%2Ffoto.jpg?alt=media&token=763df007-5512-4471-bdd3-bcb6d824514e",
+                foto: "https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffoto.png?alt=media&token=1633178c-a441-4c52-884c-26a7325c5107",
                 flyer: downloadURL,
                 descricao: descricao,
                 promocao: promocao,
@@ -117,7 +117,7 @@
             const eventoRef = eventosRef.push();
 
             // Define o link com a URL correta
-            eventoData.link = `https://lista.vemsambar.club/?p=vemsambar/eventos/${eventoRef.key}`;
+            eventoData.link = `https://lista.inovabar.com.br/?p=inovabar/eventos/${eventoRef.key}`;
 
             // Salva todos os dados do evento, incluindo 'promo', na chave do evento recém-criado
             eventoRef.set(eventoData)
