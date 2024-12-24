@@ -3,15 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Eventos</title>
+    <title>Editar Evento</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="estilo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css">
+    <style>
+        #croppieContainer {
+            width: 300px;
+            height: 300px;
+            margin: 10px 0;
+        }
+        #eventImage {
+            max-width: 100px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-4">Editar Eventos</h1>
+        <h1 class="mt-4">Editar Evento</h1>
         <form id="eventoForm">
-            <!-- Caixa de seleção personalizada para escolher um evento -->
             <div class="form-group">
                 <label for="selectEvento" class="form-label">Escolha um evento para editar:</label>
                 <select class="custom-select" id="selectEvento" onchange="selectEvent()">
@@ -20,7 +30,6 @@
             </div>
             <br>
             <hr>
-            <!-- Formulário de edição de eventos -->
             <div class="event-card">
                 <div class="event-description" id="eventDescription"></div>
                 <hr>
@@ -32,6 +41,7 @@
                 <hr>
                 <img src="https://eustonclub.com.au/wp-content/plugins/slider/images/slider-icon.png" id="eventImage" alt="Imagem do evento">
             </div>
+
             <div class="form-group">
                 <label for="dataEvento" class="form-label">Nova Data do Evento</label>
                 <input type="date" class="form-control" id="dataEvento" required>
@@ -40,10 +50,15 @@
                 <label for="horaEvento" class="form-label">Nova Hora do Evento</label>
                 <input type="time" class="form-control" id="horaEvento" required>
             </div>
+            
+            <!-- Caixa de upload de imagem -->
             <div class="form-group">
-                <label for="flyerEvento" class="form-label">Novo flyer do Flyer</label>
+                <label for="novaflyerEvento" class="form-label">Novo Flyer (Imagem)</label>
                 <input type="file" class="form-control" id="novaflyerEvento" accept="image/*">
             </div>
+            <!-- Contêiner de pré-visualização e crop da imagem -->
+            <div id="croppieContainer"></div>
+
             <div class="form-group">
                 <label for="descricao" class="form-label">Nova Descrição</label>
                 <textarea class="form-control" id="descricao" rows="4"></textarea>
@@ -81,8 +96,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js"></script>
     <script>
-        // Configuração do Firebase com suas próprias credenciais
         var firebaseConfig = {
             apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
             authDomain: "blacknight-600de.firebaseapp.com",
@@ -95,10 +110,10 @@
         };
         firebase.initializeApp(firebaseConfig);
 
-        // Defina a constante cliente para reutilização
-        var cliente = "inovabar"; // Substitua pelo nome do cliente
+        var cliente = "inovabar";
 
-        // Função para preencher o menu suspenso com eventos do Firebase Realtime Database e atualizar em tempo real
+        var croppie;
+
         function populateEventDropdown() {
             var selectEvento = document.getElementById("selectEvento");
             var eventosRef = firebase.database().ref(cliente + "/eventos");
@@ -106,39 +121,15 @@
             eventosRef.orderByChild("data").on("child_added", function (snapshot) {
                 var eventId = snapshot.key;
                 var evento = snapshot.val();
-                var dataEvento = new Date(evento.data).toLocaleString();
                 var descricao = evento.descricao;
-                var flyer = evento.flyer;
 
                 var option = document.createElement("option");
                 option.value = eventId;
                 option.innerText = descricao;
                 selectEvento.appendChild(option);
-
-                var eventImage = document.createElement("img");
-                eventImage.src = flyer;
-                eventImage.style.maxWidth = "100px";
-                eventImage.style.borderRadius = "5px";
-
-                option.appendChild(eventImage);
-            });
-
-            eventosRef.on("child_changed", function (snapshot) {
-                // Atualizar o evento selecionado
-                selectEvent();
-            });
-
-            eventosRef.on("child_removed", function (snapshot) {
-                // Remover o evento excluído da lista
-                var eventId = snapshot.key;
-                var optionToRemove = selectEvento.querySelector("option[value='" + eventId + "']");
-                if (optionToRemove) {
-                    selectEvento.removeChild(optionToRemove);
-                }
             });
         }
 
-        // Função para preencher os campos de edição com os detalhes do evento selecionado
         function selectEvent() {
             var selectedEventId = document.getElementById("selectEvento").value;
             var dataEventoField = document.getElementById("dataEvento");
@@ -168,7 +159,7 @@
                         regraField.value = evento.regra || "";
                         linkField.value = evento.link || "";
                         buttonTitleField.value = evento.buttonTitle || "";
-                        clubCheckbox.checked = evento.club || false; // Define o valor do checkbox
+                        clubCheckbox.checked = evento.club || false;
 
                         eventDescription.innerText = "Descrição: " + evento.descricao;
                         eventDate.innerText = "Data do Evento: " + dataEvento.toLocaleString();
@@ -194,6 +185,24 @@
                 eventImage.src = "";
             }
         }
+
+        // Função para fazer o upload da imagem
+        document.getElementById('novaflyerEvento').addEventListener('change', function (e) {
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                if (croppie) {
+                    croppie.destroy(); // Remove qualquer instância anterior
+                }
+
+                // Cria nova instância de croppie
+                croppie = new Croppie(document.getElementById('croppieContainer'), {
+                    viewport: { width: 200, height: 200, type: 'square' },
+                    boundary: { width: 300, height: 300 }
+                });
+                croppie.bind({ url: event.target.result });
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        });
 
         // Função para atualizar os dados do evento no Firebase
         document.getElementById("eventoForm").addEventListener("submit", function (event) {
