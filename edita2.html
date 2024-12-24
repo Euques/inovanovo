@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,8 +13,13 @@
             margin: 10px 0;
         }
         #eventImage {
-            max-width: 100px;
+            max-width: 100%;
+            max-height: 200px;
             border-radius: 5px;
+            margin-top: 10px;
+        }
+        .event-card {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -165,7 +170,7 @@
                         eventDate.innerText = "Data do Evento: " + dataEvento.toLocaleString();
                         eventLink.innerText = "Link: " + (evento.link || "Nenhum");
                         eventButtonTitle.innerText = "Título do Botão: " + (evento.buttonTitle || "Nenhum");
-                        eventImage.src = evento.flyer || "";
+                        eventImage.src = evento.flyer || "https://eustonclub.com.au/wp-content/plugins/slider/images/slider-icon.png";  // imagem padrão caso não haja
                     }
                 });
             } else {
@@ -182,7 +187,7 @@
                 eventDate.innerText = "";
                 eventLink.innerText = "";
                 eventButtonTitle.innerText = "";
-                eventImage.src = "";
+                eventImage.src = "https://eustonclub.com.au/wp-content/plugins/slider/images/slider-icon.png";  // imagem padrão
             }
         }
 
@@ -204,7 +209,6 @@
             reader.readAsDataURL(e.target.files[0]);
         });
 
-        // Função para atualizar os dados do evento no Firebase
         document.getElementById("eventoForm").addEventListener("submit", function (event) {
             event.preventDefault();
 
