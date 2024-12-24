@@ -107,10 +107,6 @@
         eventoForm.addEventListener("submit", async function (e) {
             e.preventDefault();
 
-            // Desabilitar o botão de submit para evitar múltiplos envios
-            const submitButton = eventoForm.querySelector('button[type="submit"]');
-            submitButton.disabled = true;
-
             const dataEvento = document.getElementById("dataEvento").value;
             const horaEvento = document.getElementById("horaEvento").value;
             const descricao = document.getElementById("descricao").value;
@@ -127,7 +123,14 @@
 
             // Converte para Blob para upload
             const blob = await fetch(croppedImage).then(res => res.blob());
-            const storageRef = firebase.storage().ref(`${new Date().getFullYear()}/${cliente}/fotoEvento.png`);
+
+            // Gerar um nome único usando timestamp
+            const uniqueFileName = `fotoEvento_${new Date().getTime()}.png`;
+
+            // Agora, o caminho de armazenamento incluirá o nome único da imagem
+            const storageRef = firebase.storage().ref(`${new Date().getFullYear()}/${cliente}/${uniqueFileName}`);
+
+            // Upload da imagem para o Firebase Storage
             const snapshot = await storageRef.put(blob);
             const downloadURL = await snapshot.ref.getDownloadURL();
 
@@ -164,10 +167,6 @@
                     })
                     .catch(function (error) {
                         alert("Erro ao cadastrar evento: " + error.message);
-                    })
-                    .finally(function () {
-                        // Reabilitar o botão de submit após o processo de salvar
-                        submitButton.disabled = false;
                     });
             });
         });
