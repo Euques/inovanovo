@@ -134,6 +134,10 @@
                 <label for="buttonTitle" class="form-label">Título do Botão</label>
                 <input type="text" class="form-control custom-placeholder" id="buttonTitle" placeholder="Lista Inova" value="Lista Inova">
             </div>
+            <div class="form-group">
+                <label for="apelido" class="form-label">Apelido</label>
+                <input type="text" class="form-control" id="apelido" value="Inova" required>
+            </div>
             <div class="form-group form-switch mt-3">
                 <input type="checkbox" class="form-check-input" id="clubCheckbox">
                 <label for="clubCheckbox" class="form-label">Club de Clientes</label>
@@ -201,6 +205,7 @@
             const promocao = document.getElementById("promocao").value;
             const regra = document.getElementById("regra").value;
             const buttonTitle = document.getElementById("buttonTitle").value;
+            const apelido = document.getElementById("apelido").value;
             const club = document.getElementById("clubCheckbox").checked;
 
             const dataTimestamp = new Date(`${dataEvento}T${horaEvento}:00`).getTime();
@@ -225,6 +230,8 @@
                 regra,
                 buttonTitle,
                 club,
+                apelido,
+                foto: downloadURL, // Incluindo a foto no banco
                 link: `https://lista.inovabar.com.br/?p=inovabar/eventos/${eventoRef.key}`,
                 status: "Promoção",
             };
