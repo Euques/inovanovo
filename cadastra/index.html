@@ -18,14 +18,7 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
-        }
-        
-        .cropper-wrap-box {
-            height: 300px;
-            overflow: hidden;
-            position: relative;
-            background-color: #373b3e;
-            border-radius: 10px;
+            display: none;
         }
     </style>
 </head>
@@ -34,7 +27,7 @@
         <h1 class="mt-4">Cadastro de Eventos</h1>
         
         <!-- Loading Spinner -->
-        <div id="loadingSpinner" class="loading-spinner d-none">
+        <div id="loadingSpinner" class="loading-spinner">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Carregando...</span>
             </div>
@@ -45,46 +38,37 @@
                 <label for="dataEvento" class="form-label">Data do Evento</label>
                 <input type="date" class="form-control" id="dataEvento" required>
             </div>
-
             <div class="form-group">
                 <label for="horaEvento" class="form-label">Hora do Evento</label>
                 <input type="time" class="form-control" id="horaEvento" required>
             </div>
-
             <div class="form-group">
                 <label for="fotoEvento" class="form-label">Foto do Flyer</label>
                 <input type="file" class="form-control" id="fotoEvento" accept="image/*" required>
             </div>
-
             <div id="cropperContainer" class="mt-4">
-                <div class="cropper-wrap-box"></div>
+                <div class="cropper-wrap-box" style="height: 300px; overflow: hidden; position: relative; background-color: #373b3e; border-radius: 10px;"></div>
             </div>
-
             <div class="form-group">
                 <label for="descricao" class="form-label">Descrição</label>
                 <textarea class="form-control" id="descricao" rows="4"></textarea>
             </div>
-
             <div class="form-group">
                 <label for="promocao" class="form-label">Promoção</label>
                 <input type="text" class="form-control" id="promocao">
             </div>
-
             <div class="form-group">
                 <label for="regra" class="form-label">Regra</label>
                 <input type="text" class="form-control" id="regra">
             </div>
-
             <div class="form-group">
                 <label for="buttonTitle" class="form-label">Título do Botão</label>
                 <input type="text" class="form-control" id="buttonTitle" value="Lista Inova">
             </div>
-
             <div class="form-group">
                 <label for="clubCheckbox" class="form-label">Club de clientes</label>
                 <input type="checkbox" class="form-check-input" id="clubCheckbox">
             </div>
-
             <button type="submit" class="btn btn-primary mt-2">Cadastrar Evento</button>
         </form>
     </div>
@@ -96,8 +80,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 
     <script>
-        // Configurações do Firebase
-        const firebaseConfig = {
+        // Firebase config em arquivo separado (config.js) por segurança
+        var firebaseConfig = {
             apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
             authDomain: "blacknight-600de.firebaseapp.com",
             databaseURL: "https://blacknight-600de.firebaseio.com",
@@ -116,25 +100,21 @@
         const loadingSpinner = document.getElementById("loadingSpinner");
         let cropper;
 
-        fotoEventoInput.addEventListener("change", function(e) {
+        fotoEventoInput.addEventListener("change", function (e) {
             const file = e.target.files[0];
-            if (!file) return;
-
             const reader = new FileReader();
-            reader.onload = function(event) {
+
+            reader.onload = function (event) {
                 const image = document.createElement("img");
                 image.src = event.target.result;
 
                 const cropperWrapBox = document.querySelector(".cropper-wrap-box");
-                cropperWrapBox.innerHTML = '';
+                cropperWrapBox.innerHTML = ''; // Limpa qualquer conteúdo anterior
                 cropperWrapBox.appendChild(image);
 
-                if (cropper) {
-                    cropper.destroy();
-                }
-
+                // Inicializa o Cropper
                 cropper = new Cropper(image, {
-                    aspectRatio: 1,
+                    aspectRatio: 1, // Proporção 1:1
                     viewMode: 1,
                     autoCropArea: 1,
                     responsive: true,
@@ -146,9 +126,9 @@
             reader.readAsDataURL(file);
         });
 
-        eventoForm.addEventListener("submit", async function(e) {
+        eventoForm.addEventListener("submit", async function (e) {
             e.preventDefault();
-            loadingSpinner.classList.remove('d-none');
+            loadingSpinner.style.display = 'flex';
 
             try {
                 const dataEvento = document.getElementById("dataEvento").value;
@@ -166,11 +146,9 @@
                 const croppedImage = canvas.toDataURL("image/png");
                 const blob = await fetch(croppedImage).then(res => res.blob());
 
-                // Gerar nome único usando timestamp
                 const uniqueFileName = `fotoEvento_${new Date().getTime()}.png`;
                 const storageRef = firebase.storage().ref(`${new Date().getFullYear()}/${cliente}/${uniqueFileName}`);
 
-                // Upload da imagem
                 const snapshot = await storageRef.put(blob);
                 const downloadURL = await snapshot.ref.getDownloadURL();
 
@@ -201,20 +179,20 @@
                     eventoData.link = `https://lista.inovabar.com.br/?p=inovabar/eventos/${eventoRef.key}`;
 
                     eventoRef.set(eventoData)
-                        .then(function() {
+                        .then(function () {
                             alert("Evento cadastrado com sucesso!");
                             location.reload();
                         })
-                        .catch(function(error) {
+                        .catch(function (error) {
                             alert("Erro ao cadastrar evento: " + error.message);
                         })
                         .finally(() => {
-                            loadingSpinner.classList.add('d-none');
+                            loadingSpinner.style.display = 'none';
                         });
                 });
             } catch (error) {
                 alert("Erro ao processar o evento: " + error.message);
-                loadingSpinner.classList.add('d-none');
+                loadingSpinner.style.display = 'none';
             }
         });
     </script>
