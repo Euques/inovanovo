@@ -8,6 +8,43 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
     <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --card-bg-color: #1e1e1e;
+            --input-bg-color: #2e2e2e;
+            --primary-color: #007bff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+        }
+
+        .form-control, .form-control:focus, .form-check-input, textarea {
+            background-color: var(--input-bg-color);
+            color: var(--text-color);
+            border: 1px solid #444;
+        }
+
+        .form-control::placeholder {
+            color: #888;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
         .cropper-wrap-box {
             display: flex;
             justify-content: center;
@@ -16,15 +53,15 @@
             cursor: pointer;
             height: 300px;
             overflow: hidden;
-            background-color: #373b3e;
+            background-color: var(--card-bg-color);
             border-radius: 10px;
         }
 
         .cropper-wrap-box i {
             z-index: 1;
-            pointer-events: none; /* Permite clicar no input invisível sem afetar o ícone */
+            pointer-events: none;
             font-size: 3rem;
-            color: white;
+            color: var(--text-color);
         }
 
         .cropper-wrap-box input[type="file"] {
@@ -36,11 +73,34 @@
             opacity: 0;
             cursor: pointer;
         }
+
+        .form-switch .form-check-input {
+            width: 3em;
+            height: 1.5em;
+        }
+
+        .form-switch .form-check-input:checked {
+            background-color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .cropper-wrap-box {
+                height: 200px;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-4">Cadastro de Eventos</h1>
+        <h1 class="mt-4 text-center">Cadastro de Eventos</h1>
         <form id="eventoForm">
             <div class="form-group mt-4">
                 <label for="dataEvento" class="form-label">Data do Evento</label>
@@ -72,11 +132,11 @@
                 <label for="buttonTitle" class="form-label">Título do Botão</label>
                 <input type="text" class="form-control custom-placeholder" id="buttonTitle" placeholder="Lista Inova" value="Lista Inova">
             </div>
-            <div class="form-group">
-                <label for="clubCheckbox" class="form-label">Club de clientes</label>
+            <div class="form-group form-switch">
+                <label for="clubCheckbox" class="form-label">Club de Clientes</label>
                 <input type="checkbox" class="form-check-input" id="clubCheckbox">
             </div>
-            <button type="submit" class="btn btn-primary mt-2">Cadastrar Evento</button>
+            <button type="submit" class="btn btn-primary mt-2 w-100">Cadastrar Evento</button>
         </form>
     </div>
 
@@ -117,9 +177,8 @@
                 cropperWrapBox.innerHTML = ''; // Limpa qualquer conteúdo anterior
                 cropperWrapBox.appendChild(image);
 
-                // Inicializa o Cropper
                 cropper = new Cropper(image, {
-                    aspectRatio: 1, // Proporção 1:1
+                    aspectRatio: 1,
                     viewMode: 1,
                     autoCropArea: 1,
                     responsive: true,
@@ -144,20 +203,12 @@
 
             const dataTimestamp = new Date(`${dataEvento}T${horaEvento}:00`).getTime();
 
-            // Obtém a imagem cortada
             const canvas = cropper.getCroppedCanvas();
             const croppedImage = canvas.toDataURL("image/png");
-
-            // Converte para Blob para upload
             const blob = await fetch(croppedImage).then(res => res.blob());
-
-            // Gerar um nome único usando timestamp
             const uniqueFileName = `fotoEvento_${new Date().getTime()}.png`;
 
-            // Agora, o caminho de armazenamento incluirá o nome único da imagem
             const storageRef = firebase.storage().ref(`${new Date().getFullYear()}/${cliente}/${uniqueFileName}`);
-
-            // Upload da imagem para o Firebase Storage
             const snapshot = await storageRef.put(blob);
             const downloadURL = await snapshot.ref.getDownloadURL();
 
@@ -168,31 +219,22 @@
 
                 const eventoData = {
                     data: dataTimestamp,
-                    foto: "https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffoto.png?alt=media&token=1633178c-a441-4c52-884c-26a7325c5107",
                     flyer: downloadURL,
-                    descricao: descricao,
-                    promocao: promocao,
-                    regra: regra,
-                    link: null,
-                    buttonTitle: buttonTitle,
-                    club: club,
-                    apelido: "Inova",
+                    descricao,
+                    promocao,
+                    regra,
+                    buttonTitle,
+                    club,
                     status: "Promoção",
-                    whats: "11999100893",
-                    promo: promocaoData
                 };
 
                 const eventosRef = firebase.database().ref(`${cliente}/eventos`);
-                const eventoRef = eventosRef.push();
-
-                eventoData.link = `https://lista.inovabar.com.br/?p=inovabar/eventos/${eventoRef.key}`;
-
-                eventoRef.set(eventoData)
-                    .then(function () {
+                eventosRef.push(eventoData)
+                    .then(() => {
                         alert("Evento cadastrado com sucesso!");
                         location.reload();
                     })
-                    .catch(function (error) {
+                    .catch(error => {
                         alert("Erro ao cadastrar evento: " + error.message);
                     });
             });
