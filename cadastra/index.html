@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Eventos</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #121212;
@@ -75,14 +75,12 @@
         .toggle-dark-mode {
             display: flex;
             align-items: center;
-            justify-content: space-between;
             gap: 0.5rem;
-            padding: 10px 0;
         }
 
         .toggle-dark-mode .form-check-input {
-            width: 3rem;
-            height: 1.5rem;
+            width: 2rem;
+            height: 1rem;
             appearance: none;
             background-color: #6c757d;
             border-radius: 1rem;
@@ -99,8 +97,8 @@
         .toggle-dark-mode .form-check-input::before {
             content: '';
             position: absolute;
-            width: 1.3rem;
-            height: 1.3rem;
+            width: 1rem;
+            height: 1rem;
             background-color: #ffffff;
             border-radius: 50%;
             top: 0;
@@ -110,16 +108,7 @@
         }
 
         .toggle-dark-mode .form-check-input:checked::before {
-            transform: translate(1.5rem, 0.1rem);
-        }
-
-        .form-group label {
-            font-size: 1rem;
-            font-weight: bold;
-        }
-
-        .form-label {
-            font-size: 1rem;
+            transform: translate(1rem, 0.1rem);
         }
     </style>
 </head>
@@ -127,12 +116,12 @@
     <div class="container">
         <h1 class="mt-4">Cadastro de Eventos</h1>
         <form id="eventoForm">
-            <div class="form-group mt-4">
-                <label for="dataEvento" class="form-label">Data do Evento</label>
+            <div class="input-field mt-4">
+                <label for="dataEvento" class="active">Data do Evento</label>
                 <input type="date" class="form-control" id="dataEvento" required>
             </div>
-            <div class="form-group">
-                <label for="horaEvento" class="form-label">Hora do Evento</label>
+            <div class="input-field">
+                <label for="horaEvento" class="active">Hora do Evento</label>
                 <input type="time" class="form-control" id="horaEvento" required>
             </div>
             <div id="cropperContainer" class="mt-4">
@@ -141,31 +130,35 @@
                     <i class="bi bi-camera-fill"></i>
                 </div>
             </div>
-            <div class="form-group mt-4">
-                <label for="descricao" class="form-label">Descrição</label>
-                <textarea class="form-control" id="descricao" rows="4"></textarea>
+            <div class="input-field mt-4">
+                <label for="descricao" class="active">Descrição</label>
+                <textarea class="form-control materialize-textarea" id="descricao" rows="4"></textarea>
             </div>
-            <div class="form-group">
-                <label for="promocao" class="form-label">Promoção</label>
+            <div class="input-field">
+                <label for="promocao" class="active">Promoção</label>
                 <input type="text" class="form-control" id="promocao">
             </div>
-            <div class="form-group">
-                <label for="regra" class="form-label">Regra</label>
+            <div class="input-field">
+                <label for="regra" class="active">Regra</label>
                 <input type="text" class="form-control" id="regra">
             </div>
-            <div class="form-group">
-                <label for="buttonTitle" class="form-label">Título do Botão</label>
-                <input type="text" class="form-control custom-placeholder" id="buttonTitle" placeholder="Lista Inova" value="Lista Inova">
+            <div class="input-field">
+                <label for="buttonTitle" class="active">Título do Botão</label>
+                <input type="text" class="form-control" id="buttonTitle" placeholder="Lista Inova" value="Lista Inova">
             </div>
-            <div class="form-group toggle-dark-mode">
-                <label for="clubCheckbox" class="form-check-label">Club de clientes</label>
-                <input type="checkbox" class="form-check-input" id="clubCheckbox">
+            <div class="switch toggle-dark-mode">
+                <label>
+                    Club de clientes
+                    <input type="checkbox" id="clubCheckbox">
+                    <span class="lever"></span>
+                </label>
             </div>
             <button type="submit" class="btn btn-primary mt-2">Cadastrar Evento</button>
         </form>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
