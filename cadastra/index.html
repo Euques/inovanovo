@@ -37,10 +37,15 @@
         .btn-primary {
             background-color: #1f6f8b;
             border: none;
+            position: relative;
         }
 
         .btn-primary:hover {
             background-color: #145374;
+        }
+
+        .btn-loading {
+            display: none;
         }
 
         .cropper-wrap-box {
@@ -76,6 +81,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            margin-top: 20px;
         }
 
         .toggle-dark-mode .form-check-input {
@@ -109,6 +115,25 @@
 
         .toggle-dark-mode .form-check-input:checked::before {
             transform: translate(1rem, 0.1rem);
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding: 10px;
+            text-align: center;
+            color: #bbb;
+        }
+
+        .footer a {
+            color: #bbb;
+        }
+
+        .footer a:hover {
+            color: #fff;
+        }
+
+        .container {
+            margin-bottom: 50px;
         }
     </style>
 </head>
@@ -153,9 +178,16 @@
                     <span class="lever"></span>
                 </label>
             </div>
-            <button type="submit" class="btn btn-primary mt-2">Cadastrar Evento</button>
+            <button type="submit" class="btn btn-primary mt-4" id="submitBtn">
+                Cadastrar Evento
+                <span id="loadingIcon" class="btn-loading spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </button>
         </form>
     </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Inovabar. Todos os direitos reservados. <a href="https://www.inovabar.com.br">www.inovabar.com.br</a></p>
+    </footer>
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -181,6 +213,8 @@
         const cliente = "inovabar";
         const eventoForm = document.getElementById("eventoForm");
         const fotoEventoInput = document.getElementById("fotoEvento");
+        const submitBtn = document.getElementById("submitBtn");
+        const loadingIcon = document.getElementById("loadingIcon");
         let cropper;
 
         fotoEventoInput.addEventListener("change", function (e) {
@@ -211,6 +245,8 @@
 
         eventoForm.addEventListener("submit", async function (e) {
             e.preventDefault();
+            submitBtn.disabled = true;
+            loadingIcon.style.display = "inline-block";
 
             const dataEvento = document.getElementById("dataEvento").value;
             const horaEvento = document.getElementById("horaEvento").value;
@@ -272,6 +308,10 @@
                     })
                     .catch(function (error) {
                         alert("Erro ao cadastrar evento: " + error.message);
+                    })
+                    .finally(function () {
+                        submitBtn.disabled = false;
+                        loadingIcon.style.display = "none";
                     });
             });
         });
