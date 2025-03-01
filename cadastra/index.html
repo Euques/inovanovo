@@ -229,6 +229,12 @@
 
             const dataTimestamp = new Date(`${dataEvento}T${horaEvento}:00`).getTime();
 
+            // Obtém a imagem cortada com tamanho fixo de 1000x1000 pixels
+    const canvas = cropper.getCroppedCanvas({
+        width: 1000,  // Largura fixa
+        height: 1000, // Altura fixa
+    });
+
             // Obtém a imagem cortada
             const canvas = cropper.getCroppedCanvas();
             const croppedImage = canvas.toDataURL("image/jpg");
