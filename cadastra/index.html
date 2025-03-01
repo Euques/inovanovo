@@ -229,23 +229,34 @@
 
             const dataTimestamp = new Date(`${dataEvento}T${horaEvento}:00`).getTime();
 
-            // Obtém a imagem cortada com tamanho fixo de 1000x1000 pixels
-    const canvas = cropper.getCroppedCanvas({
-        width: 1200,  // Largura fixa
-        height: 1200, // Altura fixa
-    });
+            // Obtém a imagem cortada com tamanho fixo de 1080x1080 pixels
+            const canvas = cropper.getCroppedCanvas({
+                width: 1080,
+                height: 1080,
+            });
 
-            // Obtém a imagem cortada
-            const canvas = cropper.getCroppedCanvas();
-            const croppedImage = canvas.toDataURL("image/jpg");
+            // Define uma qualidade inicial (0.1 a 1.0, onde 1.0 é máxima qualidade)
+            let quality = 0.7; // Começa com uma qualidade média
+            let croppedImage = canvas.toDataURL("image/jpeg", quality); // Use JPEG com qualidade ajustável
 
-            // Converte para Blob para upload
-            const blob = await fetch(croppedImage).then(res => res.blob());
+            // Converte para Blob e verifica o tamanho
+            let blob = await fetch(croppedImage).then((res) => res.blob());
+            let fileSizeKB = blob.size / 1024; // Tamanho em KB
+
+            // Ajusta a qualidade até que o tamanho esteja próximo de 170 KB
+            while (fileSizeKB > 170 && quality > 0.1) {
+                quality -= 0.05; // Reduz a qualidade gradualmente
+                croppedImage = canvas.toDataURL("image/jpeg", quality);
+                blob = await fetch(croppedImage).then((res) => res.blob());
+                fileSizeKB = blob.size / 1024;
+            }
+
+            console.log(`Tamanho final da imagem: ${fileSizeKB.toFixed(2)} KB`);
 
             // Gerar um nome único usando timestamp
-            const uniqueFileName = `fotoEvento_${new Date().getTime()}.png`;
+            const uniqueFileName = `fotoEvento_${new Date().getTime()}.jpg`; // Use .jpg para JPEG
 
-            // Agora, o caminho de armazenamento incluirá o nome único da imagem
+            // Caminho de armazenamento no Firebase
             const storageRef = firebase.storage().ref(`${new Date().getFullYear()}/${cliente}/${uniqueFileName}`);
 
             // Upload da imagem para o Firebase Storage
@@ -254,7 +265,7 @@
 
             const promoRef = firebase.database().ref(`${cliente}/promo`);
 
-            promoRef.once('value', (snapshot) => {
+            promoRef.once("value", (snapshot) => {
                 const promocaoData = snapshot.val();
 
                 const eventoData = {
@@ -270,7 +281,7 @@
                     apelido: "Inova",
                     status: "Promoção",
                     whats: "11999100893",
-                    promo: promocaoData
+                    promo: promocaoData,
                 };
 
                 const eventosRef = firebase.database().ref(`${cliente}/eventos`);
@@ -278,7 +289,8 @@
 
                 eventoData.link = `https://link.inovabar.com.br/?p=inovabar/eventos/${eventoRef.key}`;
 
-                eventoRef.set(eventoData)
+                eventoRef
+                    .set(eventoData)
                     .then(function () {
                         alert("Evento cadastrado com sucesso!");
                         location.reload();
