@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -128,7 +128,6 @@
             <div id="eventPreview" class="event-preview">
                 <h5>Pré-visualização do Evento</h5>
                 <p><strong>Apelido:</strong> <span id="previewApelido"></span></p>
-                <p><strong>Descrição:</strong> <span id="previewDescricao"></span></p>
                 <p><strong>Data:</strong> <span id="previewData"></span></p>
                 <div id="previewImageContainer">
                     <img id="previewFlyer" src="" alt="Flyer do evento" onload="this.style.display='block'" onerror="handleImageError()">
@@ -172,13 +171,13 @@
             return meses[new Date(data).getMonth()];
         }
 
-        // Função para formatar a data no novo estilo
-        function formatEventDisplay(data, descricao) {
+        // Função para formatar a data no estilo do dropdown
+        function formatEventDisplay(data, apelido) {
             var dia = new Date(data).getDate().toString().padStart(2, '0');
             var mes = getMesAbrev(data);
-            var hora = new Date(data).toLocaleTimeString('pt-BR', { hour: '2-digit' }).replace(':', 'H');
+            var hora = new Date(data).toLocaleTimeString('pt-BR', { hour: '2-digit' }) + 'H';
             var diaSemana = getDiaSemana(data);
-            return `${diaSemana} ${dia}.${mes} ${hora} ${descripcion || 'Sem descrição'}`; // Barra horizontal removida
+            return `${diaSemana} ${dia}.${mes} ${hora} ${apelido || 'Sem apelido'}`;
         }
 
         function populateEventDropdown() {
@@ -194,7 +193,7 @@
                     var evento = childSnapshot.val();
                     eventosData[eventId] = evento;
 
-                    var displayText = formatEventDisplay(evento.data, evento.descricao);
+                    var displayText = formatEventDisplay(evento.data, evento.apelido);
                     var item = document.createElement("div");
                     item.className = "dropdown-item";
                     item.setAttribute("data-event-id", eventId);
@@ -228,9 +227,9 @@
             if (selectedEventId && eventosData[selectedEventId]) {
                 var evento = eventosData[selectedEventId];
                 
-                document.getElementById("previewApelido").innerText = evento.apelido || 'N/A';
-                document.getElementById("previewDescricao").innerText = evento.descricao || 'N/A';
-                document.getElementById("previewData").innerText = new Date(evento.data).toLocaleString('pt-BR');
+                document.getElementById("previewApelido").innerText = formatEventDisplay(evento.data, evento.apelido);
+                document.getElementById("previewData").innerText = formatEventDisplay(evento.data, evento.apelido); // Usando o mesmo formato
+                // Removida a descrição da pré-visualização
                 
                 if (evento.flyer) {
                     previewFlyer.src = evento.flyer;
