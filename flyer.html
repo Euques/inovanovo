@@ -68,13 +68,6 @@
             transform: translate(-50%, -50%);
             z-index: 2;
         }
-        .bday-label {
-            font-size: 5vw; /* Responsivo */
-            font-weight: bold;
-            color: white;
-            text-transform: uppercase;
-            margin: 20px 0;
-        }
         #eventName {
             font-size: 4vw;
             font-weight: bold;
@@ -86,25 +79,20 @@
             font-size: 3.5vw;
             font-weight: bold;
             color: #ff00ff;
-            margin: 20px 0;
+            margin: 10px 0;
         }
         #eventDescription {
             font-size: 3vw;
             font-weight: bold;
-            margin: 20px 0;
+            margin: 10px 0;
         }
         #rules {
             font-size: 2.5vw;
-            margin: 20px 0;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
+            margin: 10px 0;
         }
         #address {
             font-size: 2vw;
             margin-top: 20px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.7);
         }
         #downloadBtn {
             margin-top: 10px;
@@ -121,7 +109,6 @@
             padding: 10px 20px;
         }
         @media (max-width: 768px) {
-            .bday-label { font-size: 8vw; }
             #eventName { font-size: 6vw; }
             #eventDate { font-size: 5vw; }
             #eventDescription { font-size: 4vw; }
@@ -141,7 +128,6 @@
             <div id="flyer-top"></div>
             <img id="profilePic" src="" alt="Foto do aniversariante">
             <div id="flyer-bottom">
-                <div class="bday-label">B-DAY</div>
                 <div id="eventName"></div>
                 <div id="eventDate"></div>
                 <div id="eventDescription"></div>
@@ -286,12 +272,11 @@
             flyerBottomClone.style.color = 'white';
             flyerBottomClone.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.8)';
             flyerBottomClone.innerHTML = `
-                <div style="font-size: 80px; font-weight: bold; text-transform: uppercase; margin: 20px 0;">B-DAY</div>
                 <div style="font-size: 60px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 20px 0;">${document.getElementById('eventName').textContent}</div>
-                <div style="font-size: 50px; font-weight: bold; color: #ff00ff; margin: 20px 0;">${document.getElementById('eventDate').textContent}</div>
-                <div style="font-size: 40px; font-weight: bold; margin: 20px 0;">${document.getElementById('eventDescription').textContent}</div>
-                <div style="font-size: 30px; margin: 20px 0; padding: 20px; background: rgba(0, 0, 0, 0.5); border-radius: 10px;">${document.getElementById('rules').textContent}</div>
-                <div style="font-size: 30px; margin-top: 20px; padding: 20px; background: rgba(0, 0, 0, 0.7);">${document.getElementById('address').textContent}</div>
+                <div style="font-size: 50px; font-weight: bold; color: #ff00ff; margin: 10px 0;">${document.getElementById('eventDate').textContent}</div>
+                <div style="font-size: 40px; font-weight: bold; margin: 10px 0;">${document.getElementById('eventDescription').textContent}</div>
+                <div style="font-size: 30px; margin: 10px 0;">${document.getElementById('rules').textContent}</div>
+                <div style="font-size: 30px; margin-top: 20px;">${document.getElementById('address').textContent}</div>
             `;
             
             // Monta o contêiner temporário
