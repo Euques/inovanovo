@@ -193,7 +193,7 @@
                     var evento = childSnapshot.val();
                     eventosData[eventId] = evento;
 
-                    var displayText = formatEventDisplay(evento.data, evento.apelido);
+                    var displayText = formatEventDisplay(evento.data, evento.apelido); // Usando apelido em vez de descrição
                     var item = document.createElement("div");
                     item.className = "dropdown-item";
                     item.setAttribute("data-event-id", eventId);
@@ -228,8 +228,7 @@
                 var evento = eventosData[selectedEventId];
                 
                 document.getElementById("previewApelido").innerText = formatEventDisplay(evento.data, evento.apelido);
-                document.getElementById("previewData").innerText = formatEventDisplay(evento.data, evento.apelido); // Usando o mesmo formato
-                // Removida a descrição da pré-visualização
+                document.getElementById("previewData").innerText = formatEventDisplay(evento.data, evento.apelido); // Mesmo formato para data
                 
                 if (evento.flyer) {
                     previewFlyer.src = evento.flyer;
