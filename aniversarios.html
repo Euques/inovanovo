@@ -30,14 +30,14 @@
             align-items: center;
             background-color: #1c1c1c;
             border-radius: 10px;
-            padding: 5px; /* Reduzido para 5px */
+            padding: 5px;
             overflow: hidden;
         }
         .event-item:hover {
             background-color: #2a2a2a;
         }
         .event-item img {
-            width: 100px; /* Foto maior */
+            width: 100px;
             height: 100px;
             object-fit: cover;
             border-radius: 5px;
@@ -47,15 +47,15 @@
             flex: 1;
         }
         .event-date {
-            font-size: 18px; /* Data em destaque */
+            font-size: 18px;
             font-weight: bold;
             margin-bottom: 5px;
             display: block;
         }
         .event-description {
-            font-size: 14px; /* Texto menor */
+            font-size: 14px;
             display: -webkit-box;
-            -webkit-line-clamp: 2; /* Limita a duas linhas */
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -87,6 +87,19 @@
 
         var cliente = "inovabar";
         var eventosData = {};
+        var whatsappNumber = null;
+
+        // Função para obter o número do WhatsApp do Firebase
+        function getWhatsAppNumber(callback) {
+            var configRef = firebase.database().ref(cliente + "/config/whatsapp");
+            configRef.once("value", function(snapshot) {
+                whatsappNumber = snapshot.val();
+                callback();
+            }, function(error) {
+                console.error("Erro ao buscar número do WhatsApp:", error);
+                callback();
+            });
+        }
 
         // Função para obter o dia da semana em formato abreviado
         function getDiaSemana(data) {
@@ -138,7 +151,20 @@
                             </div>
                         `;
                         item.onclick = function() {
-                            window.location.href = `https://adm.inovabar.com.br/corte.html?a=inovabar/eventos/${eventId}`;
+                            var defaultLink = `https://adm.inovabar.com.br/corte.html?a=inovabar/eventos/${eventId}`;
+                            var hasUid = /-[A-Za-z0-9]{10,}$/.test(defaultLink); // Verifica se o link termina com um UID
+
+                            if (hasUid) {
+                                window.location.href = defaultLink; // Link com UID, segue normalmente
+                            } else if (whatsappNumber) {
+                                // Formatar a mensagem do WhatsApp
+                                var mensagem = `Olá, gostaria de comemorar o meu aniversário ${formatted.date} - ${formatted.description}, obrigado.`;
+                                var encodedMessage = encodeURIComponent(mensagem);
+                                var whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
+                                window.location.href = whatsappLink;
+                            } else {
+                                alert("Número do WhatsApp não configurado. Por favor, entre em contato com o suporte.");
+                            }
                         };
                         eventList.appendChild(item);
                     }
@@ -146,8 +172,10 @@
             });
         }
 
-        // Inicializar a lista de eventos
-        populateEventList();
+        // Inicializar a lista de eventos após buscar o número do WhatsApp
+        getWhatsAppNumber(function() {
+            populateEventList();
+        });
     </script>
 </body>
 </html>
