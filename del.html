@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,6 +47,10 @@
             max-height: 200px;
             border-radius: 5px;
         }
+        .image-error {
+            color: #dc3545;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -64,7 +68,10 @@
                 <p><strong>Apelido:</strong> <span id="previewApelido"></span></p>
                 <p><strong>Descrição:</strong> <span id="previewDescricao"></span></p>
                 <p><strong>Data:</strong> <span id="previewData"></span></p>
-                <img id="previewFlyer" src="" alt="Flyer do evento">
+                <div id="previewImageContainer">
+                    <img id="previewFlyer" src="" alt="Flyer do evento" onload="this.style.display='block'" onerror="handleImageError()">
+                    <p id="imageError" class="image-error" style="display: none;">Não foi possível carregar a imagem do flyer.</p>
+                </div>
             </div>
             <button type="button" class="btn btn-danger" onclick="deleteEvent()">Excluir Evento</button>
         </form>
@@ -88,7 +95,13 @@
         firebase.initializeApp(firebaseConfig);
 
         var cliente = "inovabar";
-        var eventosData = {}; // Armazenar dados dos eventos localmente
+        var eventosData = {};
+
+        // Função para obter o dia da semana em formato abreviado
+        function getDiaSemana(data) {
+            var dias = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
+            return dias[new Date(data).getDay()];
+        }
 
         function populateEventDropdown() {
             var selectEvento = document.getElementById("selectEvento");
@@ -100,10 +113,11 @@
                 snapshot.forEach(function(childSnapshot) {
                     var eventId = childSnapshot.key;
                     var evento = childSnapshot.val();
-                    eventosData[eventId] = evento; // Armazenar dados
+                    eventosData[eventId] = evento;
                     
                     var dataEvento = new Date(evento.data).toLocaleString();
-                    var displayText = `${evento.apelido || 'Sem apelido'} - ${evento.descricao || 'Sem descrição'} (${dataEvento})`;
+                    var diaSemana = getDiaSemana(evento.data);
+                    var displayText = `${diaSemana} - ${evento.descricao || 'Sem descrição'} (${dataEvento})`;
                     
                     var option = document.createElement("option");
                     option.value = eventId;
@@ -116,19 +130,39 @@
         function showEventPreview() {
             var selectedEventId = document.getElementById("selectEvento").value;
             var previewDiv = document.getElementById("eventPreview");
-            
+            var previewFlyer = document.getElementById("previewFlyer");
+            var imageError = document.getElementById("imageError");
+
             if (selectedEventId && eventosData[selectedEventId]) {
                 var evento = eventosData[selectedEventId];
                 
                 document.getElementById("previewApelido").innerText = evento.apelido || 'N/A';
                 document.getElementById("previewDescricao").innerText = evento.descricao || 'N/A';
                 document.getElementById("previewData").innerText = new Date(evento.data).toLocaleString();
-                document.getElementById("previewFlyer").src = evento.flyer || '';
+                
+                if (evento.flyer) {
+                    previewFlyer.src = evento.flyer;
+                    previewFlyer.style.display = 'block';
+                    imageError.style.display = 'none';
+                } else {
+                    previewFlyer.style.display = 'none';
+                    imageError.innerText = "Nenhum flyer disponível para este evento.";
+                    imageError.style.display = 'block';
+                }
                 
                 previewDiv.style.display = 'block';
             } else {
                 previewDiv.style.display = 'none';
             }
+        }
+
+        function handleImageError() {
+            var previewFlyer = document.getElementById("previewFlyer");
+            var imageError = document.getElementById("imageError");
+            
+            previewFlyer.style.display = 'none';
+            imageError.innerText = "Não foi possível carregar a imagem do flyer.";
+            imageError.style.display = 'block';
         }
 
         function deleteEvent() {
