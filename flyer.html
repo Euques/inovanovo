@@ -58,7 +58,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding-top: 90px; /* Espaço para a foto não sobrepor */
+            padding-top: 90px;
         }
         #profilePic {
             width: 170px !important;
@@ -79,6 +79,13 @@
             text-transform: uppercase;
             margin: 5px 0;
         }
+        #eventDetails {
+            font-size: 14px;
+            font-weight: normal;
+            color: #fff;
+            margin: 5px 0;
+            line-height: 1.4;
+        }
         #eventDate {
             font-size: 32px;
             font-weight: bold;
@@ -90,11 +97,8 @@
             font-size: 14px;
             font-weight: normal;
             margin: 5px 0;
-            color: #ccc;
+            color: #fff; /* Alterado para branco */
             line-height: 1.4;
-        }
-        #rules {
-            display: none; /* Não será usado, já que a descrição está em eventDescription */
         }
         #address {
             font-size: 12px;
@@ -127,13 +131,16 @@
             #flyer-bottom {
                 height: auto;
                 padding: 15px;
-                padding-top: 90px; /* Mantém espaço para a foto */
+                padding-top: 90px;
             }
             #profilePic {
                 top: 50%;
             }
             #eventName {
                 font-size: 5vw;
+            }
+            #eventDetails {
+                font-size: 3.5vw;
             }
             #eventDate {
                 font-size: 8vw;
@@ -153,9 +160,9 @@
         <img id="profilePic" src="" alt="Foto do aniversariante">
         <div id="flyer-bottom">
             <div id="eventName"></div>
+            <div id="eventDetails"></div>
             <div id="eventDate"></div>
             <div id="eventDescription"></div>
-            <div id="rules"></div>
             <div id="address"></div>
         </div>
     </div>
@@ -196,6 +203,10 @@
 
         function formatDate(dateStr) {
             console.log('Data bruta do Firebase:', dateStr);
+            // Se a data não tiver hora, adiciona 19:00 por padrão
+            if (!dateStr.includes('T')) {
+                dateStr += 'T19:00:00';
+            }
             const date = new Date(dateStr);
             const options = { timeZone: 'America/Sao_Paulo' };
             const days = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
@@ -249,10 +260,10 @@
                             document.getElementById('flyer-top').style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/360x360'})`;
                             const profilePic = document.getElementById('profilePic');
                             profilePic.src = bdayData.foto || 'https://via.placeholder.com/170';
-                            document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome'; // Removido "B-DAY"
+                            document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
+                            document.getElementById('eventDetails').textContent = eventData.descricao || 'Grupo Com Prazer, SamBV e Dj Edu Pirata';
                             document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08T19:00:00');
-                            document.getElementById('eventDescription').textContent = bdayData.descricao || 'Com 20 pagantes, Nany ganha entrada VIP com acompanhante e R$100 de consumo para todos os shows de 2025 + 1 garrafa de (Red Label, ou Bombay, ou Smirnoff) + 1 Balde de Heineken com 6 long neck.';
-                            document.getElementById('rules').textContent = ''; // Não será usado
+                            document.getElementById('eventDescription').textContent = bdayData.regra || 'Com 20 pagantes, Nany ganha entrada VIP com acompanhante e R$100 de consumo para todos os Shows de 2025 + 1 garrafa de (Red Label, ou Bombay, ou Smirnoff) + 1 Balde de Heineken com 6 long neck.';
                             document.getElementById('address').textContent = eventData.endereco || 'Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP';
                             document.getElementById('flyer').style.display = 'block';
                             document.getElementById('downloadBtn').style.display = 'inline';
@@ -315,8 +326,9 @@
             flyerBottomClone.style.justifyContent = 'space-between';
             flyerBottomClone.innerHTML = `
                 <div style="font-size: 20px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
+                <div style="font-size: 14px; font-weight: normal; color: #fff; margin: 5px 0; line-height: 1.4;">${document.getElementById('eventDetails').textContent}</div>
                 <div style="font-size: 32px; font-weight: bold; color: #ff00ff; margin: 10px 0; line-height: 1;">${document.getElementById('eventDate').textContent}</div>
-                <div style="font-size: 14px; font-weight: normal; color: #ccc; margin: 5px 0; line-height: 1.4;">${document.getElementById('eventDescription').textContent}</div>
+                <div style="font-size: 14px; font-weight: normal; color: #fff; margin: 5px 0; line-height: 1.4;">${document.getElementById('eventDescription').textContent}</div>
                 <div style="font-size: 12px; color: #ccc; margin: 5px 0;">${document.getElementById('address').textContent}</div>
             `;
 
