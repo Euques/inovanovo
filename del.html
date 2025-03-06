@@ -61,6 +61,21 @@
         .dropdown-list.active {
             display: block;
         }
+        /* Personalizar a barra de rolagem */
+        .dropdown-list::-webkit-scrollbar {
+            width: 6px; /* Largura fina */
+        }
+        .dropdown-list::-webkit-scrollbar-track {
+            background: #222; /* Cor do fundo da barra */
+            border-radius: 10px; /* Cantos arredondados */
+        }
+        .dropdown-list::-webkit-scrollbar-thumb {
+            background: #666; /* Cor da barra */
+            border-radius: 10px; /* Cantos arredondados */
+        }
+        .dropdown-list::-webkit-scrollbar-thumb:hover {
+            background: #888; /* Cor ao passar o mouse */
+        }
         .dropdown-item {
             padding: 10px;
             cursor: pointer;
@@ -161,9 +176,9 @@
         function formatEventDisplay(data, descricao) {
             var dia = new Date(data).getDate().toString().padStart(2, '0');
             var mes = getMesAbrev(data);
-            var hora = new Date(data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }).replace(':', 'H');
+            var hora = new Date(data).toLocaleTimeString('pt-BR', { hour: '2-digit' }).replace(':', 'H');
             var diaSemana = getDiaSemana(data);
-            return `${diaSemana} ${dia}.${mes} ${hora} - ${descricao || 'Sem descrição'}`;
+            return `${diaSemana} ${dia}.${mes} ${hora} ${descricao || 'Sem descrição'}`; // Removido o "-"
         }
 
         function populateEventDropdown() {
@@ -182,6 +197,7 @@
                     var displayText = formatEventDisplay(evento.data, evento.descricao);
                     var item = document.createElement("div");
                     item.className = "dropdown-item";
+                    item.setAttribute("data-event-id", eventId);
                     item.onclick = function() { selectEvent(eventId); };
                     item.innerHTML = `<img src="${evento.flyer || ''}" onerror="this.style.display='none'" alt="Flyer" loading="lazy"> ${displayText}`;
                     dropdownList.appendChild(item);
@@ -196,7 +212,10 @@
 
         function selectEvent(eventId) {
             selectedEventId = eventId;
-            document.getElementById("dropdownButton").innerText = document.querySelector(`#dropdownList .dropdown-item:nth-child(${Object.keys(eventosData).indexOf(eventId) + 2})`).textContent.trim();
+            var selectedItem = Array.from(document.querySelectorAll(".dropdown-item")).find(item => item.getAttribute("data-event-id") === eventId);
+            if (selectedItem) {
+                document.getElementById("dropdownButton").innerText = selectedItem.textContent.trim();
+            }
             showEventPreview();
             toggleDropdown();
         }
@@ -247,7 +266,7 @@
                     .then(function() {
                         alert("Evento excluído com sucesso!");
                         selectedEventId = null;
-                        document.getElementById("dropdownButton").innerText = "Selecione um evento";
+                        document.getElementofId("dropdownButton").innerText = "Selecione um evento";
                         document.getElementById("eventPreview").style.display = 'none';
                     })
                     .catch(function(error) {
