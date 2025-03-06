@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escolha uma Data - Inovabar</title>
+    <title>Escolha uma Data para comemorar seu B-Day no Inovabar</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <meta name="robots" content="noindex">
     
@@ -138,16 +138,17 @@
                             </div>
                         `;
                         item.onclick = function() {
-                            var eventLink = evento.link || `https://adm.inovabar.com.br/corte.html?a=inovabar/eventos/${eventId}`;
-                            var hasUid = eventLink.includes(eventId); // Verifica se o link contém o eventId no final
+                            var defaultLink = `https://adm.inovabar.com.br/corte.html?a=inovabar/eventos/${eventId}`;
+                            var eventLink = evento.link || defaultLink; // Usar o link do evento se existir, senão o padrão
+                            var hasUid = eventLink.endsWith(eventId); // Verifica se o link termina com o eventId
 
                             if (hasUid) {
                                 window.location.href = eventLink; // Link com UID, segue normalmente
                             } else {
                                 var whatsappNumber = evento.whats ? `55${evento.whats}` : null;
                                 if (whatsappNumber) {
-                                    // Formatar a mensagem do WhatsApp baseada no exemplo
-                                    var mensagem = `😃 oi, gostaria de saber mais sobre a lista de Promoção (Inova) para a festa de ${formatted.date} no Inova Bar, obrigado.`;
+                                    // Personalizar a mensagem do WhatsApp
+                                    var mensagem = `😃 oi, gostaria de comemorar meu aniversário ${formatted.date} - (${formatted.description}) ai no Inova Bar, obrigado.`;
                                     var encodedMessage = encodeURIComponent(mensagem);
                                     var whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
                                     window.location.href = whatsappLink;
