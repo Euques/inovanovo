@@ -111,10 +111,7 @@
             display: none;
         }
         .event-preview p {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap; /* Garante que o texto fique em uma linha */
-            margin: 0;
+            margin: 0; /* Remover margem padrão */
         }
         .event-preview img {
             max-width: 100%;
@@ -132,7 +129,7 @@
         <h1 class="mt-4">Excluir Eventos</h1>
         <form id="eventoForm">
             <div class="form-group">
-                <label for="selectEvento" class="form-label">Escolha um evento para excluir:</label>
+                <label for="selectEvento" class="form-label" id="eventCountLabel">Escolha um evento para excluir: (0)</label>
                 <div class="custom-dropdown">
                     <div class="dropdown-button" onclick="toggleDropdown()" id="dropdownButton">Selecione um evento</div>
                     <div class="dropdown-list" id="dropdownList"></div>
@@ -194,13 +191,16 @@
 
         function populateEventDropdown() {
             var dropdownList = document.getElementById("dropdownList");
+            var eventCountLabel = document.getElementById("eventCountLabel");
             var eventosRef = firebase.database().ref(cliente + "/eventos");
 
             eventosRef.on("value", function(snapshot) {
                 dropdownList.innerHTML = '';
                 eventosData = {};
 
+                var eventCount = 0;
                 snapshot.forEach(function(childSnapshot) {
+                    eventCount++;
                     var eventId = childSnapshot.key;
                     var evento = childSnapshot.val();
                     eventosData[eventId] = evento;
@@ -213,6 +213,9 @@
                     item.innerHTML = `<img src="${evento.flyer || ''}" onerror="this.style.display='none'" alt="Flyer" loading="lazy"> ${displayText}`;
                     dropdownList.appendChild(item);
                 });
+
+                // Atualizar o texto do label com a contagem de eventos
+                eventCountLabel.innerText = `Escolha um evento para excluir: (${eventCount})`;
             });
         }
 
