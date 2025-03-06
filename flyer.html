@@ -26,9 +26,9 @@
         }
         #flyer {
             width: 100%;
-            max-width: 360px; /* Largura máxima em mobile e desktop */
-            height: 740px; /* Altura fixa para o flyer */
-            margin: 0 auto; /* Centraliza */
+            max-width: 360px;
+            height: 740px;
+            margin: 0 auto;
             position: relative;
             display: none;
             overflow: hidden;
@@ -37,7 +37,7 @@
         #flyer-top {
             position: relative;
             width: 100%;
-            height: 360px; /* Metade da altura total (1:1 para o topo) */
+            height: 360px;
             background-size: cover;
             background-position: center;
         }
@@ -54,57 +54,60 @@
             background-color: #000;
             padding: 10px;
             text-align: center;
-            height: 380px; /* Restante da altura (740 - 360) */
+            height: 380px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
         #profilePic {
-            width: 120px !important;
-            height: 120px !important;
+            width: 170px !important;
+            height: 170px !important;
             border-radius: 50%;
             border: 3px solid #ffffff7d;
             position: absolute;
-            top: 180px; /* Centralizado na transição entre topo e fundo */
+            top: 180px;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 2;
             object-fit: cover !important;
         }
         #eventName {
-            font-size: 6vw;
+            font-size: 24px; /* Tamanho fixo para consistência */
             font-weight: bold;
             color: #ff00ff;
             text-transform: uppercase;
             margin: 5px 0;
         }
-        #eventDescription {
-            font-size: 4vw;
-            font-weight: bold;
-            margin: 5px 0;
-        }
         #eventDate {
-            font-size: 5vw;
+            font-size: 48px; /* Maior para destacar como na imagem */
             font-weight: bold;
             color: #ff00ff;
-            margin: 2px 0;
+            margin: 10px 0;
+            line-height: 1;
+        }
+        #eventDescription {
+            font-size: 18px; /* Ajustado para legibilidade */
+            font-weight: bold;
+            margin: 5px 0;
+            color: #ccc; /* Cinza como na imagem */
         }
         #rules {
-            font-size: 2.5vw;
+            font-size: 14px;
             color: #707070;
             margin: 5px 0;
             line-height: 1.5;
         }
         #address {
-            font-size: 2.7vw;
+            font-size: 14px;
             margin: 5px 0;
+            display: none; /* Opcional: remover endereço se não for usado */
         }
         .button-group {
             text-align: center;
             padding: 10px 0;
             background-color: #000;
             width: 100%;
-            max-width: 360px; /* Alinha com o flyer */
+            max-width: 360px;
             margin: 0 auto;
         }
         .button-group button {
@@ -113,21 +116,29 @@
             padding: 8px 16px;
         }
 
-        /* Responsividade para telas menores que 360px (mobile) */
         @media (max-width: 360px) {
             #flyer {
-                max-width: 100%; /* Ocupa toda a largura em telas menores */
-                height: auto; /* Altura se ajusta ao conteúdo */
+                max-width: 100%;
+                height: auto;
             }
             #flyer-top {
                 height: 0;
-                padding-top: 100%; /* Volta a proporção 1:1 relativa */
+                padding-top: 100%;
             }
             #flyer-bottom {
-                height: auto; /* Ajusta ao conteúdo */
+                height: auto;
             }
             #profilePic {
-                top: 50%; /* Ajusta posição relativa */
+                top: 50%;
+            }
+            #eventDate {
+                font-size: 12vw; /* Responsivo em mobile */
+            }
+            #eventName {
+                font-size: 6vw;
+            }
+            #eventDescription {
+                font-size: 4vw;
             }
         }
     </style>
@@ -138,8 +149,8 @@
         <img id="profilePic" src="" alt="Foto do aniversariante">
         <div id="flyer-bottom">
             <div id="eventName"></div>
-            <div id="eventDescription"></div>
             <div id="eventDate"></div>
+            <div id="eventDescription"></div>
             <div id="rules"></div>
             <div id="address">Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP</div>
         </div>
@@ -228,16 +239,17 @@
                     if (eventData && bdayData) {
                         const imagesToPreload = [
                             eventData.flyer || 'https://via.placeholder.com/360x360',
-                            bdayData.foto || 'https://via.placeholder.com/120'
+                            bdayData.foto || 'https://via.placeholder.com/170'
                         ];
                         preloadImages(imagesToPreload, () => {
                             document.getElementById('flyer-top').style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/360x360'})`;
                             const profilePic = document.getElementById('profilePic');
-                            profilePic.src = bdayData.foto || 'https://via.placeholder.com/120';
+                            profilePic.src = bdayData.foto || 'https://via.placeholder.com/170';
                             document.getElementById('eventName').textContent = `B-DAY ${bdayData.apelido || bdayData.promocao || 'Sem nome'}`;
                             document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08T19:00:00');
-                            document.getElementById('eventDescription').textContent = eventData.descricao || 'Não informadas';
-                            document.getElementById('rules').textContent = bdayData.regra || 'Sem regras especiais';
+                            document.getElementById('eventDescription').textContent = bdayData.descricao || 'Com 20'; // Ajustado para "Com 20" como na imagem
+                            document.getElementById('rules').textContent = bdayData.regra || '';
+                            document.getElementById('address').textContent = eventData.endereco || 'Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP';
                             document.getElementById('flyer').style.display = 'block';
                             document.getElementById('downloadBtn').style.display = 'inline';
                         });
@@ -274,8 +286,8 @@
 
             const profilePicClone = document.createElement('img');
             profilePicClone.src = document.getElementById('profilePic').src;
-            profilePicClone.style.width = '120px';
-            profilePicClone.style.height = '120px';
+            profilePicClone.style.width = '170px';
+            profilePicClone.style.height = '170px';
             profilePicClone.style.borderRadius = '50%';
             profilePicClone.style.border = '3px solid #ffffff7d';
             profilePicClone.style.position = 'absolute';
@@ -295,10 +307,10 @@
             flyerBottomClone.style.color = 'white';
             flyerBottomClone.innerHTML = `
                 <div style="font-size: 22px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
-                <div style="font-size: 16px; font-weight: bold; margin: 5px 0;">${document.getElementById('eventDescription').textContent}</div>
-                <div style="font-size: 18px; font-weight: bold; color: #ff00ff; margin: 2px 0;">${document.getElementById('eventDate').textContent}</div>
-                <div style="font-size: 12px; color: #ccc; margin: 5px 0; line-height: 1.5;">${document.getElementById('rules').textContent}</div>
-                <div style="font-size: 12px; margin: 5px 0;">${document.getElementById('address').textContent}</div>
+                <div style="font-size: 48px; font-weight: bold; color: #ff00ff; margin: 10px 0; line-height: 1;">${document.getElementById('eventDate').textContent}</div>
+                <div style="font-size: 18px; font-weight: bold; color: #ccc; margin: 5px 0;">${document.getElementById('eventDescription').textContent}</div>
+                <div style="font-size: 14px; color: #707070; margin: 5px 0; line-height: 1.5;">${document.getElementById('rules').textContent}</div>
+                <div style="font-size: 14px; margin: 5px 0;">${document.getElementById('address').textContent}</div>
             `;
 
             tempContainer.appendChild(flyerTopClone);
