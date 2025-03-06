@@ -18,6 +18,8 @@
         body {
             background-color: rgb(0, 0, 0);
             color: aliceblue;
+            margin: 0;
+            padding: 0;
         }
         .container {
             max-width: 800px;
@@ -27,96 +29,151 @@
             border-radius: 20px;
         }
         #flyer {
-            width: 400px;
-            height: 600px;
+            width: 1080px;
+            height: 1920px;
             background-size: cover;
-            background-position: center;
+            background-position: top;
             position: relative;
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             display: none;
             border-radius: 10px;
             overflow: hidden;
+            margin: 0 auto;
         }
         #flyer-content {
             position: relative;
             z-index: 2;
-            text-align: center;
-            padding: 20px;
             height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        #flyer-top {
+            height: 60%; /* Parte superior com o flyer */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        #flyer-bottom {
+            height: 40%; /* Parte inferior com informações */
+            background-color: #000;
+            padding: 20px;
+            text-align: center;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
         #profilePic {
-            width: 100px;
-            height: 100px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
             margin: 20px auto;
             display: block;
             border: 3px solid white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         .bday-label {
-            font-size: 40px;
+            font-size: 80px;
             font-weight: bold;
             color: white;
             text-transform: uppercase;
-            margin: 10px 0;
+            margin: 20px 0;
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
         }
         #eventName {
-            font-size: 24px;
+            font-size: 60px;
             font-weight: bold;
             color: #ff00ff;
             text-transform: uppercase;
-            margin: 10px 0;
+            margin: 20px 0;
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
         }
         #eventDate {
-            font-size: 20px;
+            font-size: 50px;
             font-weight: bold;
             color: #ff00ff;
-            margin: 10px 0;
+            margin: 20px 0;
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
         }
         #eventDescription {
-            font-size: 18px;
+            font-size: 40px;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 20px 0;
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            text-align: center;
         }
         #rules {
-            font-size: 14px;
-            margin: 10px 0;
-            padding: 10px;
+            font-size: 30px;
+            margin: 20px 0;
+            padding: 20px;
             background: rgba(0, 0, 0, 0.5);
-            border-radius: 5px;
+            border-radius: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
         }
         #address {
-            font-size: 12px;
+            font-size: 30px;
             margin-top: auto;
-            padding: 10px;
+            padding: 20px;
             background: rgba(0, 0, 0, 0.7);
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
         }
         #downloadBtn {
             margin-top: 10px;
             display: none;
         }
+        .button-group {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+        }
+        .button-group button {
+            margin: 0 10px;
+            font-size: 20px;
+            padding: 10px 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container text-center">
-        <h1>Flyer de Aniversariante</h1>
-        <button onclick="loadFlyer()">Carregar Flyer</button>
-        <button onclick="downloadFlyer()" id="downloadBtn">Baixar Flyer</button>
-        
+        <div class="button-group">
+            <button class="btn btn-primary" onclick="loadFlyer()">Carregar Flyer</button>
+            <button class="btn btn-success" onclick="downloadFlyer()" id="downloadBtn">Baixar Flyer</button>
+        </div>
         <div id="flyer">
-            <div id="flyer-content">
-                <div>
-                    <div class="bday-label">B-DAY</div>
-                    <img id="profilePic" src="" alt="Foto do aniversariante">
-                    <div id="eventName"></div>
-                    <div id="eventDate"></div>
-                    <div id="eventDescription"></div>
-                    <div id="rules"></div>
-                </div>
-                <div id="address">Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP</div>
+            <div id="flyer-top"></div>
+            <div id="flyer-bottom">
+                <div id="profilePic" src="" alt="Foto do aniversariante"></div>
+                <div class="bday-label">B-DAY</div>
+                <div id="eventName"></div>
+                <div id="eventDate"></div>
+                <div id="eventDescription"></div>
+                <div id="rules"></div>
+                <div id="address">Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP<br>STA VIP NOITE TODA COM NOME NA LISTA</div>
             </div>
         </div>
     </div>
@@ -164,7 +221,7 @@
             const dayOfWeek = days[date.getDay()];
             const day = date.getDate();
             const month = months[date.getMonth()];
-            return `${dayOfWeek} ${day}. ${month} 13H`; // Horário fixo como no exemplo
+            return `SEX ${day}. ${month} 13H`; // Ajustado para "SEX" como na imagem
         }
 
         function loadFlyer() {
@@ -183,11 +240,13 @@
                 bdayRef.once('value', (bdaySnapshot) => {
                     const bdayData = bdaySnapshot.val();
                     if (eventData && bdayData) {
-                        // Foto do flyer como fundo
-                        document.getElementById('flyer').style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/400x600'})`;
+                        // Foto do flyer como fundo na parte superior
+                        const flyerTop = document.getElementById('flyer-top');
+                        flyerTop.style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/1080x1152'})`;
                         
                         // Foto do aniversariante
-                        document.getElementById('profilePic').src = bdayData.foto || 'https://via.placeholder.com/100';
+                        const profilePic = document.getElementById('profilePic');
+                        profilePic.src = bdayData.foto || 'https://via.placeholder.com/150';
                         
                         // Preenche os dados
                         document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
@@ -195,7 +254,7 @@
                         document.getElementById('eventDescription').textContent = eventData.descricao || 'Não informadas';
                         document.getElementById('rules').textContent = bdayData.regra || 'Sem regras especiais';
                         
-                        // Mostra o flyer e o botão de download
+                        // Mostra o flyer
                         document.getElementById('flyer').style.display = 'block';
                         document.getElementById('downloadBtn').style.display = 'inline';
                     } else {
@@ -210,14 +269,19 @@
 
         function downloadFlyer() {
             const flyer = document.getElementById('flyer');
-            
-            html2canvas(flyer, { useCORS: true }).then(canvas => {
-                const image = canvas.toDataURL('image/png');
-                const link = document.createElement('a');
-                link.download = `${document.getElementById('eventName').textContent}-flyer.png`;
-                link.href = image;
-                link.click();
-            });
+            // Aguarda o carregamento das imagens
+            setTimeout(() => {
+                html2canvas(flyer, { useCORS: true, scale: 2 }).then(canvas => {
+                    const image = canvas.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.download = `${document.getElementById('eventName').textContent}-flyer.png`;
+                    link.href = image;
+                    link.click();
+                }).catch(error => {
+                    console.error('Erro ao gerar a imagem:', error);
+                    alert('Erro ao gerar o flyer para download.');
+                });
+            }, 1000); // Atraso de 1 segundo para garantir que as imagens carreguem
         }
 
         // Carrega automaticamente ao abrir a página
