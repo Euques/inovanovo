@@ -64,7 +64,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 2;
-            object-fit: cover; /* Garante que a imagem se ajuste sem distorção */
+            object-fit: cover !important; /* Garante ajuste sem distorção */
         }
         #eventName {
             font-size: 4vw;
@@ -180,7 +180,7 @@
             return `${dayOfWeek} ${day}. ${month} 13H`;
         }
 
-        // Função para pré-carregar imagens
+        // Função para pré-carregar imagens com depuração
         function preloadImages(urls, callback) {
             let loadedCount = 0;
             const totalImages = urls.length;
@@ -189,13 +189,14 @@
             urls.forEach((url, index) => {
                 images[index] = new Image();
                 images[index].onload = () => {
+                    console.log(`Imagem carregada com sucesso: ${url}`);
                     loadedCount++;
                     if (loadedCount === totalImages) {
                         callback();
                     }
                 };
                 images[index].onerror = (error) => {
-                    console.error('Erro ao carregar imagem:', url, error);
+                    console.error(`Erro ao carregar imagem ${url}:`, error);
                     loadedCount++;
                     if (loadedCount === totalImages) {
                         callback();
@@ -328,7 +329,8 @@
                     useCORS: true, 
                     scale: 2,
                     allowTaint: false,
-                    logging: true
+                    logging: true,
+                    backgroundColor: null // Evita fundo preto se a imagem falhar
                 }).then(canvas => {
                     const image = canvas.toDataURL('image/png');
                     const link = document.createElement('a');
@@ -338,10 +340,10 @@
                     document.body.removeChild(tempContainer);
                 }).catch(error => {
                     console.error('Erro ao gerar a imagem:', error);
-                    alert('Erro ao gerar o flyer para download. Certifique-se de que o CORS está configurado no Firebase Storage.');
+                    alert('Erro ao gerar o flyer para download. Certifique-se de que o CORS está configurado no Firebase Storage e que as URLs das imagens são válidas.');
                     document.body.removeChild(tempContainer);
                 });
-            }, 3000);
+            }, 4000); // Aumentado para 4 segundos para garantir carregamento
         }
 
         // Carrega automaticamente ao abrir a página
