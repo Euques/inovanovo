@@ -127,7 +127,7 @@
             </div>
             <div id="eventPreview" class="event-preview">
                 <h5>Pré-visualização do Evento</h5>
-                <p><strong>Evento:</strong> <span id="previewApelido"></span></p> <!-- Removida a linha de Data -->
+                <p><strong>Evento:</strong> <span id="previewApelido"></span></p>
                 <div id="previewImageContainer">
                     <img id="previewFlyer" src="" alt="Flyer do evento" onload="this.style.display='block'" onerror="handleImageError()">
                     <p id="imageError" class="image-error" style="display: none;">Não foi possível carregar a imagem do flyer.</p>
@@ -170,13 +170,13 @@
             return meses[new Date(data).getMonth()];
         }
 
-        // Função para formatar a data no estilo do dropdown
-        function formatEventDisplay(data, apelido) {
+        // Função para formatar a data e descrição no estilo desejado
+        function formatEventDisplay(data, descricao) {
             var dia = new Date(data).getDate().toString().padStart(2, '0');
             var mes = getMesAbrev(data);
             var hora = new Date(data).toLocaleTimeString('pt-BR', { hour: '2-digit' }) + 'H';
             var diaSemana = getDiaSemana(data);
-            return `${diaSemana} ${dia}.${mes} ${hora} ${apelido || 'Sem apelido'}`;
+            return `${diaSemana} ${dia}.${mes} ${hora} - ${descricao || 'Sem descrição'}`;
         }
 
         function populateEventDropdown() {
@@ -192,7 +192,7 @@
                     var evento = childSnapshot.val();
                     eventosData[eventId] = evento;
 
-                    var displayText = formatEventDisplay(evento.data, evento.apelido);
+                    var displayText = formatEventDisplay(evento.data, evento.descricao); // Usando descrição
                     var item = document.createElement("div");
                     item.className = "dropdown-item";
                     item.setAttribute("data-event-id", eventId);
@@ -226,7 +226,7 @@
             if (selectedEventId && eventosData[selectedEventId]) {
                 var evento = eventosData[selectedEventId];
                 
-                document.getElementById("previewApelido").innerText = formatEventDisplay(evento.data, evento.apelido);
+                document.getElementById("previewApelido").innerText = formatEventDisplay(evento.data, evento.descricao); // Usando descrição
                 
                 if (evento.flyer) {
                     previewFlyer.src = evento.flyer;
