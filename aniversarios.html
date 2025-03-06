@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escolha uma Data para comemorar seu B-Day no Inovabar</title>
+    <title>Escolha uma Data - Inovabar</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <meta name="robots" content="noindex">
     
@@ -64,7 +64,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-4">Escolha uma Data</h1>
+        <h2 class="mt-4">Em qual festa gostaria de comemorar seu B-Day no Inova Bar?</h2>
         <ul class="event-list" id="eventList"></ul>
     </div>
 
@@ -138,16 +138,16 @@
                             </div>
                         `;
                         item.onclick = function() {
-                            var defaultLink = `https://adm.inovabar.com.br/corte.html?a=inovabar/eventos/${eventId}`;
-                            var eventLink = evento.link || defaultLink; // Usar o link do evento se existir, senão o padrão
+                            var eventLink = evento.link || '';
                             var hasUid = eventLink.endsWith(eventId); // Verifica se o link termina com o eventId
 
                             if (hasUid) {
-                                window.location.href = eventLink; // Link com UID, segue normalmente
+                                // Sempre redireciona para o link de cadastro de aniversariantes, independentemente do evento.link
+                                window.location.href = `https://adm.inovabar.com.br/corte.html?a=inovabar/eventos/${eventId}`;
                             } else {
                                 var whatsappNumber = evento.whats ? `55${evento.whats}` : null;
                                 if (whatsappNumber) {
-                                    // Personalizar a mensagem do WhatsApp
+                                    // Mensagem do WhatsApp personalizada
                                     var mensagem = `😃 oi, gostaria de comemorar meu aniversário ${formatted.date} - (${formatted.description}) ai no Inova Bar, obrigado.`;
                                     var encodedMessage = encodeURIComponent(mensagem);
                                     var whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
