@@ -148,7 +148,7 @@
                                 var whatsappNumber = evento.whats ? `55${evento.whats}` : null;
                                 if (whatsappNumber) {
                                     // Mensagem do WhatsApp personalizada
-                                    var mensagem = `😃 oi, gostaria de comemorar meu aniversário ${formatted.date} - (${formatted.description}) ai no Inova Bar, obrigado.`;
+                                    var mensagem = `😃 oi, gostaria de comemorar meu aniversário ${formatted.date} - ${formatted.description}, ai no Inova Bar, obrigado.`;
                                     var encodedMessage = encodeURIComponent(mensagem);
                                     var whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
                                     window.location.href = whatsappLink;
