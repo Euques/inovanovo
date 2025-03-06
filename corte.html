@@ -131,13 +131,18 @@
 
         /* Estilo da pré-visualização da festa */
         .event-preview {
-            background-color: #1c1c1c;
+            background-color: #000000; /* Fundo preto */
+            border: 1px solid #ffffff; /* Contorno branco */
             border-radius: 20px;
             padding: 10px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             overflow: hidden;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20px;
         }
 
         .event-preview img {
@@ -178,8 +183,8 @@
 </head>
 
 <body>
+    <div id="eventPreview"></div> <!-- Pré-visualização fora do container principal -->
     <div class="container text-center">
-        <div id="eventPreview"></div> <!-- Container para a pré-visualização -->
         <h1 id="mApelido" class="display-4">Escolha uma foto</h1>
 
         <label class="label" data-toggle="tooltip" title="" data-original-title="Escolha sua foto">
