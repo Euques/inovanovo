@@ -21,13 +21,6 @@
             margin: 0;
             padding: 0;
         }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            border: 1px solid rgb(43, 43, 43);
-            border-radius: 20px;
-        }
         #flyer {
             width: 100%;
             max-width: 1080px;
@@ -54,7 +47,7 @@
         }
         #flyer-bottom {
             background-color: #000;
-            padding: 20px;
+            padding: 10px; /* Reduzido para subir o conteúdo */
             text-align: center;
         }
         #profilePic {
@@ -63,7 +56,7 @@
             border-radius: 50%;
             border: 3px solid #ffffff7d;
             position: absolute;
-            top: 40%;
+            top: 35%; /* Ajustado para subir a foto e o conteúdo */
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 2;
@@ -88,12 +81,12 @@
         }
         #rules {
             font-size: 2vw;
-            color: #707070; /* Cinza escuro */
+            color: #707070;
             margin: 10px 0;
             line-height: 1.5;
         }
         #address {
-            font-size: 2vw;
+            font-size: 2.2vw; /* Um pouco maior que #rules */
             margin-top: 10px;
         }
         #downloadBtn {
@@ -101,9 +94,8 @@
             display: none;
         }
         .button-group {
-            position: relative;
             text-align: center;
-            margin-bottom: 20px;
+            margin-top: 20px;
         }
         .button-group button {
             margin: 0 10px;
@@ -115,28 +107,26 @@
             #eventDescription { font-size: 4vw; }
             #eventDate { font-size: 5vw; }
             #rules { font-size: 2.5vw; }
-            #address { font-size: 2.5vw; }
+            #address { font-size: 2.7vw; }
             #profilePic { width: 120px; height: 120px; }
         }
     </style>
 </head>
 <body>
-    <div class="container text-center">
-        <div class="button-group">
-            <button class="btn btn-primary" onclick="loadFlyer()">Carregar Flyer</button>
-            <button class="btn btn-success" onclick="downloadFlyer()" id="downloadBtn">Baixar Flyer</button>
+    <div id="flyer">
+        <div id="flyer-top"></div>
+        <img id="profilePic" src="" alt="Foto do aniversariante">
+        <div id="flyer-bottom">
+            <div id="eventName"></div>
+            <div id="eventDescription"></div>
+            <div id="eventDate"></div>
+            <div id="rules"></div>
+            <div id="address">Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP</div>
         </div>
-        <div id="flyer">
-            <div id="flyer-top"></div>
-            <img id="profilePic" src="" alt="Foto do aniversariante">
-            <div id="flyer-bottom">
-                <div id="eventName"></div>
-                <div id="eventDescription"></div>
-                <div id="eventDate"></div>
-                <div id="rules"></div>
-                <div id="address">Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP</div>
-            </div>
-        </div>
+    </div>
+    <div class="button-group">
+        <button class="btn btn-primary" onclick="loadFlyer()">Carregar Flyer</button>
+        <button class="btn btn-success" onclick="downloadFlyer()" id="downloadBtn">Baixar Flyer</button>
     </div>
 
     <!-- Firebase SDK (versão 8.10.0 como no seu exemplo) -->
@@ -303,7 +293,7 @@
             flyerBottomClone.style.width = '1080px';
             flyerBottomClone.style.height = '840px';
             flyerBottomClone.style.backgroundColor = '#000';
-            flyerBottomClone.style.padding = '20px';
+            flyerBottomClone.style.padding = '10px';
             flyerBottomClone.style.textAlign = 'center';
             flyerBottomClone.style.color = 'white';
             flyerBottomClone.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.8)';
@@ -341,7 +331,7 @@
                     alert('Erro ao gerar o flyer para download. Pode ser um problema de CORS. Verifique as configurações do Firebase Storage ou entre em contato com o suporte.');
                     document.body.removeChild(tempContainer);
                 });
-            }, 3000); // Aumentado para 3 segundos
+            }, 3000); // Mantido em 3 segundos
         }
 
         // Carrega automaticamente ao abrir a página
