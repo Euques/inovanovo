@@ -2,14 +2,30 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Comemore seu aniversário conosco">
+    <meta property="og:title" content="B-Day Inova Bar">
+    <meta property="og:description" content="Comemore seu aniversário conosco">
+    <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Fbday.png?alt=media&token=488b45f5-3478-496a-bc83-71e15111a36c">
     <title>Flyer de Aniversariante</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.css" rel="stylesheet" />
     <style>
+        body {
+            background-color: rgb(0, 0, 0);
+            color: aliceblue;
+        }
         .container {
             max-width: 800px;
             margin: 20px auto;
-            font-family: Arial, sans-serif;
+            padding: 20px;
+            border: 1px solid rgb(43, 43, 43);
+            border-radius: 20px;
         }
-        
         #flyer {
             width: 400px;
             height: 600px;
@@ -22,7 +38,6 @@
             border-radius: 10px;
             overflow: hidden;
         }
-        
         #flyer-content {
             position: relative;
             z-index: 2;
@@ -33,7 +48,6 @@
             flex-direction: column;
             justify-content: space-between;
         }
-        
         #profilePic {
             width: 100px;
             height: 100px;
@@ -42,7 +56,6 @@
             display: block;
             border: 3px solid white;
         }
-        
         .bday-label {
             font-size: 40px;
             font-weight: bold;
@@ -50,7 +63,6 @@
             text-transform: uppercase;
             margin: 10px 0;
         }
-        
         #eventName {
             font-size: 24px;
             font-weight: bold;
@@ -58,20 +70,17 @@
             text-transform: uppercase;
             margin: 10px 0;
         }
-        
         #eventDate {
             font-size: 20px;
             font-weight: bold;
             color: #ff00ff;
             margin: 10px 0;
         }
-        
         #eventDescription {
             font-size: 18px;
             font-weight: bold;
             margin: 10px 0;
         }
-        
         #rules {
             font-size: 14px;
             margin: 10px 0;
@@ -79,14 +88,12 @@
             background: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
         }
-        
         #address {
             font-size: 12px;
             margin-top: auto;
             padding: 10px;
             background: rgba(0, 0, 0, 0.7);
         }
-        
         #downloadBtn {
             margin-top: 10px;
             display: none;
@@ -94,7 +101,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container text-center">
         <h1>Flyer de Aniversariante</h1>
         <button onclick="loadFlyer()">Carregar Flyer</button>
         <button onclick="downloadFlyer()" id="downloadBtn">Baixar Flyer</button>
@@ -114,20 +121,27 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <!-- Firebase SDK (versão 8.10.0 como no seu exemplo) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap@4/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
+
     <script>
-        // Configuração do Firebase (substitua pelos seus dados reais)
-        const firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "SEU_AUTH_DOMAIN",
-            databaseURL: "SUA_DATABASE_URL",
-            projectId: "SEU_PROJECT_ID",
-            storageBucket: "SEU_STORAGE_BUCKET",
-            messagingSenderId: "SEU_SENDER_ID",
-            appId: "SEU_APP_ID"
+        // Configuração do Firebase (usando suas credenciais)
+        var firebaseConfig = {
+            apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
+            authDomain: "blacknight-600de.firebaseapp.com",
+            databaseURL: "https://blacknight-600de.firebaseio.com",
+            projectId: "blacknight-600de",
+            storageBucket: "blacknight-600de.appspot.com",
+            messagingSenderId: "588926432348",
+            appId: "1:588926432348:web:47b2b4a1b421d4b2a0e299",
+            measurementId: "G-559VYPVJ5Q"
         };
 
         // Inicializa o Firebase
