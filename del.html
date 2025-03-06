@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,10 +10,6 @@
     <style>
         body {
             background-color: #121212;
-            color: #fff;
-        }
-        .form-control {
-            background-color: #333;
             color: #fff;
         }
         .form-label {
@@ -34,6 +30,56 @@
             border: 1px solid #333;
             border-radius: 5px;
             margin-top: 50px;
+        }
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+        }
+        .dropdown-button {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+        .dropdown-list.active {
+            display: block;
+        }
+        .dropdown-item {
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #444;
+        }
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        .dropdown-item:hover {
+            background-color: #444;
+        }
+        .dropdown-item img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 10px;
         }
         .event-preview {
             margin-top: 15px;
@@ -59,9 +105,10 @@
         <form id="eventoForm">
             <div class="form-group">
                 <label for="selectEvento" class="form-label">Escolha um evento para excluir:</label>
-                <select class="form-control" id="selectEvento" onchange="showEventPreview()">
-                    <option value="">Selecione um evento</option>
-                </select>
+                <div class="custom-dropdown">
+                    <div class="dropdown-button" onclick="toggleDropdown()" id="dropdownButton">Selecione um evento</div>
+                    <div class="dropdown-list" id="dropdownList"></div>
+                </div>
             </div>
             <div id="eventPreview" class="event-preview">
                 <h5>Pré-visualização do Evento</h5>
@@ -96,6 +143,7 @@
 
         var cliente = "inovabar";
         var eventosData = {};
+        var selectedEventId = null;
 
         // Função para obter o dia da semana em formato abreviado
         function getDiaSemana(data) {
@@ -103,32 +151,57 @@
             return dias[new Date(data).getDay()];
         }
 
+        // Função para formatar o mês em texto (ex.: FEV)
+        function getMesAbrev(data) {
+            var meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+            return meses[new Date(data).getMonth()];
+        }
+
+        // Função para formatar a data no novo estilo
+        function formatEventDisplay(data, descricao) {
+            var dia = new Date(data).getDate().toString().padStart(2, '0');
+            var mes = getMesAbrev(data);
+            var hora = new Date(data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }).replace(':', 'H');
+            var diaSemana = getDiaSemana(data);
+            return `${diaSemana} ${dia}.${mes} ${hora} - ${descricao || 'Sem descrição'}`;
+        }
+
         function populateEventDropdown() {
-            var selectEvento = document.getElementById("selectEvento");
+            var dropdownList = document.getElementById("dropdownList");
             var eventosRef = firebase.database().ref(cliente + "/eventos");
 
             eventosRef.on("value", function(snapshot) {
-                selectEvento.innerHTML = '<option value="">Selecione um evento</option>';
-                
+                dropdownList.innerHTML = '';
+                eventosData = {};
+
                 snapshot.forEach(function(childSnapshot) {
                     var eventId = childSnapshot.key;
                     var evento = childSnapshot.val();
                     eventosData[eventId] = evento;
-                    
-                    var dataEvento = new Date(evento.data).toLocaleString();
-                    var diaSemana = getDiaSemana(evento.data);
-                    var displayText = `${diaSemana} - ${evento.descricao || 'Sem descrição'} (${dataEvento})`;
-                    
-                    var option = document.createElement("option");
-                    option.value = eventId;
-                    option.innerText = displayText;
-                    selectEvento.appendChild(option);
+
+                    var displayText = formatEventDisplay(evento.data, evento.descricao);
+                    var item = document.createElement("div");
+                    item.className = "dropdown-item";
+                    item.onclick = function() { selectEvent(eventId); };
+                    item.innerHTML = `<img src="${evento.flyer || ''}" onerror="this.style.display='none'" alt="Flyer" loading="lazy"> ${displayText}`;
+                    dropdownList.appendChild(item);
                 });
             });
         }
 
+        function toggleDropdown() {
+            var dropdownList = document.getElementById("dropdownList");
+            dropdownList.classList.toggle("active");
+        }
+
+        function selectEvent(eventId) {
+            selectedEventId = eventId;
+            document.getElementById("dropdownButton").innerText = document.querySelector(`#dropdownList .dropdown-item:nth-child(${Object.keys(eventosData).indexOf(eventId) + 2})`).textContent.trim();
+            showEventPreview();
+            toggleDropdown();
+        }
+
         function showEventPreview() {
-            var selectedEventId = document.getElementById("selectEvento").value;
             var previewDiv = document.getElementById("eventPreview");
             var previewFlyer = document.getElementById("previewFlyer");
             var imageError = document.getElementById("imageError");
@@ -138,7 +211,7 @@
                 
                 document.getElementById("previewApelido").innerText = evento.apelido || 'N/A';
                 document.getElementById("previewDescricao").innerText = evento.descricao || 'N/A';
-                document.getElementById("previewData").innerText = new Date(evento.data).toLocaleString();
+                document.getElementById("previewData").innerText = new Date(evento.data).toLocaleString('pt-BR');
                 
                 if (evento.flyer) {
                     previewFlyer.src = evento.flyer;
@@ -166,8 +239,6 @@
         }
 
         function deleteEvent() {
-            var selectedEventId = document.getElementById("selectEvento").value;
-
             if (selectedEventId) {
                 var eventoRef = firebase.database().ref(cliente + "/eventos/" + selectedEventId);
 
@@ -175,6 +246,8 @@
                     eventoRef.remove()
                     .then(function() {
                         alert("Evento excluído com sucesso!");
+                        selectedEventId = null;
+                        document.getElementById("dropdownButton").innerText = "Selecione um evento";
                         document.getElementById("eventPreview").style.display = 'none';
                     })
                     .catch(function(error) {
