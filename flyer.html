@@ -52,12 +52,12 @@
         }
         #flyer-bottom {
             background-color: #000;
-            padding: 10px;
+            padding: 20px;
             text-align: center;
             height: 380px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
         }
         #profilePic {
             width: 170px !important;
@@ -72,35 +72,35 @@
             object-fit: cover !important;
         }
         #eventName {
-            font-size: 24px; /* Tamanho fixo para consistência */
+            font-size: 20px;
             font-weight: bold;
             color: #ff00ff;
             text-transform: uppercase;
             margin: 5px 0;
         }
         #eventDate {
-            font-size: 48px; /* Maior para destacar como na imagem */
+            font-size: 32px; /* Tamanho reduzido para melhor proporção */
             font-weight: bold;
             color: #ff00ff;
             margin: 10px 0;
             line-height: 1;
         }
         #eventDescription {
-            font-size: 18px; /* Ajustado para legibilidade */
+            font-size: 16px;
             font-weight: bold;
             margin: 5px 0;
-            color: #ccc; /* Cinza como na imagem */
+            color: #ccc;
         }
         #rules {
-            font-size: 14px;
+            font-size: 12px;
             color: #707070;
             margin: 5px 0;
             line-height: 1.5;
         }
         #address {
-            font-size: 14px;
+            font-size: 12px;
             margin: 5px 0;
-            display: none; /* Opcional: remover endereço se não for usado */
+            color: #ccc;
         }
         .button-group {
             text-align: center;
@@ -127,18 +127,25 @@
             }
             #flyer-bottom {
                 height: auto;
+                padding: 15px;
             }
             #profilePic {
                 top: 50%;
             }
-            #eventDate {
-                font-size: 12vw; /* Responsivo em mobile */
-            }
             #eventName {
-                font-size: 6vw;
+                font-size: 5vw;
+            }
+            #eventDate {
+                font-size: 8vw;
             }
             #eventDescription {
                 font-size: 4vw;
+            }
+            #rules {
+                font-size: 3vw;
+            }
+            #address {
+                font-size: 3vw;
             }
         }
     </style>
@@ -152,7 +159,7 @@
             <div id="eventDate"></div>
             <div id="eventDescription"></div>
             <div id="rules"></div>
-            <div id="address">Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP</div>
+            <div id="address"></div>
         </div>
     </div>
     <div class="button-group">
@@ -247,8 +254,8 @@
                             profilePic.src = bdayData.foto || 'https://via.placeholder.com/170';
                             document.getElementById('eventName').textContent = `B-DAY ${bdayData.apelido || bdayData.promocao || 'Sem nome'}`;
                             document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08T19:00:00');
-                            document.getElementById('eventDescription').textContent = bdayData.descricao || 'Com 20'; // Ajustado para "Com 20" como na imagem
-                            document.getElementById('rules').textContent = bdayData.regra || '';
+                            document.getElementById('eventDescription').textContent = bdayData.descricao || 'Com 20 pagantes, Nany ganha entrada VIP com acompanhante e R$100 de consumo para todos os shows de 2025 + 1 garrafa de (Red Label, ou Bombay, ou Smirnoff) + 1 Balde de Heineken com 6 long neck.';
+                            document.getElementById('rules').textContent = bdayData.regra || 'Lista VIP do site';
                             document.getElementById('address').textContent = eventData.endereco || 'Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP';
                             document.getElementById('flyer').style.display = 'block';
                             document.getElementById('downloadBtn').style.display = 'inline';
@@ -302,15 +309,18 @@
             flyerBottomClone.style.width = '360px';
             flyerBottomClone.style.height = '380px';
             flyerBottomClone.style.backgroundColor = '#000';
-            flyerBottomClone.style.padding = '10px';
+            flyerBottomClone.style.padding = '20px';
             flyerBottomClone.style.textAlign = 'center';
             flyerBottomClone.style.color = 'white';
+            flyerBottomClone.style.display = 'flex';
+            flyerBottomClone.style.flexDirection = 'column';
+            flyerBottomClone.style.justifyContent = 'space-between';
             flyerBottomClone.innerHTML = `
-                <div style="font-size: 22px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
-                <div style="font-size: 48px; font-weight: bold; color: #ff00ff; margin: 10px 0; line-height: 1;">${document.getElementById('eventDate').textContent}</div>
-                <div style="font-size: 18px; font-weight: bold; color: #ccc; margin: 5px 0;">${document.getElementById('eventDescription').textContent}</div>
-                <div style="font-size: 14px; color: #707070; margin: 5px 0; line-height: 1.5;">${document.getElementById('rules').textContent}</div>
-                <div style="font-size: 14px; margin: 5px 0;">${document.getElementById('address').textContent}</div>
+                <div style="font-size: 20px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
+                <div style="font-size: 32px; font-weight: bold; color: #ff00ff; margin: 10px 0; line-height: 1;">${document.getElementById('eventDate').textContent}</div>
+                <div style="font-size: 16px; font-weight: bold; color: #ccc; margin: 5px 0;">${document.getElementById('eventDescription').textContent}</div>
+                <div style="font-size: 12px; color: #707070; margin: 5px 0; line-height: 1.5;">${document.getElementById('rules').textContent}</div>
+                <div style="font-size: 12px; color: #ccc; margin: 5px 0;">${document.getElementById('address').textContent}</div>
             `;
 
             tempContainer.appendChild(flyerTopClone);
