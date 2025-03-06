@@ -73,13 +73,13 @@
             font-weight: bold;
             color: #ff00ff;
             text-transform: uppercase;
-            margin: 20px 0;
+            margin: 10px 0;
         }
         #eventDate {
             font-size: 3.5vw;
             font-weight: bold;
             color: #ff00ff;
-            margin: 10px 0;
+            margin: 5px 0;
         }
         #eventDescription {
             font-size: 3vw;
@@ -89,10 +89,11 @@
         #rules {
             font-size: 2.5vw;
             margin: 10px 0;
+            line-height: 1.5;
         }
         #address {
             font-size: 2vw;
-            margin-top: 20px;
+            margin-top: 10px;
         }
         #downloadBtn {
             margin-top: 10px;
@@ -272,11 +273,11 @@
             flyerBottomClone.style.color = 'white';
             flyerBottomClone.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.8)';
             flyerBottomClone.innerHTML = `
-                <div style="font-size: 60px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 20px 0;">${document.getElementById('eventName').textContent}</div>
-                <div style="font-size: 50px; font-weight: bold; color: #ff00ff; margin: 10px 0;">${document.getElementById('eventDate').textContent}</div>
+                <div style="font-size: 60px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 10px 0;">${document.getElementById('eventName').textContent}</div>
+                <div style="font-size: 50px; font-weight: bold; color: #ff00ff; margin: 5px 0;">${document.getElementById('eventDate').textContent}</div>
                 <div style="font-size: 40px; font-weight: bold; margin: 10px 0;">${document.getElementById('eventDescription').textContent}</div>
-                <div style="font-size: 30px; margin: 10px 0;">${document.getElementById('rules').textContent}</div>
-                <div style="font-size: 30px; margin-top: 20px;">${document.getElementById('address').textContent}</div>
+                <div style="font-size: 30px; margin: 10px 0; line-height: 1.5;">${document.getElementById('rules').textContent}</div>
+                <div style="font-size: 30px; margin-top: 10px;">${document.getElementById('address').textContent}</div>
             `;
             
             // Monta o contêiner temporário
