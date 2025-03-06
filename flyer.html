@@ -20,11 +20,15 @@
             color: aliceblue;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         #flyer {
             width: 100%;
             max-width: 1080px;
             position: relative;
+            flex-grow: 1;
             display: none;
             margin: 0 auto;
             overflow: hidden;
@@ -47,7 +51,7 @@
         }
         #flyer-bottom {
             background-color: #000;
-            padding: 10px; /* Reduzido para subir o conteúdo */
+            padding: 5px; /* Reduzido para subir ainda mais o conteúdo */
             text-align: center;
         }
         #profilePic {
@@ -56,7 +60,7 @@
             border-radius: 50%;
             border: 3px solid #ffffff7d;
             position: absolute;
-            top: 35%; /* Ajustado para subir a foto e o conteúdo */
+            top: 35%; /* Ajustado para subir a foto */
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 2;
@@ -66,36 +70,33 @@
             font-weight: bold;
             color: #ff00ff;
             text-transform: uppercase;
-            margin: 10px 0;
+            margin: 5px 0; /* Reduzido para ajustar o espaçamento */
         }
         #eventDescription {
             font-size: 3vw;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 5px 0;
         }
         #eventDate {
             font-size: 3.5vw;
             font-weight: bold;
             color: #ff00ff;
-            margin: 5px 0;
+            margin: 2px 0; /* Reduzido para ajustar */
         }
         #rules {
             font-size: 2vw;
             color: #707070;
-            margin: 10px 0;
+            margin: 5px 0;
             line-height: 1.5;
         }
         #address {
             font-size: 2.2vw; /* Um pouco maior que #rules */
-            margin-top: 10px;
-        }
-        #downloadBtn {
-            margin-top: 10px;
-            display: none;
+            margin: 5px 0;
         }
         .button-group {
             text-align: center;
-            margin-top: 20px;
+            padding: 10px 0;
+            background-color: #000;
         }
         .button-group button {
             margin: 0 10px;
@@ -103,12 +104,15 @@
             padding: 10px 20px;
         }
         @media (max-width: 768px) {
+            #flyer {
+                max-width: 100%;
+            }
             #eventName { font-size: 6vw; }
             #eventDescription { font-size: 4vw; }
             #eventDate { font-size: 5vw; }
             #rules { font-size: 2.5vw; }
             #address { font-size: 2.7vw; }
-            #profilePic { width: 120px; height: 120px; }
+            #profilePic { width: 120px; height: 120px; top: 30%; }
         }
     </style>
 </head>
@@ -293,16 +297,16 @@
             flyerBottomClone.style.width = '1080px';
             flyerBottomClone.style.height = '840px';
             flyerBottomClone.style.backgroundColor = '#000';
-            flyerBottomClone.style.padding = '10px';
+            flyerBottomClone.style.padding = '5px';
             flyerBottomClone.style.textAlign = 'center';
             flyerBottomClone.style.color = 'white';
             flyerBottomClone.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.8)';
             flyerBottomClone.innerHTML = `
-                <div style="font-size: 60px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 10px 0;">${document.getElementById('eventName').textContent}</div>
-                <div style="font-size: 40px; font-weight: bold; margin: 10px 0;">${document.getElementById('eventDescription').textContent}</div>
-                <div style="font-size: 50px; font-weight: bold; color: #ff00ff; margin: 5px 0;">${document.getElementById('eventDate').textContent}</div>
-                <div style="font-size: 30px; color: #ccc; margin: 10px 0; line-height: 1.5;">${document.getElementById('rules').textContent}</div>
-                <div style="font-size: 30px; margin-top: 10px;">${document.getElementById('address').textContent}</div>
+                <div style="font-size: 60px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
+                <div style="font-size: 40px; font-weight: bold; margin: 5px 0;">${document.getElementById('eventDescription').textContent}</div>
+                <div style="font-size: 50px; font-weight: bold; color: #ff00ff; margin: 2px 0;">${document.getElementById('eventDate').textContent}</div>
+                <div style="font-size: 30px; color: #ccc; margin: 5px 0; line-height: 1.5;">${document.getElementById('rules').textContent}</div>
+                <div style="font-size: 30px; margin: 5px 0;">${document.getElementById('address').textContent}</div>
             `;
             
             // Monta o contêiner temporário
