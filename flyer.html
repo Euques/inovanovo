@@ -26,10 +26,13 @@
         }
         #flyer {
             width: 100%;
+            max-width: 480px; /* Largura fixa típica de mobile */
+            margin: 0 auto; /* Centraliza em telas maiores */
             position: relative;
             flex-grow: 1;
             display: none;
             overflow: hidden;
+            background-color: #000; /* Garante fundo preto ao redor */
         }
         #flyer-top {
             position: relative;
@@ -96,34 +99,13 @@
             text-align: center;
             padding: 10px 0;
             background-color: #000;
+            max-width: 480px; /* Alinha com o flyer */
+            margin: 0 auto;
         }
         .button-group button {
             margin: 5px;
             font-size: 16px;
             padding: 8px 16px;
-        }
-
-        /* Ajustes para telas maiores (desktop) */
-        @media (min-width: 768px) {
-            #flyer {
-                max-width: 1080px;
-                margin: 0 auto;
-            }
-            #eventName { font-size: 4vw; }
-            #eventDescription { font-size: 3vw; }
-            #eventDate { font-size: 3.5vw; }
-            #rules { font-size: 2vw; }
-            #address { font-size: 2.2vw; }
-            #profilePic { 
-                width: 170px !important; 
-                height: 170px !important; 
-                top: 35%; 
-            }
-            .button-group button {
-                margin: 0 10px;
-                font-size: 20px;
-                padding: 10px 20px;
-            }
         }
     </style>
 </head>
@@ -144,7 +126,6 @@
         <button class="btn btn-success" onclick="downloadFlyer()" id="downloadBtn">Baixar Flyer</button>
     </div>
 
-    <!-- Scripts mantidos iguais -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
@@ -154,7 +135,6 @@
     <script src="https://unpkg.com/bootstrap@4/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
     <script>
-        // Configuração do Firebase e funções JavaScript mantidas iguais
         var firebaseConfig = {
             apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
             authDomain: "blacknight-600de.firebaseapp.com",
@@ -177,13 +157,16 @@
         }
 
         function formatDate(dateStr) {
+            console.log('Data bruta do Firebase:', dateStr); // Log para depuração
             const date = new Date(dateStr);
+            const options = { timeZone: 'America/Sao_Paulo' }; // Força horário de SP
             const days = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
             const months = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
             const dayOfWeek = days[date.getDay()];
-            const day = date.getDate();
+            const day = String(date.getDate()).padStart(2, '0');
             const month = months[date.getMonth()];
-            return `${dayOfWeek} ${day}. ${month} 13H`;
+            const hours = String(date.getHours()).padStart(2, '0');
+            return `${dayOfWeek} ${day}.${month} ${hours}H`;
         }
 
         function preloadImages(urls, callback) {
@@ -221,15 +204,15 @@
                     const bdayData = bdaySnapshot.val();
                     if (eventData && bdayData) {
                         const imagesToPreload = [
-                            eventData.flyer || 'https://via.placeholder.com/1080x1080',
-                            bdayData.foto || 'https://via.placeholder.com/170'
+                            eventData.flyer || 'https://via.placeholder.com/480x480',
+                            bdayData.foto || 'https://via.placeholder.com/120'
                         ];
                         preloadImages(imagesToPreload, () => {
-                            document.getElementById('flyer-top').style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/1080x1080'})`;
+                            document.getElementById('flyer-top').style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/480x480'})`;
                             const profilePic = document.getElementById('profilePic');
-                            profilePic.src = bdayData.foto || 'https://via.placeholder.com/170';
+                            profilePic.src = bdayData.foto || 'https://via.placeholder.com/120';
                             document.getElementById('eventName').textContent = `B-DAY ${bdayData.apelido || bdayData.promocao || 'Sem nome'}`;
-                            document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08');
+                            document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08T19:00:00');
                             document.getElementById('eventDescription').textContent = eventData.descricao || 'Não informadas';
                             document.getElementById('rules').textContent = bdayData.regra || 'Sem regras especiais';
                             document.getElementById('flyer').style.display = 'block';
@@ -248,16 +231,16 @@
         function downloadFlyer() {
             const flyer = document.getElementById('flyer');
             const tempContainer = document.createElement('div');
-            tempContainer.style.width = '1080px';
-            tempContainer.style.height = '1920px';
+            tempContainer.style.width = '480px'; // Tamanho mobile para o download
+            tempContainer.style.height = '854px'; // Proporção 9:16 para mobile
             tempContainer.style.position = 'absolute';
             tempContainer.style.left = '-9999px';
             tempContainer.style.top = '-9999px';
             tempContainer.style.backgroundColor = '#000';
 
             const flyerTopClone = document.createElement('div');
-            flyerTopClone.style.width = '1080px';
-            flyerTopClone.style.height = '1080px';
+            flyerTopClone.style.width = '480px';
+            flyerTopClone.style.height = '480px'; // Mantém 1:1 no topo
             flyerTopClone.style.backgroundImage = document.getElementById('flyer-top').style.backgroundImage;
             flyerTopClone.style.backgroundSize = 'cover';
             flyerTopClone.style.backgroundPosition = 'center';
@@ -268,12 +251,12 @@
 
             const profilePicClone = document.createElement('img');
             profilePicClone.src = document.getElementById('profilePic').src;
-            profilePicClone.style.width = '170px';
-            profilePicClone.style.height = '170px';
+            profilePicClone.style.width = '120px';
+            profilePicClone.style.height = '120px';
             profilePicClone.style.borderRadius = '50%';
             profilePicClone.style.border = '3px solid #ffffff7d';
             profilePicClone.style.position = 'absolute';
-            profilePicClone.style.top = '1080px';
+            profilePicClone.style.top = '480px';
             profilePicClone.style.left = '50%';
             profilePicClone.style.transform = 'translate(-50%, -50%)';
             profilePicClone.style.zIndex = '2';
@@ -281,18 +264,18 @@
             profilePicClone.crossOrigin = "anonymous";
 
             const flyerBottomClone = document.createElement('div');
-            flyerBottomClone.style.width = '1080px';
-            flyerBottomClone.style.height = '840px';
+            flyerBottomClone.style.width = '480px';
+            flyerBottomClone.style.height = '374px'; // Restante da proporção 9:16
             flyerBottomClone.style.backgroundColor = '#000';
             flyerBottomClone.style.padding = '10px';
             flyerBottomClone.style.textAlign = 'center';
             flyerBottomClone.style.color = 'white';
             flyerBottomClone.innerHTML = `
-                <div style="font-size: 60px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
-                <div style="font-size: 40px; font-weight: bold; margin: 5px 0;">${document.getElementById('eventDescription').textContent}</div>
-                <div style="font-size: 50px; font-weight: bold; color: #ff00ff; margin: 2px 0;">${document.getElementById('eventDate').textContent}</div>
-                <div style="font-size: 30px; color: #ccc; margin: 5px 0; line-height: 1.5;">${document.getElementById('rules').textContent}</div>
-                <div style="font-size: 30px; margin: 5px 0;">${document.getElementById('address').textContent}</div>
+                <div style="font-size: 28px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
+                <div style="font-size: 20px; font-weight: bold; margin: 5px 0;">${document.getElementById('eventDescription').textContent}</div>
+                <div style="font-size: 24px; font-weight: bold; color: #ff00ff; margin: 2px 0;">${document.getElementById('eventDate').textContent}</div>
+                <div style="font-size: 14px; color: #ccc; margin: 5px 0; line-height: 1.5;">${document.getElementById('rules').textContent}</div>
+                <div style="font-size: 14px; margin: 5px 0;">${document.getElementById('address').textContent}</div>
             `;
 
             tempContainer.appendChild(flyerTopClone);
