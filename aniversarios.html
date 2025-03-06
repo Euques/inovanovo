@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -87,22 +87,6 @@
 
         var cliente = "inovabar";
         var eventosData = {};
-        var whatsappNumber = null;
-
-        // Função para obter o número do WhatsApp do Firebase
-        function getWhatsAppNumber(callback) {
-            var configRef = firebase.database().ref(cliente + "/config/whatsapp");
-            configRef.once("value", function(snapshot) {
-                whatsappNumber = snapshot.val();
-                if (!whatsappNumber) {
-                    console.warn("Número do WhatsApp não encontrado no Firebase.");
-                }
-                callback();
-            }, function(error) {
-                console.error("Erro ao buscar número do WhatsApp:", error);
-                callback();
-            });
-        }
 
         // Função para obter o dia da semana em formato abreviado
         function getDiaSemana(data) {
@@ -154,19 +138,22 @@
                             </div>
                         `;
                         item.onclick = function() {
-                            var defaultLink = `https://adm.inovabar.com.br/corte.html?a=inovabar/eventos/${eventId}`;
-                            var hasUid = /-[A-Za-z0-9]+$/.test(eventId); // Verifica se o eventId contém um UID
+                            var eventLink = evento.link || `https://adm.inovabar.com.br/corte.html?a=inovabar/eventos/${eventId}`;
+                            var hasUid = eventLink.includes(eventId); // Verifica se o link contém o eventId no final
 
                             if (hasUid) {
-                                window.location.href = defaultLink; // Link com UID, segue normalmente
-                            } else if (whatsappNumber) {
-                                // Formatar a mensagem do WhatsApp baseada no exemplo
-                                var mensagem = `😃 oi, gostaria de saber mais sobre a lista de Promoção (Inova) para a festa de ${formatted.date} no Inova Bar, obrigado.`;
-                                var encodedMessage = encodeURIComponent(mensagem);
-                                var whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
-                                window.location.href = whatsappLink;
+                                window.location.href = eventLink; // Link com UID, segue normalmente
                             } else {
-                                alert("Número do WhatsApp não configurado. Por favor, entre em contato com o suporte.");
+                                var whatsappNumber = evento.whats ? `55${evento.whats}` : null;
+                                if (whatsappNumber) {
+                                    // Formatar a mensagem do WhatsApp baseada no exemplo
+                                    var mensagem = `😃 oi, gostaria de saber mais sobre a lista de Promoção (Inova) para a festa de ${formatted.date} no Inova Bar, obrigado.`;
+                                    var encodedMessage = encodeURIComponent(mensagem);
+                                    var whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
+                                    window.location.href = whatsappLink;
+                                } else {
+                                    alert("Número do WhatsApp não configurado para este evento. Por favor, entre em contato com o suporte.");
+                                }
                             }
                         };
                         eventList.appendChild(item);
@@ -175,10 +162,8 @@
             });
         }
 
-        // Inicializar a lista de eventos após buscar o número do WhatsApp
-        getWhatsAppNumber(function() {
-            populateEventList();
-        });
+        // Inicializar a lista de eventos
+        populateEventList();
     </script>
 </body>
 </html>
