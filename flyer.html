@@ -29,132 +29,105 @@
             border-radius: 20px;
         }
         #flyer {
-            width: 1080px;
-            height: 1920px;
-            background-size: cover;
-            background-position: top;
+            width: 100%;
+            max-width: 1080px;
             position: relative;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             display: none;
-            border-radius: 10px;
-            overflow: hidden;
             margin: 0 auto;
-        }
-        #flyer-content {
-            position: relative;
-            z-index: 2;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+            overflow: hidden;
         }
         #flyer-top {
-            height: 60%; /* Parte superior com o flyer */
+            position: relative;
+            width: 100%;
+            padding-top: 100%; /* Proporção 1:1 */
             background-size: cover;
             background-position: center;
-            position: relative;
+        }
+        #flyer-top::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
         }
         #flyer-bottom {
-            height: 40%; /* Parte inferior com informações */
             background-color: #000;
             padding: 20px;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
         }
         #profilePic {
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            margin: 20px auto;
-            display: block;
             border: 3px solid white;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            z-index: 2;
         }
         .bday-label {
-            font-size: 80px;
+            font-size: 5vw; /* Responsivo */
             font-weight: bold;
             color: white;
             text-transform: uppercase;
             margin: 20px 0;
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
         }
         #eventName {
-            font-size: 60px;
+            font-size: 4vw;
             font-weight: bold;
             color: #ff00ff;
             text-transform: uppercase;
             margin: 20px 0;
-            position: absolute;
-            top: 20%;
-            left: 50%;
-            transform: translateX(-50%);
         }
         #eventDate {
-            font-size: 50px;
+            font-size: 3.5vw;
             font-weight: bold;
             color: #ff00ff;
             margin: 20px 0;
-            position: absolute;
-            top: 30%;
-            left: 50%;
-            transform: translateX(-50%);
         }
         #eventDescription {
-            font-size: 40px;
+            font-size: 3vw;
             font-weight: bold;
             margin: 20px 0;
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            text-align: center;
         }
         #rules {
-            font-size: 30px;
+            font-size: 2.5vw;
             margin: 20px 0;
             padding: 20px;
             background: rgba(0, 0, 0, 0.5);
             border-radius: 10px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
         }
         #address {
-            font-size: 30px;
-            margin-top: auto;
+            font-size: 2vw;
+            margin-top: 20px;
             padding: 20px;
             background: rgba(0, 0, 0, 0.7);
-            width: 100%;
-            position: absolute;
-            bottom: 0;
-            left: 0;
         }
         #downloadBtn {
             margin-top: 10px;
             display: none;
         }
         .button-group {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 3;
+            position: relative;
+            text-align: center;
+            margin-bottom: 20px;
         }
         .button-group button {
             margin: 0 10px;
             font-size: 20px;
             padding: 10px 20px;
+        }
+        @media (max-width: 768px) {
+            .bday-label { font-size: 8vw; }
+            #eventName { font-size: 6vw; }
+            #eventDate { font-size: 5vw; }
+            #eventDescription { font-size: 4vw; }
+            #rules { font-size: 3.5vw; }
+            #address { font-size: 3vw; }
+            #profilePic { width: 120px; height: 120px; }
         }
     </style>
 </head>
@@ -166,14 +139,14 @@
         </div>
         <div id="flyer">
             <div id="flyer-top"></div>
+            <img id="profilePic" src="" alt="Foto do aniversariante">
             <div id="flyer-bottom">
-                <div id="profilePic" src="" alt="Foto do aniversariante"></div>
                 <div class="bday-label">B-DAY</div>
                 <div id="eventName"></div>
                 <div id="eventDate"></div>
                 <div id="eventDescription"></div>
                 <div id="rules"></div>
-                <div id="address">Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP<br>STA VIP NOITE TODA COM NOME NA LISTA</div>
+                <div id="address">Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP</div>
             </div>
         </div>
     </div>
@@ -221,7 +194,7 @@
             const dayOfWeek = days[date.getDay()];
             const day = date.getDate();
             const month = months[date.getMonth()];
-            return `SEX ${day}. ${month} 13H`; // Ajustado para "SEX" como na imagem
+            return `${dayOfWeek} ${day}. ${month} 13H`;
         }
 
         function loadFlyer() {
@@ -242,7 +215,7 @@
                     if (eventData && bdayData) {
                         // Foto do flyer como fundo na parte superior
                         const flyerTop = document.getElementById('flyer-top');
-                        flyerTop.style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/1080x1152'})`;
+                        flyerTop.style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/1080x1080'})`;
                         
                         // Foto do aniversariante
                         const profilePic = document.getElementById('profilePic');
@@ -269,19 +242,80 @@
 
         function downloadFlyer() {
             const flyer = document.getElementById('flyer');
-            // Aguarda o carregamento das imagens
+            // Cria um contêiner temporário com proporção 9:16
+            const tempContainer = document.createElement('div');
+            tempContainer.style.width = '1080px';
+            tempContainer.style.height = '1920px';
+            tempContainer.style.position = 'absolute';
+            tempContainer.style.left = '-9999px';
+            tempContainer.style.top = '-9999px';
+            
+            // Clona o flyer-top com proporção 1:1 (1080x1080)
+            const flyerTopClone = document.createElement('div');
+            flyerTopClone.style.width = '1080px';
+            flyerTopClone.style.height = '1080px';
+            flyerTopClone.style.backgroundImage = document.getElementById('flyer-top').style.backgroundImage;
+            flyerTopClone.style.backgroundSize = 'cover';
+            flyerTopClone.style.backgroundPosition = 'center';
+            flyerTopClone.style.position = 'relative';
+            flyerTopClone.style.backgroundColor = '#000'; // Fundo preto para continuidade
+            flyerTopClone.innerHTML = `
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);"></div>
+            `;
+            
+            // Clona a foto do aniversariante
+            const profilePicClone = document.createElement('img');
+            profilePicClone.src = document.getElementById('profilePic').src;
+            profilePicClone.style.width = '150px';
+            profilePicClone.style.height = '150px';
+            profilePicClone.style.borderRadius = '50%';
+            profilePicClone.style.border = '3px solid white';
+            profilePicClone.style.position = 'absolute';
+            profilePicClone.style.top = '1080px';
+            profilePicClone.style.left = '50%';
+            profilePicClone.style.transform = 'translate(-50%, -50%)';
+            profilePicClone.style.zIndex = '2';
+            
+            // Clona o flyer-bottom com proporção restante (1080x840)
+            const flyerBottomClone = document.createElement('div');
+            flyerBottomClone.style.width = '1080px';
+            flyerBottomClone.style.height = '840px';
+            flyerBottomClone.style.backgroundColor = '#000';
+            flyerBottomClone.style.padding = '20px';
+            flyerBottomClone.style.textAlign = 'center';
+            flyerBottomClone.style.color = 'white';
+            flyerBottomClone.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.8)';
+            flyerBottomClone.innerHTML = `
+                <div style="font-size: 80px; font-weight: bold; text-transform: uppercase; margin: 20px 0;">B-DAY</div>
+                <div style="font-size: 60px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 20px 0;">${document.getElementById('eventName').textContent}</div>
+                <div style="font-size: 50px; font-weight: bold; color: #ff00ff; margin: 20px 0;">${document.getElementById('eventDate').textContent}</div>
+                <div style="font-size: 40px; font-weight: bold; margin: 20px 0;">${document.getElementById('eventDescription').textContent}</div>
+                <div style="font-size: 30px; margin: 20px 0; padding: 20px; background: rgba(0, 0, 0, 0.5); border-radius: 10px;">${document.getElementById('rules').textContent}</div>
+                <div style="font-size: 30px; margin-top: 20px; padding: 20px; background: rgba(0, 0, 0, 0.7);">${document.getElementById('address').textContent}</div>
+            `;
+            
+            // Monta o contêiner temporário
+            tempContainer.appendChild(flyerTopClone);
+            tempContainer.appendChild(profilePicClone);
+            tempContainer.appendChild(flyerBottomClone);
+            document.body.appendChild(tempContainer);
+
+            // Gera a imagem com html2canvas
             setTimeout(() => {
-                html2canvas(flyer, { useCORS: true, scale: 2 }).then(canvas => {
+                html2canvas(tempContainer, { useCORS: true, scale: 2 }).then(canvas => {
                     const image = canvas.toDataURL('image/png');
                     const link = document.createElement('a');
                     link.download = `${document.getElementById('eventName').textContent}-flyer.png`;
                     link.href = image;
                     link.click();
+                    // Remove o contêiner temporário
+                    document.body.removeChild(tempContainer);
                 }).catch(error => {
                     console.error('Erro ao gerar a imagem:', error);
                     alert('Erro ao gerar o flyer para download.');
+                    document.body.removeChild(tempContainer);
                 });
-            }, 1000); // Atraso de 1 segundo para garantir que as imagens carreguem
+            }, 1000);
         }
 
         // Carrega automaticamente ao abrir a página
