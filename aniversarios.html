@@ -94,6 +94,9 @@
             var configRef = firebase.database().ref(cliente + "/config/whatsapp");
             configRef.once("value", function(snapshot) {
                 whatsappNumber = snapshot.val();
+                if (!whatsappNumber) {
+                    console.warn("Número do WhatsApp não encontrado no Firebase.");
+                }
                 callback();
             }, function(error) {
                 console.error("Erro ao buscar número do WhatsApp:", error);
@@ -152,13 +155,13 @@
                         `;
                         item.onclick = function() {
                             var defaultLink = `https://adm.inovabar.com.br/corte.html?a=inovabar/eventos/${eventId}`;
-                            var hasUid = /-[A-Za-z0-9]{10,}$/.test(defaultLink); // Verifica se o link termina com um UID
+                            var hasUid = /-[A-Za-z0-9]+$/.test(eventId); // Verifica se o eventId contém um UID
 
                             if (hasUid) {
                                 window.location.href = defaultLink; // Link com UID, segue normalmente
                             } else if (whatsappNumber) {
-                                // Formatar a mensagem do WhatsApp
-                                var mensagem = `Olá, gostaria de comemorar o meu aniversário ${formatted.date} - ${formatted.description}, obrigado.`;
+                                // Formatar a mensagem do WhatsApp baseada no exemplo
+                                var mensagem = `😃 oi, gostaria de saber mais sobre a lista de Promoção (Inova) para a festa de ${formatted.date} no Inova Bar, obrigado.`;
                                 var encodedMessage = encodeURIComponent(mensagem);
                                 var whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`;
                                 window.location.href = whatsappLink;
