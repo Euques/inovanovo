@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Aniversário - Inovabar</title>
+    <title>Escolha uma Data - Inovabar</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <meta name="robots" content="noindex">
     
@@ -12,15 +12,11 @@
             background-color: #121212;
             color: #fff;
         }
-        .form-label {
-            color: #fff;
-        }
         .container {
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            border: 1px solid #333;
-            border-radius: 5px;
+            border: none; /* Remover contorno do container */
             margin-top: 50px;
         }
         .event-list {
@@ -28,90 +24,40 @@
             padding: 0;
         }
         .event-item {
-            padding: 10px;
+            margin-bottom: 15px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid #444;
+            background-color: #1c1c1c; /* Tom de preto mais claro */
+            border-radius: 10px; /* Cantos arredondados */
+            padding: 15px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-        }
-        .event-item:last-child {
-            border-bottom: none;
+            border: none; /* Remover contorno */
         }
         .event-item:hover {
-            background-color: #444;
+            background-color: #2a2a2a; /* Tom ainda mais claro ao passar o mouse */
         }
         .event-item img {
-            width: 40px;
-            height: 40px;
+            width: 60px; /* Foto maior */
+            height: 60px;
             object-fit: cover;
             border-radius: 5px;
-            margin-right: 10px;
+            margin-right: 15px;
         }
-        .form-control {
-            background-color: #333;
-            color: #fff;
-            border: 1px solid #444;
-            border-radius: 5px;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-        .event-preview {
-            margin-top: 15px;
-            padding: 10px;
-            background-color: #222;
-            border-radius: 5px;
-            display: none;
-        }
-        .event-preview img {
-            max-width: 100%;
-            max-height: 200px;
-            border-radius: 5px;
-        }
-        .image-error {
-            color: #dc3545;
-            font-style: italic;
+        .event-details {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-4">Cadastro de Aniversário - Inovabar</h1>
+        <h1 class="mt-4">Escolha uma Data</h1>
         <ul class="event-list" id="eventList"></ul>
-        <form id="aniversarioForm" style="display: none;">
-            <div class="form-group">
-                <label for="eventCountLabel" class="form-label">Festa selecionada para o aniversário</label>
-            </div>
-            <div class="form-group">
-                <label for="nomeCliente" class="form-label">Nome do Cliente</label>
-                <input type="text" class="form-control" id="nomeCliente" required>
-            </div>
-            <div class="form-group">
-                <label for="dataAniversario" class="form-label">Data do Aniversário</label>
-                <input type="date" class="form-control" id="dataAniversario" required>
-            </div>
-            <div class="form-group">
-                <label for="numConvidados" class="form-label">Número de Convidados</label>
-                <input type="number" class="form-control" id="numConvidados" min="1" required>
-            </div>
-            <button type="submit" class="btn btn-primary mt-3">Cadastrar Aniversário</button>
-        </form>
-        <div id="eventPreview" class="event-preview">
-            <h5>Pré-visualização da Festa</h5>
-            <p><strong>Festa:</strong> <span id="previewApelido"></span></p>
-            <div id="previewImageContainer">
-                <img id="previewFlyer" src="" alt="Flyer da festa" style="display: none;">
-                <p id="imageError" class="image-error" style="display: none;">Não foi possível carregar a imagem do flyer.</p>
-            </div>
-        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -133,7 +79,6 @@
 
         var cliente = "inovabar";
         var eventosData = {};
-        var selectedEventId = null;
 
         // Função para obter o dia da semana em formato abreviado
         function getDiaSemana(data) {
@@ -164,100 +109,31 @@
                 eventList.innerHTML = '';
                 eventosData = {};
 
-                var eventCount = 0;
+                var currentTimestamp = Date.now(); // Data atual em milissegundos
+
                 snapshot.forEach(function(childSnapshot) {
-                    eventCount++;
                     var eventId = childSnapshot.key;
                     var evento = childSnapshot.val();
-                    eventosData[eventId] = evento;
 
-                    var displayText = formatEventDisplay(evento.data, evento.descricao);
-                    var item = document.createElement("li");
-                    item.className = "event-item";
-                    item.innerHTML = `<img src="${evento.flyer || ''}" onerror="this.style.display='none'" alt="Flyer" loading="lazy"> ${displayText}`;
-                    item.onclick = function() {
-                        window.location.href = `https://adm.inovabar.com.br/corte.html?a=inovabar/eventos/${eventId}`;
-                    };
-                    eventList.appendChild(item);
+                    // Filtrar eventos passados: só exibir se a data do evento for >= data atual
+                    if (evento.data >= currentTimestamp) {
+                        eventosData[eventId] = evento;
+
+                        var displayText = formatEventDisplay(evento.data, evento.descricao);
+                        var item = document.createElement("li");
+                        item.className = "event-item";
+                        item.innerHTML = `
+                            <img src="${evento.flyer || ''}" onerror="this.style.display='none'" alt="Flyer" loading="lazy">
+                            <div class="event-details">${displayText}</div>
+                        `;
+                        item.onclick = function() {
+                            window.location.href = `https://adm.inovabar.com.br/corte.html?a=inovabar/eventos/${eventId}`;
+                        };
+                        eventList.appendChild(item);
+                    }
                 });
-
-                // Atualizar o texto do label (embora o label não seja mais necessário, mantive para referência)
-                console.log(`Total de festas: ${eventCount}`);
             });
         }
-
-        function showEventPreview() {
-            var previewDiv = document.getElementById("eventPreview");
-            var previewFlyer = document.getElementById("previewFlyer");
-            var imageError = document.getElementById("imageError");
-
-            if (selectedEventId && eventosData[selectedEventId]) {
-                var evento = eventosData[selectedEventId];
-                
-                document.getElementById("previewApelido").innerText = formatEventDisplay(evento.data, evento.descricao);
-                document.getElementById("aniversarioForm").style.display = 'block'; // Mostrar o formulário ao selecionar uma festa
-                
-                if (evento.flyer) {
-                    previewFlyer.src = evento.flyer;
-                    previewFlyer.style.display = 'block';
-                    imageError.style.display = 'none';
-                } else {
-                    previewFlyer.style.display = 'none';
-                    imageError.innerText = "Nenhum flyer disponível para este evento.";
-                    imageError.style.display = 'block';
-                }
-                
-                previewDiv.style.display = 'block';
-            } else {
-                previewDiv.style.display = 'none';
-                document.getElementById("aniversarioForm").style.display = 'none'; // Esconder o formulário se não houver seleção
-            }
-        }
-
-        function handleImageError() {
-            var previewFlyer = document.getElementById("previewFlyer");
-            var imageError = document.getElementById("imageError");
-            
-            previewFlyer.style.display = 'none';
-            imageError.innerText = "Não foi possível carregar a imagem do flyer.";
-            imageError.style.display = 'block';
-        }
-
-        // Lidar com o envio do formulário de aniversário
-        document.getElementById('aniversarioForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            if (!selectedEventId) {
-                alert("Por favor, selecione uma festa primeiro.");
-                return;
-            }
-
-            var nomeCliente = document.getElementById('nomeCliente').value;
-            var dataAniversario = document.getElementById('dataAniversario').value;
-            var numConvidados = document.getElementById('numConvidados').value;
-
-            if (nomeCliente && dataAniversario && numConvidados) {
-                var aniversariosRef = firebase.database().ref(cliente + "/aniversarios").push();
-
-                aniversariosRef.set({
-                    nomeCliente: nomeCliente,
-                    dataAniversario: dataAniversario,
-                    numConvidados: parseInt(numConvidados),
-                    eventoId: selectedEventId,
-                    dataCriacao: firebase.database.ServerValue.TIMESTAMP
-                }).then(() => {
-                    alert("Aniversário cadastrado com sucesso!");
-                    document.getElementById('aniversarioForm').reset();
-                    selectedEventId = null;
-                    document.getElementById("eventPreview").style.display = 'none';
-                    document.getElementById("aniversarioForm").style.display = 'none';
-                }).catch((error) => {
-                    alert("Erro ao cadastrar o aniversário: " + error.message);
-                });
-            } else {
-                alert("Por favor, preencha todos os campos.");
-            }
-        });
 
         // Inicializar a lista de eventos
         populateEventList();
