@@ -178,6 +178,10 @@
 </head>
 
 <body>
+    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script> <!-- jQuery primeiro -->
+    <script src="https://unpkg.com/bootstrap@4/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="crooper/cropper.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
@@ -253,6 +257,9 @@
             $('#whats').on('input', function () {
                 $('#crop').prop('disabled', $('#apelido').val().length < 2 || $('#whats').val().length < 3);
             });
+
+            // Carregar pré-visualização da festa ao iniciar
+            loadEventPreview();
         });
 
         window.addEventListener('DOMContentLoaded', function () {
@@ -267,9 +274,6 @@
             var cropper;
 
             $('[data-toggle="tooltip"]').tooltip();
-
-            // Carregar pré-visualização da festa ao iniciar
-            loadEventPreview();
 
             input.addEventListener('change', function (e) {
                 var files = e.target.files;
@@ -388,11 +392,5 @@
             });
         });
     </script>
-
-    <!-- MDB -->
-    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/bootstrap@4/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="crooper/cropper.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
 </body>
 </html>
