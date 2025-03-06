@@ -466,7 +466,8 @@
                             })
                             .then(() => {
                                 console.log('Foi Gravado');
-                                $('#mApelido').text(apelido);
+                               
+                                document.getElementById('mApelido').innerHTML = apelido.value
                             })
                             .catch(error => {
                                 console.error('Hi fodeu!: ', error);
