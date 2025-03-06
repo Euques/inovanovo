@@ -14,45 +14,77 @@
             width: 400px;
             height: 600px;
             background-size: cover;
-            padding: 20px;
+            background-position: center;
             position: relative;
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             display: none;
             border-radius: 10px;
+            overflow: hidden;
         }
         
         #flyer-content {
             position: relative;
             z-index: 2;
             text-align: center;
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         
         #profilePic {
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            margin: 10px auto;
+            margin: 20px auto;
             display: block;
-            border: 2px solid white;
+            border: 3px solid white;
         }
         
-        #flyer h2 {
+        .bday-label {
+            font-size: 40px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
             margin: 10px 0;
-            font-size: 28px;
         }
         
-        #flyer p {
-            margin: 8px 0;
-            font-size: 16px;
+        #eventName {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff00ff;
+            text-transform: uppercase;
+            margin: 10px 0;
+        }
+        
+        #eventDate {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff00ff;
+            margin: 10px 0;
+        }
+        
+        #eventDescription {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
         }
         
         #rules {
             font-size: 14px;
-            margin-top: 20px;
+            margin: 10px 0;
             padding: 10px;
             background: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
+        }
+        
+        #address {
+            font-size: 12px;
+            margin-top: auto;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.7);
         }
         
         #downloadBtn {
@@ -69,11 +101,15 @@
         
         <div id="flyer">
             <div id="flyer-content">
-                <img id="profilePic" src="" alt="Foto do aniversariante">
-                <h2 id="eventName"></h2>
-                <p id="eventDate"></p>
-                <p id="eventDescription"></p>
-                <p id="rules"></p>
+                <div>
+                    <div class="bday-label">B-DAY</div>
+                    <img id="profilePic" src="" alt="Foto do aniversariante">
+                    <div id="eventName"></div>
+                    <div id="eventDate"></div>
+                    <div id="eventDescription"></div>
+                    <div id="rules"></div>
+                </div>
+                <div id="address">Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP</div>
             </div>
         </div>
     </div>
@@ -98,9 +134,33 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // Função para pegar parâmetros da URL
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                eventId: params.get('eventId'),
+                bdayId: params.get('bdayId')
+            };
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const days = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+            const months = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+            const dayOfWeek = days[date.getDay()];
+            const day = date.getDate();
+            const month = months[date.getMonth()];
+            return `${dayOfWeek} ${day}. ${month} 13H`; // Horário fixo como no exemplo
+        }
+
         function loadFlyer() {
-            const eventId = "-OKX77yN21Rj9NtsMEZd";
-            const bdayId = "-OKaKdD-Y8SgKVQpiMgO"; // Exemplo com o B-day Nany
+            const { eventId, bdayId } = getUrlParams();
+
+            if (!eventId || !bdayId) {
+                alert('Por favor, forneça eventId e bdayId na URL (ex.: ?eventId=-OKX77yN21Rj9NtsMEZd&bdayId=-OKaKdD-Y8SgKVQpiMgO)');
+                return;
+            }
+
             const eventRef = db.ref(`inovabar/eventos/${eventId}`);
             const bdayRef = db.ref(`inovabar/eventos/${eventId}/bday/${bdayId}`);
 
@@ -117,15 +177,20 @@
                         
                         // Preenche os dados
                         document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
-                        document.getElementById('eventDate').textContent = `Data: ${bdayData.bday || 'Não informada'}`;
-                        document.getElementById('eventDescription').textContent = `Atrações: ${eventData.descricao || 'Não informadas'}`;
+                        document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08');
+                        document.getElementById('eventDescription').textContent = eventData.descricao || 'Não informadas';
                         document.getElementById('rules').textContent = bdayData.regra || 'Sem regras especiais';
                         
                         // Mostra o flyer e o botão de download
                         document.getElementById('flyer').style.display = 'block';
                         document.getElementById('downloadBtn').style.display = 'inline';
+                    } else {
+                        alert('Dados não encontrados para os IDs fornecidos.');
                     }
                 });
+            }).catch(error => {
+                console.error('Erro ao carregar dados:', error);
+                alert('Erro ao carregar os dados do Firebase.');
             });
         }
 
@@ -140,6 +205,9 @@
                 link.click();
             });
         }
+
+        // Carrega automaticamente ao abrir a página
+        window.onload = loadFlyer;
     </script>
 </body>
 </html>
