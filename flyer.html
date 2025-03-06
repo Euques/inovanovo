@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Comemore seu aniversário conosco">
     <meta property="og:title" content="B-Day Inova Bar">
     <meta property="og:description" content="Comemore seu aniversário conosco">
@@ -16,21 +15,20 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.css" rel="stylesheet" />
     <style>
         body {
-            background-color: rgb(0, 0, 0);
+            background-color: #000;
             color: aliceblue;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            font-family: 'Roboto', sans-serif;
         }
         #flyer {
             width: 100%;
-            max-width: 1080px;
             position: relative;
             flex-grow: 1;
             display: none;
-            margin: 0 auto;
             overflow: hidden;
         }
         #flyer-top {
@@ -51,47 +49,47 @@
         }
         #flyer-bottom {
             background-color: #000;
-            padding: 5px;
+            padding: 10px;
             text-align: center;
         }
         #profilePic {
-            width: 170px !important;
-            height: 170px !important;
+            width: 120px !important;
+            height: 120px !important;
             border-radius: 50%;
             border: 3px solid #ffffff7d;
             position: absolute;
-            top: 35%;
+            top: 30%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 2;
-            object-fit: cover !important; /* Garante ajuste sem distorção */
+            object-fit: cover !important;
         }
         #eventName {
-            font-size: 4vw;
+            font-size: 6vw;
             font-weight: bold;
             color: #ff00ff;
             text-transform: uppercase;
             margin: 5px 0;
         }
         #eventDescription {
-            font-size: 3vw;
+            font-size: 4vw;
             font-weight: bold;
             margin: 5px 0;
         }
         #eventDate {
-            font-size: 3.5vw;
+            font-size: 5vw;
             font-weight: bold;
             color: #ff00ff;
             margin: 2px 0;
         }
         #rules {
-            font-size: 2vw;
+            font-size: 2.5vw;
             color: #707070;
             margin: 5px 0;
             line-height: 1.5;
         }
         #address {
-            font-size: 2.2vw;
+            font-size: 2.7vw;
             margin: 5px 0;
         }
         .button-group {
@@ -100,20 +98,32 @@
             background-color: #000;
         }
         .button-group button {
-            margin: 0 10px;
-            font-size: 20px;
-            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            padding: 8px 16px;
         }
-        @media (max-width: 768px) {
+
+        /* Ajustes para telas maiores (desktop) */
+        @media (min-width: 768px) {
             #flyer {
-                max-width: 100%;
+                max-width: 1080px;
+                margin: 0 auto;
             }
-            #eventName { font-size: 6vw; }
-            #eventDescription { font-size: 4vw; }
-            #eventDate { font-size: 5vw; }
-            #rules { font-size: 2.5vw; }
-            #address { font-size: 2.7vw; }
-            #profilePic { width: 120px !important; height: 120px !important; top: 30%; }
+            #eventName { font-size: 4vw; }
+            #eventDescription { font-size: 3vw; }
+            #eventDate { font-size: 3.5vw; }
+            #rules { font-size: 2vw; }
+            #address { font-size: 2.2vw; }
+            #profilePic { 
+                width: 170px !important; 
+                height: 170px !important; 
+                top: 35%; 
+            }
+            .button-group button {
+                margin: 0 10px;
+                font-size: 20px;
+                padding: 10px 20px;
+            }
         }
     </style>
 </head>
@@ -134,7 +144,7 @@
         <button class="btn btn-success" onclick="downloadFlyer()" id="downloadBtn">Baixar Flyer</button>
     </div>
 
-    <!-- Firebase SDK (versão 8.10.0 como no seu exemplo) -->
+    <!-- Scripts mantidos iguais -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
@@ -142,10 +152,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/bootstrap@4/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
     <script>
-        // Configuração do Firebase (usando suas credenciais)
+        // Configuração do Firebase e funções JavaScript mantidas iguais
         var firebaseConfig = {
             apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
             authDomain: "blacknight-600de.firebaseapp.com",
@@ -156,12 +165,9 @@
             appId: "1:588926432348:web:47b2b4a1b421d4b2a0e299",
             measurementId: "G-559VYPVJ5Q"
         };
-
-        // Inicializa o Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Função para pegar parâmetros da URL
         function getUrlParams() {
             const params = new URLSearchParams(window.location.search);
             return {
@@ -180,27 +186,21 @@
             return `${dayOfWeek} ${day}. ${month} 13H`;
         }
 
-        // Função para pré-carregar imagens com depuração
         function preloadImages(urls, callback) {
             let loadedCount = 0;
             const totalImages = urls.length;
             const images = [];
-
             urls.forEach((url, index) => {
                 images[index] = new Image();
                 images[index].onload = () => {
-                    console.log(`Imagem carregada com sucesso: ${url}`);
+                    console.log(`Imagem carregada: ${url}`);
                     loadedCount++;
-                    if (loadedCount === totalImages) {
-                        callback();
-                    }
+                    if (loadedCount === totalImages) callback();
                 };
-                images[index].onerror = (error) => {
-                    console.error(`Erro ao carregar imagem ${url}:`, error);
+                images[index].onerror = () => {
+                    console.error(`Erro ao carregar imagem ${url}`);
                     loadedCount++;
-                    if (loadedCount === totalImages) {
-                        callback();
-                    }
+                    if (loadedCount === totalImages) callback();
                 };
                 images[index].crossOrigin = "anonymous";
                 images[index].src = url;
@@ -209,61 +209,44 @@
 
         function loadFlyer() {
             const { eventId, bdayId } = getUrlParams();
-
             if (!eventId || !bdayId) {
-                alert('Por favor, forneça eventId e bdayId na URL (ex.: ?eventId=-OKX77yN21Rj9NtsMEZd&bdayId=-OKaKdD-Y8SgKVQpiMgO)');
+                alert('Forneça eventId e bdayId na URL (ex.: ?eventId=-OKX77yN21Rj9NtsMEZd&bdayId=-OKaKdD-Y8SgKVQpiMgO)');
                 return;
             }
-
             const eventRef = db.ref(`inovabar/eventos/${eventId}`);
             const bdayRef = db.ref(`inovabar/eventos/${eventId}/bday/${bdayId}`);
-
             eventRef.once('value', (eventSnapshot) => {
                 const eventData = eventSnapshot.val();
                 bdayRef.once('value', (bdaySnapshot) => {
                     const bdayData = bdaySnapshot.val();
                     if (eventData && bdayData) {
-                        // Pré-carrega as imagens antes de renderizar
                         const imagesToPreload = [
                             eventData.flyer || 'https://via.placeholder.com/1080x1080',
                             bdayData.foto || 'https://via.placeholder.com/170'
                         ];
-
                         preloadImages(imagesToPreload, () => {
-                            // Foto do flyer como fundo na parte superior
-                            const flyerTop = document.getElementById('flyer-top');
-                            flyerTop.style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/1080x1080'})`;
-                            
-                            // Foto do aniversariante com tamanho fixo
+                            document.getElementById('flyer-top').style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/1080x1080'})`;
                             const profilePic = document.getElementById('profilePic');
                             profilePic.src = bdayData.foto || 'https://via.placeholder.com/170';
-                            profilePic.style.width = '170px'; // Força o tamanho
-                            profilePic.style.height = '170px';
-                            profilePic.style.objectFit = 'cover';
-                            
-                            // Preenche os dados
                             document.getElementById('eventName').textContent = `B-DAY ${bdayData.apelido || bdayData.promocao || 'Sem nome'}`;
                             document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08');
                             document.getElementById('eventDescription').textContent = eventData.descricao || 'Não informadas';
                             document.getElementById('rules').textContent = bdayData.regra || 'Sem regras especiais';
-                            
-                            // Mostra o flyer
                             document.getElementById('flyer').style.display = 'block';
                             document.getElementById('downloadBtn').style.display = 'inline';
                         });
                     } else {
-                        alert('Dados não encontrados para os IDs fornecidos.');
+                        alert('Dados não encontrados.');
                     }
                 });
             }).catch(error => {
                 console.error('Erro ao carregar dados:', error);
-                alert('Erro ao carregar os dados do Firebase.');
+                alert('Erro ao carregar os dados.');
             });
         }
 
         function downloadFlyer() {
             const flyer = document.getElementById('flyer');
-            // Cria um contêiner temporário com proporção 9:16
             const tempContainer = document.createElement('div');
             tempContainer.style.width = '1080px';
             tempContainer.style.height = '1920px';
@@ -271,8 +254,7 @@
             tempContainer.style.left = '-9999px';
             tempContainer.style.top = '-9999px';
             tempContainer.style.backgroundColor = '#000';
-            
-            // Clona o flyer-top com proporção 1:1 (1080x1080)
+
             const flyerTopClone = document.createElement('div');
             flyerTopClone.style.width = '1080px';
             flyerTopClone.style.height = '1080px';
@@ -280,15 +262,13 @@
             flyerTopClone.style.backgroundSize = 'cover';
             flyerTopClone.style.backgroundPosition = 'center';
             flyerTopClone.style.position = 'relative';
-            flyerTopClone.style.backgroundColor = '#000';
             flyerTopClone.innerHTML = `
                 <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);"></div>
             `;
-            
-            // Clona a foto do aniversariante com tamanho fixo
+
             const profilePicClone = document.createElement('img');
             profilePicClone.src = document.getElementById('profilePic').src;
-            profilePicClone.style.width = '170px'; // Força o tamanho
+            profilePicClone.style.width = '170px';
             profilePicClone.style.height = '170px';
             profilePicClone.style.borderRadius = '50%';
             profilePicClone.style.border = '3px solid #ffffff7d';
@@ -299,16 +279,14 @@
             profilePicClone.style.zIndex = '2';
             profilePicClone.style.objectFit = 'cover';
             profilePicClone.crossOrigin = "anonymous";
-            
-            // Clona o flyer-bottom com proporção restante (1080x840)
+
             const flyerBottomClone = document.createElement('div');
             flyerBottomClone.style.width = '1080px';
             flyerBottomClone.style.height = '840px';
             flyerBottomClone.style.backgroundColor = '#000';
-            flyerBottomClone.style.padding = '5px';
+            flyerBottomClone.style.padding = '10px';
             flyerBottomClone.style.textAlign = 'center';
             flyerBottomClone.style.color = 'white';
-            flyerBottomClone.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.8)';
             flyerBottomClone.innerHTML = `
                 <div style="font-size: 60px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
                 <div style="font-size: 40px; font-weight: bold; margin: 5px 0;">${document.getElementById('eventDescription').textContent}</div>
@@ -316,21 +294,18 @@
                 <div style="font-size: 30px; color: #ccc; margin: 5px 0; line-height: 1.5;">${document.getElementById('rules').textContent}</div>
                 <div style="font-size: 30px; margin: 5px 0;">${document.getElementById('address').textContent}</div>
             `;
-            
-            // Monta o contêiner temporário
+
             tempContainer.appendChild(flyerTopClone);
             tempContainer.appendChild(profilePicClone);
             tempContainer.appendChild(flyerBottomClone);
             document.body.appendChild(tempContainer);
 
-            // Gera a imagem com html2canvas
             setTimeout(() => {
                 html2canvas(tempContainer, { 
                     useCORS: true, 
                     scale: 2,
                     allowTaint: false,
-                    logging: true,
-                    backgroundColor: null // Evita fundo preto se a imagem falhar
+                    backgroundColor: null 
                 }).then(canvas => {
                     const image = canvas.toDataURL('image/png');
                     const link = document.createElement('a');
@@ -340,13 +315,12 @@
                     document.body.removeChild(tempContainer);
                 }).catch(error => {
                     console.error('Erro ao gerar a imagem:', error);
-                    alert('Erro ao gerar o flyer para download. Certifique-se de que o CORS está configurado no Firebase Storage e que as URLs das imagens são válidas.');
+                    alert('Erro ao gerar o flyer.');
                     document.body.removeChild(tempContainer);
                 });
-            }, 4000); // Aumentado para 4 segundos para garantir carregamento
+            }, 4000);
         }
 
-        // Carrega automaticamente ao abrir a página
         window.onload = loadFlyer;
     </script>
 </body>
