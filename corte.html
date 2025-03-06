@@ -322,7 +322,7 @@
                 if (evento && document.getElementById('eventPreview')) {
                     var formatted = formatEventDisplay(evento.data, evento.descricao);
                     var previewHtml = `
-                        <div class="event-preview">
+                        <div class="container event-preview">
                             <img src="${evento.flyer || ''}" onerror="this.style.display='none'" alt="Flyer da festa" loading="lazy">
                             <div class="event-details">
                                 <span class="event-date">${formatted.date}</span>
