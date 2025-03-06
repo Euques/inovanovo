@@ -127,8 +127,7 @@
             </div>
             <div id="eventPreview" class="event-preview">
                 <h5>Pré-visualização do Evento</h5>
-                <p><strong>Apelido:</strong> <span id="previewApelido"></span></p>
-                <p><strong>Data:</strong> <span id="previewData"></span></p>
+                <p><strong>Evento:</strong> <span id="previewApelido"></span></p> <!-- Removida a linha de Data -->
                 <div id="previewImageContainer">
                     <img id="previewFlyer" src="" alt="Flyer do evento" onload="this.style.display='block'" onerror="handleImageError()">
                     <p id="imageError" class="image-error" style="display: none;">Não foi possível carregar a imagem do flyer.</p>
@@ -193,7 +192,7 @@
                     var evento = childSnapshot.val();
                     eventosData[eventId] = evento;
 
-                    var displayText = formatEventDisplay(evento.data, evento.apelido); // Usando apelido em vez de descrição
+                    var displayText = formatEventDisplay(evento.data, evento.apelido);
                     var item = document.createElement("div");
                     item.className = "dropdown-item";
                     item.setAttribute("data-event-id", eventId);
@@ -228,7 +227,6 @@
                 var evento = eventosData[selectedEventId];
                 
                 document.getElementById("previewApelido").innerText = formatEventDisplay(evento.data, evento.apelido);
-                document.getElementById("previewData").innerText = formatEventDisplay(evento.data, evento.apelido); // Mesmo formato para data
                 
                 if (evento.flyer) {
                     previewFlyer.src = evento.flyer;
