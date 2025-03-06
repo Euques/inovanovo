@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Flyer de Aniversariante</title>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            font-family: Arial, sans-serif;
+        }
+        
+        #flyer {
+            width: 400px;
+            height: 600px;
+            background-size: cover;
+            padding: 20px;
+            position: relative;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            display: none;
+            border-radius: 10px;
+        }
+        
+        #flyer-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        
+        #profilePic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 10px auto;
+            display: block;
+            border: 2px solid white;
+        }
+        
+        #flyer h2 {
+            margin: 10px 0;
+            font-size: 28px;
+        }
+        
+        #flyer p {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        
+        #rules {
+            font-size: 14px;
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+        }
+        
+        #downloadBtn {
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Flyer de Aniversariante</h1>
+        <button onclick="loadFlyer()">Carregar Flyer</button>
+        <button onclick="downloadFlyer()" id="downloadBtn">Baixar Flyer</button>
+        
+        <div id="flyer">
+            <div id="flyer-content">
+                <img id="profilePic" src="" alt="Foto do aniversariante">
+                <h2 id="eventName"></h2>
+                <p id="eventDate"></p>
+                <p id="eventDescription"></p>
+                <p id="rules"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        // Configuração do Firebase (substitua pelos seus dados reais)
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "SEU_AUTH_DOMAIN",
+            databaseURL: "SUA_DATABASE_URL",
+            projectId: "SEU_PROJECT_ID",
+            storageBucket: "SEU_STORAGE_BUCKET",
+            messagingSenderId: "SEU_SENDER_ID",
+            appId: "SEU_APP_ID"
+        };
+
+        // Inicializa o Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function loadFlyer() {
+            const eventId = "-OKX77yN21Rj9NtsMEZd";
+            const bdayId = "-OKaKdD-Y8SgKVQpiMgO"; // Exemplo com o B-day Nany
+            const eventRef = db.ref(`inovabar/eventos/${eventId}`);
+            const bdayRef = db.ref(`inovabar/eventos/${eventId}/bday/${bdayId}`);
+
+            eventRef.once('value', (eventSnapshot) => {
+                const eventData = eventSnapshot.val();
+                bdayRef.once('value', (bdaySnapshot) => {
+                    const bdayData = bdaySnapshot.val();
+                    if (eventData && bdayData) {
+                        // Foto do flyer como fundo
+                        document.getElementById('flyer').style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/400x600'})`;
+                        
+                        // Foto do aniversariante
+                        document.getElementById('profilePic').src = bdayData.foto || 'https://via.placeholder.com/100';
+                        
+                        // Preenche os dados
+                        document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
+                        document.getElementById('eventDate').textContent = `Data: ${bdayData.bday || 'Não informada'}`;
+                        document.getElementById('eventDescription').textContent = `Atrações: ${eventData.descricao || 'Não informadas'}`;
+                        document.getElementById('rules').textContent = bdayData.regra || 'Sem regras especiais';
+                        
+                        // Mostra o flyer e o botão de download
+                        document.getElementById('flyer').style.display = 'block';
+                        document.getElementById('downloadBtn').style.display = 'inline';
+                    }
+                });
+            });
+        }
+
+        function downloadFlyer() {
+            const flyer = document.getElementById('flyer');
+            
+            html2canvas(flyer, { useCORS: true }).then(canvas => {
+                const image = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.download = `${document.getElementById('eventName').textContent}-flyer.png`;
+                link.href = image;
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>
