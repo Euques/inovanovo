@@ -51,26 +51,27 @@
         }
         #flyer-bottom {
             background-color: #000;
-            padding: 5px; /* Reduzido para subir ainda mais o conteúdo */
+            padding: 5px;
             text-align: center;
         }
         #profilePic {
-            width: 170px;
-            height: 170px;
+            width: 170px !important;
+            height: 170px !important;
             border-radius: 50%;
             border: 3px solid #ffffff7d;
             position: absolute;
-            top: 35%; /* Ajustado para subir a foto */
+            top: 35%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 2;
+            object-fit: cover; /* Garante que a imagem se ajuste sem distorção */
         }
         #eventName {
             font-size: 4vw;
             font-weight: bold;
             color: #ff00ff;
             text-transform: uppercase;
-            margin: 5px 0; /* Reduzido para ajustar o espaçamento */
+            margin: 5px 0;
         }
         #eventDescription {
             font-size: 3vw;
@@ -81,7 +82,7 @@
             font-size: 3.5vw;
             font-weight: bold;
             color: #ff00ff;
-            margin: 2px 0; /* Reduzido para ajustar */
+            margin: 2px 0;
         }
         #rules {
             font-size: 2vw;
@@ -90,7 +91,7 @@
             line-height: 1.5;
         }
         #address {
-            font-size: 2.2vw; /* Um pouco maior que #rules */
+            font-size: 2.2vw;
             margin: 5px 0;
         }
         .button-group {
@@ -112,7 +113,7 @@
             #eventDate { font-size: 5vw; }
             #rules { font-size: 2.5vw; }
             #address { font-size: 2.7vw; }
-            #profilePic { width: 120px; height: 120px; top: 30%; }
+            #profilePic { width: 120px !important; height: 120px !important; top: 30%; }
         }
     </style>
 </head>
@@ -200,6 +201,7 @@
                         callback();
                     }
                 };
+                images[index].crossOrigin = "anonymous";
                 images[index].src = url;
             });
         }
@@ -231,12 +233,15 @@
                             const flyerTop = document.getElementById('flyer-top');
                             flyerTop.style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/1080x1080'})`;
                             
-                            // Foto do aniversariante
+                            // Foto do aniversariante com tamanho fixo
                             const profilePic = document.getElementById('profilePic');
                             profilePic.src = bdayData.foto || 'https://via.placeholder.com/170';
+                            profilePic.style.width = '170px'; // Força o tamanho
+                            profilePic.style.height = '170px';
+                            profilePic.style.objectFit = 'cover';
                             
                             // Preenche os dados
-                            document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
+                            document.getElementById('eventName').textContent = `B-DAY ${bdayData.apelido || bdayData.promocao || 'Sem nome'}`;
                             document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08');
                             document.getElementById('eventDescription').textContent = eventData.descricao || 'Não informadas';
                             document.getElementById('rules').textContent = bdayData.regra || 'Sem regras especiais';
@@ -264,7 +269,7 @@
             tempContainer.style.position = 'absolute';
             tempContainer.style.left = '-9999px';
             tempContainer.style.top = '-9999px';
-            tempContainer.style.backgroundColor = '#000'; // Fundo preto como fallback
+            tempContainer.style.backgroundColor = '#000';
             
             // Clona o flyer-top com proporção 1:1 (1080x1080)
             const flyerTopClone = document.createElement('div');
@@ -274,15 +279,15 @@
             flyerTopClone.style.backgroundSize = 'cover';
             flyerTopClone.style.backgroundPosition = 'center';
             flyerTopClone.style.position = 'relative';
-            flyerTopClone.style.backgroundColor = '#000'; // Fundo preto para continuidade
+            flyerTopClone.style.backgroundColor = '#000';
             flyerTopClone.innerHTML = `
                 <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);"></div>
             `;
             
-            // Clona a foto do aniversariante
+            // Clona a foto do aniversariante com tamanho fixo
             const profilePicClone = document.createElement('img');
             profilePicClone.src = document.getElementById('profilePic').src;
-            profilePicClone.style.width = '170px';
+            profilePicClone.style.width = '170px'; // Força o tamanho
             profilePicClone.style.height = '170px';
             profilePicClone.style.borderRadius = '50%';
             profilePicClone.style.border = '3px solid #ffffff7d';
@@ -291,6 +296,8 @@
             profilePicClone.style.left = '50%';
             profilePicClone.style.transform = 'translate(-50%, -50%)';
             profilePicClone.style.zIndex = '2';
+            profilePicClone.style.objectFit = 'cover';
+            profilePicClone.crossOrigin = "anonymous";
             
             // Clona o flyer-bottom com proporção restante (1080x840)
             const flyerBottomClone = document.createElement('div');
@@ -328,14 +335,13 @@
                     link.download = `${document.getElementById('eventName').textContent}-flyer.png`;
                     link.href = image;
                     link.click();
-                    // Remove o contêiner temporário
                     document.body.removeChild(tempContainer);
                 }).catch(error => {
                     console.error('Erro ao gerar a imagem:', error);
-                    alert('Erro ao gerar o flyer para download. Pode ser um problema de CORS. Verifique as configurações do Firebase Storage ou entre em contato com o suporte.');
+                    alert('Erro ao gerar o flyer para download. Certifique-se de que o CORS está configurado no Firebase Storage.');
                     document.body.removeChild(tempContainer);
                 });
-            }, 3000); // Mantido em 3 segundos
+            }, 3000);
         }
 
         // Carrega automaticamente ao abrir a página
