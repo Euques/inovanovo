@@ -58,12 +58,12 @@
             text-align: center;
         }
         #profilePic {
-            width: 150px;
-            height: 150px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
-            border: 3px solid white;
+            border: 3px solid #ffffff7d;
             position: absolute;
-            top: 50%;
+            top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 2;
@@ -75,19 +75,20 @@
             text-transform: uppercase;
             margin: 10px 0;
         }
+        #eventDescription {
+            font-size: 3vw;
+            font-weight: bold;
+            margin: 10px 0;
+        }
         #eventDate {
             font-size: 3.5vw;
             font-weight: bold;
             color: #ff00ff;
             margin: 5px 0;
         }
-        #eventDescription {
-            font-size: 3vw;
-            font-weight: bold;
-            margin: 10px 0;
-        }
         #rules {
             font-size: 2.5vw;
+            color: #ccc; /* Cinza */
             margin: 10px 0;
             line-height: 1.5;
         }
@@ -111,8 +112,8 @@
         }
         @media (max-width: 768px) {
             #eventName { font-size: 6vw; }
-            #eventDate { font-size: 5vw; }
             #eventDescription { font-size: 4vw; }
+            #eventDate { font-size: 5vw; }
             #rules { font-size: 3.5vw; }
             #address { font-size: 3vw; }
             #profilePic { width: 120px; height: 120px; }
@@ -130,8 +131,8 @@
             <img id="profilePic" src="" alt="Foto do aniversariante">
             <div id="flyer-bottom">
                 <div id="eventName"></div>
-                <div id="eventDate"></div>
                 <div id="eventDescription"></div>
+                <div id="eventDate"></div>
                 <div id="rules"></div>
                 <div id="address">Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP</div>
             </div>
@@ -184,6 +185,30 @@
             return `${dayOfWeek} ${day}. ${month} 13H`;
         }
 
+        // Função para pré-carregar imagens
+        function preloadImages(urls, callback) {
+            let loadedCount = 0;
+            const totalImages = urls.length;
+            const images = [];
+
+            urls.forEach((url, index) => {
+                images[index] = new Image();
+                images[index].onload = () => {
+                    loadedCount++;
+                    if (loadedCount === totalImages) {
+                        callback();
+                    }
+                };
+                images[index].onerror = () => {
+                    loadedCount++;
+                    if (loadedCount === totalImages) {
+                        callback();
+                    }
+                };
+                images[index].src = url;
+            });
+        }
+
         function loadFlyer() {
             const { eventId, bdayId } = getUrlParams();
 
@@ -200,23 +225,31 @@
                 bdayRef.once('value', (bdaySnapshot) => {
                     const bdayData = bdaySnapshot.val();
                     if (eventData && bdayData) {
-                        // Foto do flyer como fundo na parte superior
-                        const flyerTop = document.getElementById('flyer-top');
-                        flyerTop.style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/1080x1080'})`;
-                        
-                        // Foto do aniversariante
-                        const profilePic = document.getElementById('profilePic');
-                        profilePic.src = bdayData.foto || 'https://via.placeholder.com/150';
-                        
-                        // Preenche os dados
-                        document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
-                        document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08');
-                        document.getElementById('eventDescription').textContent = eventData.descricao || 'Não informadas';
-                        document.getElementById('rules').textContent = bdayData.regra || 'Sem regras especiais';
-                        
-                        // Mostra o flyer
-                        document.getElementById('flyer').style.display = 'block';
-                        document.getElementById('downloadBtn').style.display = 'inline';
+                        // Pré-carrega as imagens antes de renderizar
+                        const imagesToPreload = [
+                            eventData.flyer || 'https://via.placeholder.com/1080x1080',
+                            bdayData.foto || 'https://via.placeholder.com/150'
+                        ];
+
+                        preloadImages(imagesToPreload, () => {
+                            // Foto do flyer como fundo na parte superior
+                            const flyerTop = document.getElementById('flyer-top');
+                            flyerTop.style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/1080x1080'})`;
+                            
+                            // Foto do aniversariante
+                            const profilePic = document.getElementById('profilePic');
+                            profilePic.src = bdayData.foto || 'https://via.placeholder.com/150';
+                            
+                            // Preenche os dados
+                            document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
+                            document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08');
+                            document.getElementById('eventDescription').textContent = eventData.descricao || 'Não informadas';
+                            document.getElementById('rules').textContent = bdayData.regra || 'Sem regras especiais';
+                            
+                            // Mostra o flyer
+                            document.getElementById('flyer').style.display = 'block';
+                            document.getElementById('downloadBtn').style.display = 'inline';
+                        });
                     } else {
                         alert('Dados não encontrados para os IDs fornecidos.');
                     }
@@ -253,12 +286,12 @@
             // Clona a foto do aniversariante
             const profilePicClone = document.createElement('img');
             profilePicClone.src = document.getElementById('profilePic').src;
-            profilePicClone.style.width = '150px';
-            profilePicClone.style.height = '150px';
+            profilePicClone.style.width = '160px';
+            profilePicClone.style.height = '160px';
             profilePicClone.style.borderRadius = '50%';
-            profilePicClone.style.border = '3px solid white';
+            profilePicClone.style.border = '3px solid #ffffff7d';
             profilePicClone.style.position = 'absolute';
-            profilePicClone.style.top = '1080px';
+            profilePicClone.style.top = '40%'; // Ajustado para 40%
             profilePicClone.style.left = '50%';
             profilePicClone.style.transform = 'translate(-50%, -50%)';
             profilePicClone.style.zIndex = '2';
@@ -274,9 +307,9 @@
             flyerBottomClone.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.8)';
             flyerBottomClone.innerHTML = `
                 <div style="font-size: 60px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 10px 0;">${document.getElementById('eventName').textContent}</div>
-                <div style="font-size: 50px; font-weight: bold; color: #ff00ff; margin: 5px 0;">${document.getElementById('eventDate').textContent}</div>
                 <div style="font-size: 40px; font-weight: bold; margin: 10px 0;">${document.getElementById('eventDescription').textContent}</div>
-                <div style="font-size: 30px; margin: 10px 0; line-height: 1.5;">${document.getElementById('rules').textContent}</div>
+                <div style="font-size: 50px; font-weight: bold; color: #ff00ff; margin: 5px 0;">${document.getElementById('eventDate').textContent}</div>
+                <div style="font-size: 30px; color: #ccc; margin: 10px 0; line-height: 1.5;">${document.getElementById('rules').textContent}</div>
                 <div style="font-size: 30px; margin-top: 10px;">${document.getElementById('address').textContent}</div>
             `;
             
@@ -298,10 +331,10 @@
                     document.body.removeChild(tempContainer);
                 }).catch(error => {
                     console.error('Erro ao gerar a imagem:', error);
-                    alert('Erro ao gerar o flyer para download.');
+                    alert('Erro ao gerar o flyer para download. Verifique se as imagens estão acessíveis.');
                     document.body.removeChild(tempContainer);
                 });
-            }, 1000);
+            }, 2000); // Aumentado para 2 segundos para garantir o carregamento
         }
 
         // Carrega automaticamente ao abrir a página
