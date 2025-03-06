@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +16,7 @@
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            border: none; /* Remover contorno do container */
+            border: none;
             margin-top: 50px;
         }
         .event-list {
@@ -28,29 +28,37 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-            background-color: #1c1c1c; /* Tom de preto mais claro */
-            border-radius: 10px; /* Cantos arredondados */
-            padding: 15px;
+            background-color: #1c1c1c;
+            border-radius: 10px;
+            padding: 5px; /* Reduzido para 5px */
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            border: none; /* Remover contorno */
         }
         .event-item:hover {
-            background-color: #2a2a2a; /* Tom ainda mais claro ao passar o mouse */
+            background-color: #2a2a2a;
         }
         .event-item img {
-            width: 60px; /* Foto maior */
-            height: 60px;
+            width: 100px; /* Foto maior */
+            height: 100px;
             object-fit: cover;
             border-radius: 5px;
-            margin-right: 15px;
+            margin-right: 10px;
         }
         .event-details {
             flex: 1;
+        }
+        .event-date {
+            font-size: 18px; /* Data em destaque */
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .event-description {
+            font-size: 14px; /* Texto menor */
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Limita a duas linhas */
+            -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
         }
     </style>
 </head>
@@ -86,7 +94,7 @@
             return dias[new Date(data).getDay()];
         }
 
-        // Função para formatar o mês em texto (ex.: FEV)
+        // Função para formatar o mês em texto (ex.: MAR)
         function getMesAbrev(data) {
             var meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
             return meses[new Date(data).getMonth()];
@@ -98,7 +106,7 @@
             var mes = getMesAbrev(data);
             var hora = new Date(data).toLocaleTimeString('pt-BR', { hour: '2-digit' }) + 'H';
             var diaSemana = getDiaSemana(data);
-            return `${diaSemana} ${dia}.${mes} ${hora} - ${descricao || 'Sem descrição'}`;
+            return { date: `${diaSemana} ${dia}.${mes} ${hora}`, description: descricao || 'Sem descrição' };
         }
 
         function populateEventList() {
@@ -119,12 +127,15 @@
                     if (evento.data >= currentTimestamp) {
                         eventosData[eventId] = evento;
 
-                        var displayText = formatEventDisplay(evento.data, evento.descricao);
+                        var formatted = formatEventDisplay(evento.data, evento.descricao);
                         var item = document.createElement("li");
                         item.className = "event-item";
                         item.innerHTML = `
                             <img src="${evento.flyer || ''}" onerror="this.style.display='none'" alt="Flyer" loading="lazy">
-                            <div class="event-details">${displayText}</div>
+                            <div class="event-details">
+                                <span class="event-date">${formatted.date}</span>
+                                <div class="event-description">${formatted.description}</div>
+                            </div>
                         `;
                         item.onclick = function() {
                             window.location.href = `https://adm.inovabar.com.br/corte.html?a=inovabar/eventos/${eventId}`;
