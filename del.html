@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,6 +44,9 @@
             width: 100%;
             text-align: left;
             cursor: pointer;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .dropdown-list {
             position: absolute;
@@ -55,6 +58,7 @@
             border-radius: 5px;
             max-height: 200px;
             overflow-y: auto;
+            overflow-x: hidden; /* Remover barra horizontal */
             z-index: 1000;
             display: none;
         }
@@ -82,6 +86,9 @@
             display: flex;
             align-items: center;
             border-bottom: 1px solid #444;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; /* Garante que o texto fique em uma linha */
         }
         .dropdown-item:last-child {
             border-bottom: none;
@@ -102,6 +109,12 @@
             background-color: #222;
             border-radius: 5px;
             display: none;
+        }
+        .event-preview p {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; /* Garante que o texto fique em uma linha */
+            margin: 0;
         }
         .event-preview img {
             max-width: 100%;
@@ -192,7 +205,7 @@
                     var evento = childSnapshot.val();
                     eventosData[eventId] = evento;
 
-                    var displayText = formatEventDisplay(evento.data, evento.descricao); // Usando descrição
+                    var displayText = formatEventDisplay(evento.data, evento.descricao);
                     var item = document.createElement("div");
                     item.className = "dropdown-item";
                     item.setAttribute("data-event-id", eventId);
@@ -226,7 +239,7 @@
             if (selectedEventId && eventosData[selectedEventId]) {
                 var evento = eventosData[selectedEventId];
                 
-                document.getElementById("previewApelido").innerText = formatEventDisplay(evento.data, evento.descricao); // Usando descrição
+                document.getElementById("previewApelido").innerText = formatEventDisplay(evento.data, evento.descricao);
                 
                 if (evento.flyer) {
                     previewFlyer.src = evento.flyer;
