@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="pt_BR">
 
@@ -8,33 +5,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Comemore seu aniversário conosco">
+    <meta property="og:title" content="B-Day Inova Bar">
+    <meta property="og:description" content="Comemore seu aniversário conosco">
+    <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Fbday.png?alt=media&token=488b45f5-3478-496a-bc83-71e15111a36c">
 
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Comemore seu aniversário conosco">
-  <meta property="og:title" content="B-Day Inova Bar">
-  <meta property="og:description" content="Comemore seu aniversário conosco">
-  <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Fbday.png?alt=media&token=488b45f5-3478-496a-bc83-71e15111a36c">
-    
     <title>B-day Inova Bar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="crooper/cropper.css">
-
-
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-    <!-- MDB -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.css" rel="stylesheet" />
 
     <style>
         body {
             background-color: rgb(0, 0, 0);
             color: aliceblue;
-           
-
-
         }
 
         h1 {
@@ -47,7 +35,6 @@
 
         .label {
             cursor: pointer;
-
         }
 
         .progress {
@@ -61,10 +48,7 @@
 
         .img-container img {
             max-width: 100%;
-
         }
-
-
 
         .container,
         .container-fluid,
@@ -72,19 +56,17 @@
         .container-md,
         .container-sm,
         .container-xl {
-            width: 100%;
-            padding-right: 15px;
-            padding-left: 15px;
-            margin-right: auto;
-            margin-left: auto;
-           
+            width: 90%;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgb(43, 43, 43);
+            border-radius: 20px;
         }
 
         .cropper-view-box,
         .cropper-face {
             border-radius: 50%;
         }
-
 
         .cropper-point.point-se {
             bottom: -3px;
@@ -101,44 +83,33 @@
             height: 160px;
         }
 
-
         .modal-content {
-
             background-color: #1f1f1f;
-
         }
-        
+
         .modal-dialog {
-    position: relative;
-    width: auto;
-                margin: 0px;
-   
-    pointer-events: none;
-}
-        
+            position: relative;
+            width: auto;
+            margin: 0px;
+            pointer-events: none;
+        }
+
         .modal-body {
-    position: relative;
-    flex: 1 1 auto;
-        padding: 1rem 2rem 1rem 2rem;
-}
+            position: relative;
+            flex: 1 1 auto;
+            padding: 1rem 2rem 1rem 2rem;
+        }
 
         .modal-header {
-
             border-bottom: 2px solid #424141;
-
         }
 
         .modal-footer {
             border-top: 2px solid #424141;
-
         }
 
-
-
         .form-outline .form-control~.form-label {
-
             color: #e0e0e0;
-
         }
 
         .cropper-modal {
@@ -146,28 +117,56 @@
             opacity: 0.9;
         }
 
-        .container {
-            width: 90%;
-            padding: 20px;
-
-            margin-top: 20px;
-
-            
-            border: 1px solid rgb(43, 43, 43);
+        .cropper-wrap-box,
+        .cropper-canvas,
+        .cropper-drag-box,
+        .cropper-crop-box,
+        .cropper-modal {
             border-radius: 20px;
-
         }
-        
-        
-        .cropper-wrap-box, .cropper-canvas, .cropper-drag-box, .cropper-crop-box, .cropper-modal {
-    border-radius: 20px;
-}
+
         .cropper-container {
+            border-radius: 20px;
+        }
 
-    border-radius: 20px;
-}
+        /* Estilo da pré-visualização da festa */
+        .event-preview {
+            background-color: #1c1c1c;
+            border-radius: 20px;
+            padding: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
 
+        .event-preview img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
 
+        .event-preview .event-details {
+            flex: 1;
+        }
+
+        .event-preview .event-date {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .event-preview .event-description {
+            font-size: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 
     <style type="text/css">
@@ -179,203 +178,80 @@
 </head>
 
 <body>
-    
-    
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
-<script>
-
-  var firebaseConfig = {
-        apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
-        authDomain: "blacknight-600de.firebaseapp.com",
-        databaseURL: "https://blacknight-600de.firebaseio.com",
-        projectId: "blacknight-600de",
-        storageBucket: "blacknight-600de.appspot.com",
-        messagingSenderId: "588926432348",
-        appId: "1:588926432348:web:47b2b4a1b421d4b2a0e299",
-        measurementId: "G-559VYPVJ5Q"
-
-    };
-
-    // Initialize Firebase
-
-    firebase.initializeApp(firebaseConfig);
-
-</script>
-    
-    
-    
-    
-    <div class="container text-center ">
-        <h1 id="mApelido" class="display-4">Escolha uma foto</h1>
-
-        <label class="label" data-toggle="tooltip" title="" data-original-title="Escolha sua foto">
-            <img class="rounded" id="avatar" src="https://firebasestorage.googleapis.com/v0/b/inovabarapp.appspot.com/o/promo%2Fcamera2.jpeg?alt=media&token=cab19dad-ab65-4b83-ba69-8cd97513237c" alt="avatar">
-            <input type="file" class="sr-only" id="input" name="image" accept="image/*">
-        </label>
-        <div class="progress">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0"
-                aria-valuemin="0" aria-valuemax="100">0%</div>
-        </div>
-        <div class="alert" role="alert"></div>
-        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog " role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel">Preencha seus dados</h5>
-
-                        <button type="button" class="btn-close btn-close-white" data-mdb-dismiss="modal"
-                            aria-label="Close"></button>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="img-container">
-                            <img id="image" src="https://avatars0.githubusercontent.com/u/3456749">
-                        </div>
-                    </div>
-
-
-                    <div class="form-outline form-white modal-body">
-
-                        <form role="form" id="newModalForm" class="needs-validation" novalidate>
-                            <div class="form-outline mb-4">
-                                <input type="text" class="form-control" id="apelido" name="apelido" required>
-                                <label class="form-label" for="apelido">Seu Apelido</label>
-                                <div class="form-helper">O apelido aparecerá pra seus convidados</div>
-                                <div class="invalid-feedback">
-                                    Voce precisa por um Apelido.
-                                </div>
-
-                            </div>
-                            <div class="form-outline mb-4">
-
-                                <input type="text" class="form-control" id="nome">
-                                <label class="form-label" for="nome">Seu Nome Completo:</label>
-                            </div>
-                            <div class="form-outline mb-4">
-
-                                <input type="date" class="form-control" id="data">
-                                <label class="form-label" for="data">Seu Aniversário</label>
-                            </div>
-
-                            <div class="form-outline mb-4">
-
-                                <input type="number" class="form-control" id="whats">
-                                <label class="form-label" for="whats">Seu Whatsapp:</label>
-                                <div class="form-helper">Você será identificado por esse número</div>
-                            </div>
-
-
-
-                    </div>
-
-
-
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary"
-                            data-mdb-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="crop" disabled>Cadastrar Aniversário</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-   <div id="container" class="container text-left">
-        <div class="wrapper">
-            <div class="inner">
-                <h4 id="text04">Olha o que vc ganha</h4>
-                <div id="" class="style1 list">
-
-                        <ul>
-                        <li>
-                            <p><strong>Entrada VIP com acompanhante e R$100 em consumação para todos os shows de 2025</strong></p>
-                        </li>
-                        <li>
-                            <p><strong>Cartão Fidelidade</strong></p>
-                        </li>
-                            
-                        <li>
-                            <p><strong>Flyer e Link da lista para convidados</strong> c/ sua foto</p>
-                        </li>
-                   
-                        
-                    </ul>
-                </div>
-                <h4 id="" >com 20 convidados pagantes</h4>
-                <div id="" class="">
-                    <ul class="">
-                        <li >
-                            <p>1 <strong>Garrafa de (Red Label, ou Bomby, ou Smirnoff)</strong></p>
-                        </li>
-                        <li>
-                            <p>1 <strong>Balde de Heineken com 6 long neck</strong></p>
-                        </li>
-                       
-                    </ul>
-                    
-
-                    
-                 <!--   <ul>
-                        <li>
-                            <p><strong>Reserva de um Bistro</strong></p>
-                        </li>
-                        <li>
-                            <p><strong>Flyer virtual</strong> c/ sua foto</p>
-                        </li>
-                        <li>
-                            <p><strong>Vip para o aniversariante</strong></p>
-                        </li>
-                        <li>
-                            <p><strong>01 Gin tônica</strong></p>
-                        </li>
-                    </ul>
-                </div>
-                <h4 id="" >com 20 convidados pagantes</h4>
-                <div id="" class="">
-                    <ul class="">
-                        <li >
-                            <p>1 <strong>Garrafa de red label</strong></p>
-                        </li>
-                        <li>
-                            <p>1 <strong>Balde de Heineken</strong> long neck com 6 unidades</p>
-                        </li>
-                    </ul> -->
-                </div>
-               
-            </div>
-        </div>
-    </div>
-<br>
-    <!-- MDB -->
-
-
-
-    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/bootstrap@4/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="crooper/cropper.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        
-        
-        const { search } = window.location
-const params = new URLSearchParams(search)
-const pegaA = params.get('a')
+        var firebaseConfig = {
+            apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
+            authDomain: "blacknight-600de.firebaseapp.com",
+            databaseURL: "https://blacknight-600de.firebaseio.com",
+            projectId: "blacknight-600de",
+            storageBucket: "blacknight-600de.appspot.com",
+            messagingSenderId: "588926432348",
+            appId: "1:588926432348:web:47b2b4a1b421d4b2a0e299",
+            measurementId: "G-559VYPVJ5Q"
+        };
 
+        firebase.initializeApp(firebaseConfig);
 
+        // Extrair o UID da URL
+        const { search } = window.location;
+        const params = new URLSearchParams(search);
+        const pegaA = params.get('a');
+        const pathParts = pegaA.split('/');
+        const eventPath = pathParts[0] + '/' + pathParts[1]; // Ex.: "inovabar/eventos"
+        const eventId = pathParts[2]; // Ex.: "-OJTJ0ASXwREwt9WQaEP"
 
+        // Função para obter o dia da semana em formato abreviado
+        function getDiaSemana(data) {
+            var dias = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
+            return dias[new Date(data).getDay()];
+        }
 
+        // Função para formatar o mês em texto (ex.: MAR)
+        function getMesAbrev(data) {
+            var meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+            return meses[new Date(data).getMonth()];
+        }
+
+        // Função para formatar a data e descrição no estilo desejado
+        function formatEventDisplay(data, descricao) {
+            var dia = new Date(data).getDate().toString().padStart(2, '0');
+            var mes = getMesAbrev(data);
+            var hora = new Date(data).toLocaleTimeString('pt-BR', { hour: '2-digit' }) + 'H';
+            var diaSemana = getDiaSemana(data);
+            return { date: `${diaSemana} ${dia}.${mes} ${hora}`, description: descricao || 'Sem descrição' };
+        }
+
+        // Carregar dados da festa para a pré-visualização
+        function loadEventPreview() {
+            var eventRef = firebase.database().ref(`${eventPath}/${eventId}`);
+            eventRef.once('value', function(snapshot) {
+                var evento = snapshot.val();
+                if (evento) {
+                    var formatted = formatEventDisplay(evento.data, evento.descricao);
+                    var previewHtml = `
+                        <div class="event-preview">
+                            <img src="${evento.flyer || ''}" onerror="this.style.display='none'" alt="Flyer da festa" loading="lazy">
+                            <div class="event-details">
+                                <span class="event-date">${formatted.date}</span>
+                                <div class="event-description">${formatted.description}</div>
+                            </div>
+                        </div>
+                    `;
+                    document.querySelector('.container').insertAdjacentHTML('afterbegin', previewHtml);
+                }
+            }, function(error) {
+                console.error("Erro ao carregar dados da festa:", error);
+            });
+        }
 
         $(document).ready(function () {
             $('#whats').on('input', function () {
-                $('#crop').prop('disabled', $('#apelido').val().length < 2 || $('#whats').val().length < 3 );
+                $('#crop').prop('disabled', $('#apelido').val().length < 2 || $('#whats').val().length < 3);
             });
         });
 
@@ -384,8 +260,6 @@ const pegaA = params.get('a')
             var image = document.getElementById('image');
             var input = document.getElementById('input');
 
-
-
             var $progress = $('.progress');
             var $progressBar = $('.progress-bar');
             var $alert = $('.alert');
@@ -393,6 +267,9 @@ const pegaA = params.get('a')
             var cropper;
 
             $('[data-toggle="tooltip"]').tooltip();
+
+            // Carregar pré-visualização da festa ao iniciar
+            loadEventPreview();
 
             input.addEventListener('change', function (e) {
                 var files = e.target.files;
@@ -452,116 +329,70 @@ const pegaA = params.get('a')
 
                         formData.append('avatar', blob, 'avatar.jpg');
 
-
                         firebase
                             .database()
                             .ref(`${pegaA}/bday`)
-                            .push(
+                            .push({
+                                aprovado: false,
+                                apelido: 'apelido'
+                            })
+                            .once('value', (snap) => {
+                                var idVal = snap.val();
+                                var idFoto = snap.key;
 
-                                {
-                                    aprovado: false,
-                                    apelido: 'apelido'
+                                console.log(`id foto é ${snap.key}`);
 
-                                }
-                            ).once('value', (snap) => {
-                                var idVal = snap.val()
-                                var idFoto = snap.Key
+                                const anoAtual = new Date().getFullYear();
 
-
-                                console.log(`id foto é ${snap.key}`)
-
-                                const anoAtual = new Date().getFullYear()
-
-
-                                const base64 = avatar.src.split('base64,')[1]
+                                const base64 = avatar.src.split('base64,')[1];
                                 firebase.storage().ref(`bday${anoAtual}/${snap.key}.png`).putString(base64, 'base64', { contentType: 'image/png' }).then(snapshot => {
-                                    console.log('snapshot', snapshot)
+                                    console.log('snapshot', snapshot);
 
                                     firebase.storage().ref(`bday${anoAtual}/${snap.key}.png`).getDownloadURL().then(url => {
-                                        console.log('endereço', url)
+                                        console.log('endereço', url);
 
+                                        var apelido = document.getElementById('apelido').value;
+                                        var nome = document.getElementById('nome').value;
+                                        var data = document.getElementById('data').value;
+                                        var whats = document.getElementById('whats').value;
 
-                                        var apelido = document.getElementById('apelido').value
-                                        var nome = document.getElementById('nome').value
-                                        var data = document.getElementById('data').value
-                                        var whats = document.getElementById('whats').value
-
-                                        var promo1 = `Com 20 pagantes, ${apelido} ganha entrada VIP com acompanhante e R$100 de consumo para todos os Shows de 2025 + 1 garrafa de (Red Label, ou Bombay, ou Smirnoff) + 1 Balde de Heineken com 6 long neck.`
-                                       
+                                        var promo1 = `Com 20 pagantes, ${apelido} ganha entrada VIP com acompanhante e R$100 de consumo para todos os Shows de 2025 + 1 garrafa de (Red Label, ou Bombay, ou Smirnoff) + 1 Balde de Heineken com 6 long neck.`;
 
                                         firebase.database()
                                             .ref(`${pegaA}/bday/${snap.key}`)
-                                            .set(
+                                            .set({
+                                                foto: url,
+                                                aprovado: false,
+                                                apelido: 'B-day ' + apelido,
+                                                nome: nome,
+                                                promocao: 'B-day ' + apelido,
+                                                bday: data,
+                                                whats: whats,
+                                                status: 'Aniversariante',
+                                                regra: promo1
+                                            });
 
-                                                
-                                                {
-                                                    foto: url,
-                                                    aprovado: false,
-                                                    apelido: 'B-day ' + apelido,
-                                                    nome: nome,
-                                                    promocao: 'B-day ' + apelido,
-                                                    bday: data,
-                                                    whats: whats,
-                                                    status: 'Aniversariante',
-                                                    regra: promo1
-
-                                                }
-                                            )
-                                        
-                                        window.open(`https://lista.inovabar.com.br/?p=${pegaA}/bday/${snap.key}`, '_top')
-
-                                    })
-
-                                })
-
-
+                                        window.open(`https://lista.inovabar.com.br/?p=${pegaA}/bday/${snap.key}`, '_top');
+                                    });
+                                });
                             })
-
-
-
-
                             .then(() => {
-                                console.log('Foi Gravado')
-                            
-                            
-
-                                document.getElementById('mApelido').innerHTML = apelido.value
-
-
-
-
-
+                                console.log('Foi Gravado');
+                                document.getElementById('mApelido').innerHTML = apelido.value;
                             })
                             .catch(error => {
-                                console.error('Hi fodeu!: ', error)
-                            })
-
-
-
-
-
-
-
-
-
-
+                                console.error('Hi fodeu!: ', error);
+                            });
                     });
                 }
             });
         });
-
-
-
-
-
     </script>
 
-  
-
-
+    <!-- MDB -->
+    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap@4/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="crooper/cropper.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
 </body>
-
-
-
 </html>
-
