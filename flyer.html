@@ -11,7 +11,10 @@
     <title>Flyer de Aniversariante</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500&family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.min.js"></script>
     <style>
         body {
@@ -99,12 +102,12 @@
 
         #eventDetails {
             font-size: clamp(12px, 3.5vw, 14px);
-            font-family: 'Oswald', sans-serif; /* Fonte estreita */
-            font-weight: 500;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 300; /* Peso leve da fonte Oswald */
             color: #fff;
             margin: 5px 0;
             line-height: 1.4;
-            text-transform: uppercase; /* Tornar uppercase */
+            text-transform: uppercase; /* Mantendo uppercase */
             letter-spacing: 1px; /* Ajuste para parecer mais estreito */
         }
 
@@ -271,8 +274,8 @@
                         ];
                         preloadImages(imagesToPreload, (loadedImages) => {
                             const flyerImage = document.getElementById('flyer-image');
-                            flyerImage.src = loadedImages[0].src; // Substitui o placeholder pelo flyer real
-                            document.getElementById('profilePic').src = loadedImages[1].src; // Substitui o GIF pelo perfil real
+                            flyerImage.src = loadedImages[0].src;
+                            document.getElementById('profilePic').src = loadedImages[1].src;
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
                             document.getElementById('eventDetails').textContent = eventData.descricao || 'Grupo Com Prazer, SamBV e Dj Edu Pirata';
                             
@@ -291,7 +294,6 @@
                             document.getElementById('eventDescription').textContent = bdayData.regra || 'Com 20 pagantes, ganha entrada VIP...';
                             document.getElementById('flyer').style.display = 'block';
 
-                            // Extrair e clarear cor predominante
                             const colorThief = new ColorThief();
                             try {
                                 const dominantColor = colorThief.getColor(loadedImages[0]);
