@@ -26,26 +26,15 @@
             flex-direction: column;
             min-height: 100vh;
             font-family: 'Roboto', sans-serif;
-            align-items: center;
         }
 
-        .flyer-container {
+        #flyer {
             width: 100%;
             max-width: 360px;
             height: 640px;
             margin: 20px auto;
             position: relative;
             overflow: hidden;
-            transform-origin: top left;
-            transform: scale(0.3333); /* 360/1080 = 0.3333 para visualização inicial */
-        }
-
-        #flyer {
-            width: 1080px; /* Dimensões nativas para captura */
-            height: 1920px;
-            position: absolute;
-            top: 0;
-            left: 0;
             background-color: #000;
         }
 
@@ -70,7 +59,7 @@
 
         #flyer-image {
             width: 100%;
-            height: 100%; /* Ajuste para ocupar toda a altura */
+            height: 56.25%;
             object-fit: cover;
         }
 
@@ -79,69 +68,67 @@
             bottom: 0;
             width: 100%;
             height: 100%;
-            background: url('https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundobday.png?alt=media&token=26d842e9-d4a3-4672-8aad-e28bca804ea7') no-repeat bottom;
+            background: url('https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundobg.png?alt=media&token=f39b5c9a-321b-4e6c-bd5c-db057abfea97') no-repeat bottom;
             background-size: cover;
-            background-position: center;
         }
 
         #layer-top {
-            position: absolute;
+            position: relative;
             z-index: 2;
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 45px;
+            padding: 15px;
             color: #fff;
             text-align: center;
-            top: 50%; /* Ajuste para centralizar verticalmente na visualização */
-            transform: translateY(-50%);
+            margin-top: 50%;
         }
 
         #profilePic {
             width: 47%;
             aspect-ratio: 1;
             border-radius: 50%;
-            border: 9px solid #ffffff7d;
+            border: 3px solid #ffffff7d;
             object-fit: cover;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
         }
 
         #eventName {
-            font-size: 60px;
+            font-size: clamp(16px, 5vw, 20px);
             text-transform: uppercase;
-            margin: 15px 0;
+            margin: 5px 0;
         }
 
         #eventDetails {
-            font-size: 42px;
+            font-size: clamp(12px, 3.5vw, 14px); /* Tamanho mínimo de 12px, máximo de 14px, ajusta dinamicamente */
             font-family: 'Oswald', sans-serif;
             font-weight: 300;
             color: #fff;
-            margin: 15px 0;
+            margin: 5px 0;
             line-height: 1.4;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            width: 100%;
-            white-space: normal;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%;
+            letter-spacing: 1px;
+            width: 100%; /* Ocupa a largura total da div pai */
+            white-space: nowrap; /* Impede a quebra de linha */
+            overflow: hidden; /* Oculta o excesso de texto */
+            text-overflow: ellipsis; /* Adiciona "..." se o texto for cortado (opcional) */
+            max-width: 100%; /* Limita à largura da div */
         }
 
         #eventDate {
-            font-size: 96px;
-            margin: 30px 0;
+            font-size: clamp(24px, 8vw, 32px);
+            margin: 10px 0;
             line-height: 1;
         }
 
         #eventDescription {
-            font-size: 36px;
+            font-size: clamp(10px, 3vw, 12px);
             font-weight: normal;
-            margin: 15px 0;
+            margin: 5px 0;
             color: #fff;
             line-height: 1.4;
-            padding: 0 45px;
+            padding: 0 15px;
         }
 
         .button-group {
@@ -165,30 +152,30 @@
         }
 
         @media (max-width: 360px) {
-            .flyer-container {
+            #flyer {
                 height: auto;
                 aspect-ratio: 9/16;
-                transform: scale(1); /* Remove escala em telas menores */
+            }
+            #eventDetails {
+                font-size: clamp(10px, 3vw, 14px); /* Ajuste menor em telas pequenas */
             }
         }
     </style>
 </head>
 <body>
-    <div class="flyer-container">
-        <div id="flyer">
-            <div id="background-container">
-                <div id="layer-bottom">
-                    <img id="flyer-image" src="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundoflyer.jpg?alt=media&token=769fba9c-e1dc-40f5-93e3-b8ab8c416f3d" alt="Flyer Image">
-                </div>
-                <div id="layer-middle"></div>
+    <div id="flyer">
+        <div id="background-container">
+            <div id="layer-bottom">
+                <img id="flyer-image" src="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundoflyer.jpg?alt=media&token=769fba9c-e1dc-40f5-93e3-b8ab8c416f3d" alt="Flyer Image">
             </div>
-            <div id="layer-top">
-                <img id="profilePic" src="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Fcarregando.gif?alt=media&token=7445b774-f39d-4323-8cee-e79b55453850" alt="Foto do aniversariante">
-                <div id="eventName"></div>
-                <div id="eventDetails"></div>
-                <div id="eventDate"></div>
-                <div id="eventDescription"></div>
-            </div>
+            <div id="layer-middle"></div>
+        </div>
+        <div id="layer-top">
+            <img id="profilePic" src="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Fcarregando.gif?alt=media&token=7445b774-f39d-4323-8cee-e79b55453850" alt="Foto do aniversariante">
+            <div id="eventName"></div>
+            <div id="eventDetails"></div>
+            <div id="eventDate"></div>
+            <div id="eventDescription"></div>
         </div>
     </div>
     <div class="button-group">
@@ -328,9 +315,6 @@
                                 document.getElementById('eventName').style.color = '#ff00ff';
                                 document.getElementById('eventDate').style.color = '#ff00ff';
                             }
-
-                            // Ajustar a escala do contêiner para visualização
-                            adjustFlyerContainerScale();
                         });
                     } else {
                         alert('Dados não encontrados.');
@@ -343,47 +327,23 @@
             });
         }
 
-        function adjustFlyerContainerScale() {
-            const flyerContainer = document.querySelector('.flyer-container');
-            const targetWidth = 360; // Largura desejada para visualização
-            const flyerWidth = 1080; // Largura nativa do flyer
-            const scale = targetWidth / flyerWidth; // 360/1080 = 0.3333
-            flyerContainer.style.transform = `scale(${scale})`;
-            flyerContainer.style.width = `${targetWidth}px`;
-            flyerContainer.style.height = `${1920 * scale}px`; // Mantém a proporção 9:16
-        }
-
         function downloadFlyer() {
             const flyer = document.getElementById('flyer');
-            const flyerContainer = document.querySelector('.flyer-container');
             const downloadIcon = document.getElementById('downloadIcon');
             const spinner = document.getElementById('loadingSpinner');
 
             downloadIcon.style.display = 'none';
             spinner.style.display = 'inline-block';
 
-            // Dimensões desejadas: 1080x1920
-            const targetWidth = 1080;
-            const targetHeight = 1920;
-
-            // Ajusta temporariamente o contêiner para captura
-            flyerContainer.style.transform = 'scale(1)';
-            flyerContainer.style.width = `${targetWidth}px`;
-            flyerContainer.style.height = `${targetHeight}px`;
-
             html2canvas(flyer, { 
                 useCORS: true, 
-                scale: 1, // Já está em 1080x1920, não precisa de escala adicional
+                scale: 8,
                 backgroundColor: null,
                 logging: true,
-                width: targetWidth,
-                height: targetHeight,
+                width: flyer.offsetWidth,
+                height: flyer.offsetHeight,
                 imageTimeout: 15000
             }).then(canvas => {
-                // Restaurar a escala do contêiner após a captura
-                adjustFlyerContainerScale();
-
-                // Gerar a imagem com alta qualidade
                 const image = canvas.toDataURL('image/jpeg', 0.95);
                 const link = document.createElement('a');
                 link.download = `${document.getElementById('eventName').textContent}-flyer.jpg`;
@@ -395,8 +355,6 @@
             }).catch(error => {
                 console.error('Erro ao gerar a imagem:', error);
                 alert('Erro ao gerar o flyer. Verifique o console.');
-                // Restaurar a escala do contêiner em caso de erro
-                adjustFlyerContainerScale();
                 downloadIcon.style.display = 'inline-block';
                 spinner.style.display = 'none';
             });
