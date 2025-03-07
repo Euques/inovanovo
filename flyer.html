@@ -43,7 +43,6 @@
             background-position: center;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             text-align: center;
         }
@@ -52,36 +51,38 @@
             height: 170px !important;
             border-radius: 50%;
             border: 3px solid #ffffff7d;
+            margin-top: 50px; /* Posição mais alta para a foto */
             margin-bottom: 20px;
             object-fit: cover !important;
         }
         #eventName {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             color: #ff00ff;
             text-transform: uppercase;
             margin: 5px 0;
         }
         #eventDetails {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: normal;
             color: #fff;
             margin: 5px 0;
             line-height: 1.4;
         }
         #eventDate {
-            font-size: 48px;
+            font-size: 40px;
             font-weight: bold;
             color: #ff00ff;
             margin: 10px 0;
             line-height: 1;
         }
         #eventDescription {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: normal;
             color: #fff;
             margin: 10px 0;
             line-height: 1.4;
+            max-width: 90%; /* Evitar que o texto fique muito largo */
         }
         .loading {
             position: fixed;
@@ -93,6 +94,19 @@
             display: none;
             z-index: 1000;
         }
+        .button-group {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #000;
+            width: 100%;
+            max-width: 360px;
+            margin: 0 auto;
+        }
+        .button-group button {
+            margin: 5px;
+            font-size: 16px;
+            padding: 8px 16px;
+        }
 
         @media (max-width: 360px) {
             #flyer {
@@ -102,11 +116,12 @@
             #flyer-top {
                 height: auto;
                 padding-top: 50%;
-                padding-bottom: 50%;
+                padding-bottom: 20%;
             }
             #profilePic {
                 width: 120px !important;
                 height: 120px !important;
+                margin-top: 30px;
             }
             #eventName {
                 font-size: 6vw;
@@ -234,7 +249,7 @@
                             bdayData.foto || 'https://via.placeholder.com/170'
                         ];
                         preloadImages(imagesToPreload, () => {
-                            document.getElementById('flyer-top').style.backgroundImage = `url(https://adm.inovabar.com.br/assets/flyerbg.png)`;
+                            document.getElementById('flyer-top').style.backgroundImage = `url('https://adm.inovabar.com.br/assets/flyerbg.png')`;
                             const profilePic = document.getElementById('profilePic');
                             profilePic.src = bdayData.foto || 'https://via.placeholder.com/170';
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
@@ -276,15 +291,14 @@
             flyerTopClone.style.backgroundPosition = 'center';
             flyerTopClone.style.display = 'flex';
             flyerTopClone.style.flexDirection = 'column';
-            flyerTopClone.style.justifyContent = 'center';
             flyerTopClone.style.alignItems = 'center';
             flyerTopClone.style.textAlign = 'center';
             flyerTopClone.innerHTML = `
-                <img src="${document.getElementById('profilePic').src}" style="width: 170px; height: 170px; border-radius: 50%; border: 3px solid #ffffff7d; margin-bottom: 20px; object-fit: cover;" crossorigin="anonymous">
-                <div style="font-size: 28px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
-                <div style="font-size: 16px; font-weight: normal; color: #fff; margin: 5px 0; line-height: 1.4;">${document.getElementById('eventDetails').textContent}</div>
-                <div style="font-size: 48px; font-weight: bold; color: #ff00ff; margin: 10px 0; line-height: 1;">${document.getElementById('eventDate').textContent}</div>
-                <div style="font-size: 16px; font-weight: normal; color: #fff; margin: 10px 0; line-height: 1.4;">${document.getElementById('eventDescription').textContent}</div>
+                <img src="${document.getElementById('profilePic').src}" style="width: 170px; height: 170px; border-radius: 50%; border: 3px solid #ffffff7d; margin-top: 50px; margin-bottom: 20px; object-fit: cover;" crossorigin="anonymous">
+                <div style="font-size: 24px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
+                <div style="font-size: 14px; font-weight: normal; color: #fff; margin: 5px 0; line-height: 1.4;">${document.getElementById('eventDetails').textContent}</div>
+                <div style="font-size: 40px; font-weight: bold; color: #ff00ff; margin: 10px 0; line-height: 1;">${document.getElementById('eventDate').textContent}</div>
+                <div style="font-size: 14px; font-weight: normal; color: #fff; margin: 10px 0; line-height: 1.4; max-width: 90%;">${document.getElementById('eventDescription').textContent}</div>
             `;
 
             tempContainer.appendChild(flyerTopClone);
