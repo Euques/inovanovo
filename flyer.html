@@ -99,11 +99,13 @@
 
         #eventDetails {
             font-size: clamp(12px, 3.5vw, 14px);
-            font-family: 'Oswald', sans-serif;
+            font-family: 'Oswald', sans-serif; /* Fonte estreita */
             font-weight: 500;
             color: #fff;
             margin: 5px 0;
             line-height: 1.4;
+            text-transform: uppercase; /* Tornar uppercase */
+            letter-spacing: 1px; /* Ajuste para parecer mais estreito */
         }
 
         #eventDate {
@@ -153,12 +155,12 @@
     <div id="flyer">
         <div id="background-container">
             <div id="layer-bottom">
-                <img id="flyer-image" src="" alt="Flyer Image">
+                <img id="flyer-image" src="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundoflyer.jpg?alt=media&token=769fba9c-e1dc-40f5-93e3-b8ab8c416f3d" alt="Flyer Image">
             </div>
             <div id="layer-middle"></div>
         </div>
         <div id="layer-top">
-            <img id="profilePic" src="" alt="Foto do aniversariante">
+            <img id="profilePic" src="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Fcarregando.gif?alt=media&token=7445b774-f39d-4323-8cee-e79b55453850" alt="Foto do aniversariante">
             <div id="eventName"></div>
             <div id="eventDetails"></div>
             <div id="eventDate"></div>
@@ -218,7 +220,6 @@
             return `${dayOfWeek} ${day}.${month} ${hours}H`;
         }
 
-        // Função para clarear a cor com menos embranquecimento
         function lightenColor(r, g, b, factor = 0.4) {
             const lighten = (value) => Math.min(255, Math.round(value + (255 - value) * factor));
             return `rgb(${lighten(r)}, ${lighten(g)}, ${lighten(b)})`;
@@ -270,8 +271,8 @@
                         ];
                         preloadImages(imagesToPreload, (loadedImages) => {
                             const flyerImage = document.getElementById('flyer-image');
-                            flyerImage.src = loadedImages[0].src;
-                            document.getElementById('profilePic').src = loadedImages[1].src;
+                            flyerImage.src = loadedImages[0].src; // Substitui o placeholder pelo flyer real
+                            document.getElementById('profilePic').src = loadedImages[1].src; // Substitui o GIF pelo perfil real
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
                             document.getElementById('eventDetails').textContent = eventData.descricao || 'Grupo Com Prazer, SamBV e Dj Edu Pirata';
                             
@@ -295,7 +296,7 @@
                             try {
                                 const dominantColor = colorThief.getColor(loadedImages[0]);
                                 const [r, g, b] = dominantColor;
-                                const lightenedColor = lightenColor(r, g, b, 0.4); // Fator 0.4 para menos embranquecimento
+                                const lightenedColor = lightenColor(r, g, b, 0.4);
                                 console.log(`Cor predominante original: rgb(${r}, ${g}, ${b}), Clareada: ${lightenedColor}`);
                                 document.getElementById('eventName').style.color = lightenedColor;
                                 document.getElementById('eventDate').style.color = lightenedColor;
