@@ -12,6 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.min.js"></script>
     <style>
         body {
             background-color: #000;
@@ -55,7 +56,7 @@
 
         #flyer-image {
             width: 100%;
-            height: 56.25%; /* 360/640 ratio */
+            height: 56.25%;
             object-fit: cover;
         }
 
@@ -93,7 +94,6 @@
         #eventName {
             font-size: clamp(16px, 5vw, 20px);
             font-weight: bold;
-            color: #ff00ff;
             text-transform: uppercase;
             margin: 5px 0;
         }
@@ -108,7 +108,6 @@
 
         #eventDate {
             font-size: clamp(24px, 8vw, 32px);
-            font-weight: bold;
             color: #ff00ff;
             margin: 10px 0;
             line-height: 1;
@@ -242,7 +241,7 @@
                 alert('Forneça eventId e bdayId na URL');
                 return;
             }
-            console.log(`Carregando flyer para eventId: ${eventId}, bdayId: ${bdayId}`);
+            console.log(`Carregando flyer - eventId: ${eventId}, bdayId: ${bdayId}`);
             const eventRef = db.ref(`inovabar/eventos/${eventId}`);
             const bdayRef = db.ref(`inovabar/eventos/${eventId}/bday/${bdayId}`);
             eventRef.once('value', (eventSnapshot) => {
@@ -250,38 +249,46 @@
                 bdayRef.once('value', (bdaySnapshot) => {
                     const bdayData = bdaySnapshot.val();
                     if (eventData && bdayData) {
-                        console.log('eventData:', eventData);
-                        console.log('bdayData:', bdayData);
+                        console.log('eventData:', JSON.stringify(eventData));
+                        console.log('bdayData:', JSON.stringify(bdayData));
                         const imagesToPreload = [
                             eventData.flyer || 'https://via.placeholder.com/360x360',
                             bdayData.foto || 'https://via.placeholder.com/170'
                         ];
                         preloadImages(imagesToPreload, (loadedImages) => {
-                            document.getElementById('flyer-image').src = loadedImages[0].src;
+                            const flyerImage = document.getElementById('flyer-image');
+                            flyerImage.src = loadedImages[0].src;
                             document.getElementById('profilePic').src = loadedImages[1].src;
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
                             document.getElementById('eventDetails').textContent = eventData.descricao || 'Grupo Com Prazer, SamBV e Dj Edu Pirata';
                             
-                            // Prioridade: bdayData.bday > eventData.data
                             const eventTimestamp = bdayData.bday || eventData.data;
-                            console.log('bdayData.bday:', bdayData.bday);
-                            console.log('eventData.data:', eventData.data);
-                            console.log('Timestamp selecionado:', eventTimestamp);
+                            console.log(`bdayData.bday: ${bdayData.bday}, eventData.data: ${eventData.data}, Selecionado: ${eventTimestamp}`);
                             
-                            if (!eventTimestamp) {
-                                console.error('Nenhum timestamp encontrado!');
+                            if (!eventTimestamp || isNaN(eventTimestamp)) {
+                                console.error('Timestamp inválido ou ausente!');
                                 document.getElementById('eventDate').textContent = 'Data não disponível';
                             } else {
-                                const formattedDate = formatDate(eventTimestamp);
-                                console.log('Data formatada:', formattedDate);
+                                const formattedDate = formatDate(Number(eventTimestamp));
+                                console.log(`Data formatada: ${formattedDate}`);
                                 document.getElementById('eventDate').textContent = formattedDate;
                             }
                             
                             document.getElementById('eventDescription').textContent = bdayData.regra || 'Com 20 pagantes, ganha entrada VIP...';
                             document.getElementById('flyer').style.display = 'block';
+
+                            // Extrair cor predominante
+                            const colorThief = new ColorThief();
+                            flyerImage.onload = () => {
+                                const dominantColor = colorThief.getColor(flyerImage);
+                                const rgbColor = `rgb(${dominantColor[0]}, ${dominantColor[1]}, ${dominantColor[2]})`;
+                                document.getElementById('eventName').style.color = rgbColor;
+                                console.log(`Cor predominante: ${rgbColor}`);
+                            };
                         });
                     } else {
                         alert('Dados não encontrados.');
+                        console.error('eventData ou bdayData não existem');
                     }
                 });
             }).catch(error => {
