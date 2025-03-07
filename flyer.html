@@ -39,10 +39,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 50px; /* Tamanho reduzido */
+            width: 50px;
             height: auto;
-            opacity: 0.5; /* Discreto com opacidade */
-            display: none; /* Inicialmente oculto */
+            opacity: 0.5;
+            display: none;
             z-index: 10;
         }
         #layer-bottom {
@@ -58,7 +58,7 @@
         }
         #flyer-image {
             width: 360px;
-            height: 360px; /* Proporção 1:1 */
+            height: 360px;
             object-fit: cover;
             margin-top: 0;
         }
@@ -83,16 +83,16 @@
             box-sizing: border-box;
             z-index: 3;
             color: #fff;
-            gap: 2px; /* Espaçamento reduzido entre os textos */
-            text-align: center; /* Centralizar o texto */
+            gap: 2px;
+            text-align: center;
         }
         #profilePic {
-            width: 120px !important; /* Tamanho reduzido para melhor alinhamento */
+            width: 120px !important;
             height: 120px !important;
             border-radius: 50%;
             border: 3px solid #ffffff7d;
-            align-self: center; /* Centraliza a foto */
-            margin-bottom: 10px; /* Espaçamento acima da foto na base */
+            align-self: center;
+            margin-bottom: 10px;
             object-fit: cover !important;
         }
         #eventName {
@@ -137,11 +137,11 @@
             margin: 5px;
             font-size: 16px;
             padding: 8px 16px;
-            display: inline-flex; /* Ajuste para alinhamento lado a lado */
+            display: inline-flex;
             align-items: center;
             gap: 5px;
-            font-weight: normal; /* Remover negrito dos botões */
-            width: 48%; /* Ajuste para alinhamento lado a lado */
+            font-weight: normal;
+            width: 48%;
             max-width: 160px;
         }
 
@@ -149,7 +149,7 @@
             #flyer {
                 max-width: 100%;
                 height: auto;
-                padding-top: 177.78%; /* 9:16 para largura 100% */
+                padding-top: 177.78%;
             }
             #layer-bottom, #layer-middle, #layer-top {
                 position: absolute;
@@ -221,6 +221,7 @@
     <script src="https://unpkg.com/bootstrap@4/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
     <script>
+        // Configuração do Firebase
         var firebaseConfig = {
             apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
             authDomain: "blacknight-600de.firebaseapp.com",
@@ -261,6 +262,7 @@
         function preloadImages(urls, callback) {
             let loadedCount = 0;
             const totalImages = urls.length;
+            console.log('Imagens a carregar:', urls);
             const images = [];
             urls.forEach((url, index) => {
                 images[index] = new Image();
@@ -269,8 +271,8 @@
                     loadedCount++;
                     if (loadedCount === totalImages) callback();
                 };
-                images[index].onerror = () => {
-                    console.error(`Erro ao carregar imagem ${url}`);
+                images[index].onerror = (error) => {
+                    console.error(`Erro ao carregar imagem ${url}:`, error);
                     loadedCount++;
                     if (loadedCount === totalImages) callback();
                 };
@@ -284,18 +286,25 @@
             const flyer = document.getElementById('flyer');
             loading.style.display = 'block';
             flyer.style.display = 'none';
+            console.log('Iniciando loadFlyer...');
 
             const { eventId, bdayId } = getUrlParams();
+            console.log('Parâmetros URL:', { eventId, bdayId });
             if (!eventId || !bdayId) {
                 alert('Forneça eventId e bdayId na URL (ex.: ?eventId=-OKX77yN21Rj9NtsMEZd&bdayId=-OKaKdD-Y8SgKVQpiMgO)');
                 loading.style.display = 'none';
                 return;
             }
+
             const eventRef = db.ref(`inovabar/eventos/${eventId}`);
             const bdayRef = db.ref(`inovabar/eventos/${eventId}/bday/${bdayId}`);
+            console.log(`Consultando Firebase: eventos/${eventId} e bday/${bdayId}`);
+
             eventRef.once('value', (eventSnapshot) => {
+                console.log('Snapshot de evento:', eventSnapshot.val());
                 const eventData = eventSnapshot.val();
                 bdayRef.once('value', (bdaySnapshot) => {
+                    console.log('Snapshot de bday:', bdaySnapshot.val());
                     const bdayData = bdaySnapshot.val();
                     if (eventData && bdayData) {
                         const imagesToPreload = [
@@ -303,6 +312,7 @@
                             bdayData.foto || 'https://via.placeholder.com/170'
                         ];
                         preloadImages(imagesToPreload, () => {
+                            console.log('Imagens pré-carregadas com sucesso');
                             document.getElementById('flyer-image').src = eventData.flyer || 'https://via.placeholder.com/360x360';
                             document.getElementById('profilePic').src = bdayData.foto || 'https://via.placeholder.com/170';
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
@@ -310,17 +320,23 @@
                             document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08T19:00:00');
                             document.getElementById('eventDescription').textContent = bdayData.regra || 'Com 20 pagantes, Nany ganha entrada VIP com acompanhante e R$100 de consumo para todos os Shows de 2025 + 1 garrafa de (Red Label, ou Bombay, ou Smirnoff) + 1 Balde de Heineken com 6 long neck.';
                             flyer.style.display = 'block';
-                            loading.style.display = 'none'; // Oculta o loading ao carregar
+                            loading.style.display = 'none';
                             document.getElementById('downloadBtn').style.display = 'inline';
+                            console.log('Flyer carregado com sucesso');
                         });
                     } else {
+                        console.log('Dados não encontrados no Firebase');
                         alert('Dados não encontrados.');
                         loading.style.display = 'none';
                     }
+                }).catch(error => {
+                    console.error('Erro ao carregar dados de bday:', error);
+                    alert('Erro ao carregar os dados de bday.');
+                    loading.style.display = 'none';
                 });
             }).catch(error => {
-                console.error('Erro ao carregar dados:', error);
-                alert('Erro ao carregar os dados.');
+                console.error('Erro ao carregar dados de evento:', error);
+                alert('Erro ao carregar os dados de evento.');
                 loading.style.display = 'none';
             });
         }
@@ -328,6 +344,8 @@
         function downloadFlyer() {
             const loading = document.getElementById('loading');
             loading.style.display = 'block';
+            console.log('Iniciando downloadFlyer...');
+
             const flyer = document.getElementById('flyer');
             const tempContainer = document.createElement('div');
             tempContainer.style.width = '360px';
@@ -394,6 +412,7 @@
                     link.click();
                     document.body.removeChild(tempContainer);
                     loading.style.display = 'none';
+                    console.log('Flyer baixado com sucesso');
                 }).catch(error => {
                     console.error('Erro ao gerar a imagem:', error);
                     alert('Erro ao gerar o flyer.');
@@ -402,9 +421,6 @@
                 });
             }, 4000);
         }
-
-        // Chama loadFlyer apenas ao clicar no botão, não no onload
-        // window.onload = loadFlyer; // Removido para evitar carregamento automático
     </script>
 </body>
 </html>
