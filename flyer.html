@@ -11,7 +11,7 @@
     <title>Flyer de Aniversariante</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500&family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500&family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.min.js"></script>
     <style>
         body {
@@ -65,7 +65,7 @@
             bottom: 0;
             width: 100%;
             height: 100%;
-            background: url('https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundobg.png?alt=media&token=f39b5c9a-321b-4e6c-bd5c-db057abfea97') no-repeat bottom;
+            background: url('https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundoflyer.jpg?alt=media&token=769fba9c-e1dc-40f5-93e3-b8ab8c416f3d') no-repeat bottom;
             background-size: cover;
         }
 
@@ -100,7 +100,8 @@
         #eventDetails {
             font-size: clamp(12px, 3.5vw, 14px);
             font-family: 'Oswald', sans-serif;
-            font-weight: 500;
+            font-weight: 200;
+            text-transform: uppercase;
             color: #fff;
             margin: 5px 0;
             line-height: 1.4;
@@ -153,12 +154,12 @@
     <div id="flyer">
         <div id="background-container">
             <div id="layer-bottom">
-                <img id="flyer-image" src="" alt="Flyer Image">
+                <img id="flyer-image" src="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundoflyer.jpg?alt=media&token=769fba9c-e1dc-40f5-93e3-b8ab8c416f3d" alt="Flyer Image">
             </div>
             <div id="layer-middle"></div>
         </div>
         <div id="layer-top">
-            <img id="profilePic" src="" alt="Foto do aniversariante">
+            <img id="profilePic" src="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Fcarregando.gif?alt=media&token=a0e2dae3-3538-47b2-a868-78803e5c828a" alt="Foto do aniversariante">
             <div id="eventName"></div>
             <div id="eventDetails"></div>
             <div id="eventDate"></div>
@@ -218,7 +219,6 @@
             return `${dayOfWeek} ${day}.${month} ${hours}H`;
         }
 
-        // Função para clarear a cor com menos embranquecimento
         function lightenColor(r, g, b, factor = 0.4) {
             const lighten = (value) => Math.min(255, Math.round(value + (255 - value) * factor));
             return `rgb(${lighten(r)}, ${lighten(g)}, ${lighten(b)})`;
@@ -295,7 +295,7 @@
                             try {
                                 const dominantColor = colorThief.getColor(loadedImages[0]);
                                 const [r, g, b] = dominantColor;
-                                const lightenedColor = lightenColor(r, g, b, 0.4); // Fator 0.4 para menos embranquecimento
+                                const lightenedColor = lightenColor(r, g, b, 0.4);
                                 console.log(`Cor predominante original: rgb(${r}, ${g}, ${b}), Clareada: ${lightenedColor}`);
                                 document.getElementById('eventName').style.color = lightenedColor;
                                 document.getElementById('eventDate').style.color = lightenedColor;
