@@ -78,7 +78,7 @@
             padding: 15px;
             color: #fff;
             text-align: center;
-            margin-top: 23.4375%; /* Adjusted for better positioning */
+            margin-top: 50%; /* Adjusted as requested */
         }
 
         #profilePic {
@@ -207,15 +207,19 @@
             };
         }
 
-        function formatDate(dateStr) {
-            const date = new Date(dateStr);
-            const options = { timeZone: 'America/Sao_Paulo' };
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
             const days = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
             const months = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
-            const dayOfWeek = days[date.toLocaleDateString('pt-BR', { weekday: 'short', ...options }).toUpperCase().slice(0, 3)];
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = months[date.getMonth()];
-            const hours = String(date.getHours()).padStart(2, '0');
+            
+            // Adjust for São Paulo timezone (UTC-3)
+            const offset = -3 * 60; // São Paulo is UTC-3
+            const localDate = new Date(date.getTime() + offset * 60 * 1000);
+
+            const dayOfWeek = days[localDate.getUTCDay()];
+            const day = String(localDate.getUTCDate()).padStart(2, '0');
+            const month = months[localDate.getUTCMonth()];
+            const hours = String(localDate.getUTCHours()).padStart(2, '0');
             return `${dayOfWeek} ${day}.${month} ${hours}H`;
         }
 
@@ -261,7 +265,7 @@
                             document.getElementById('profilePic').src = imagesToPreload[1];
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
                             document.getElementById('eventDetails').textContent = eventData.descricao || 'Grupo Com Prazer, SamBV e Dj Edu Pirata';
-                            document.getElementById('eventDate').textContent = formatDate(bdayData.bday || new Date());
+                            document.getElementById('eventDate').textContent = formatDate(bdayData.bday || 1741449600000); // Use provided timestamp as default
                             document.getElementById('eventDescription').textContent = bdayData.regra || 'Com 20 pagantes, ganha entrada VIP...';
                             document.getElementById('flyer').style.display = 'block';
                         });
