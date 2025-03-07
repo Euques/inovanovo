@@ -68,7 +68,7 @@
             bottom: 0;
             width: 100%;
             height: 100%;
-            background: url('https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundonovo.png?alt=media&token=55b43e8e-b0cf-476f-b80f-7f9d0db940f1') no-repeat bottom;
+            background: url('https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundobg.png?alt=media&token=f39b5c9a-321b-4e6c-bd5c-db057abfea97') no-repeat bottom;
             background-size: cover;
         }
 
@@ -101,7 +101,7 @@
         }
 
         #eventDetails {
-            font-size: clamp(12px, 3.5vw, 14px); /* Tamanho mínimo de 12px, máximo de 14px, ajusta dinamicamente */
+            font-size: clamp(12px, 3.5vw, 14px);
             font-family: 'Oswald', sans-serif;
             font-weight: 300;
             color: #fff;
@@ -109,11 +109,11 @@
             line-height: 1.4;
             text-transform: uppercase;
             letter-spacing: 1px;
-            width: 100%; /* Ocupa a largura total da div pai */
-            white-space: nowrap; /* Impede a quebra de linha */
-            overflow: hidden; /* Oculta o excesso de texto */
-            text-overflow: ellipsis; /* Adiciona "..." se o texto for cortado (opcional) */
-            max-width: 100%; /* Limita à largura da div */
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
         }
 
         #eventDate {
@@ -157,7 +157,7 @@
                 aspect-ratio: 9/16;
             }
             #eventDetails {
-                font-size: clamp(10px, 3vw, 14px); /* Ajuste menor em telas pequenas */
+                font-size: clamp(10px, 3vw, 14px);
             }
         }
     </style>
@@ -335,16 +335,24 @@
             downloadIcon.style.display = 'none';
             spinner.style.display = 'inline-block';
 
+            // Configurações para melhorar a resolução
+            const scaleFactor = 10; // Aumentado de 8 para 10 para maior resolução
+            const width = flyer.offsetWidth;
+            const height = flyer.offsetHeight;
+
             html2canvas(flyer, { 
                 useCORS: true, 
-                scale: 8,
+                scale: scaleFactor, // Aumenta a resolução da captura
                 backgroundColor: null,
                 logging: true,
-                width: flyer.offsetWidth,
-                height: flyer.offsetHeight,
-                imageTimeout: 15000
+                width: width,
+                height: height,
+                imageTimeout: 15000,
+                windowWidth: width, // Garante que o canvas respeite as dimensões
+                windowHeight: height
             }).then(canvas => {
-                const image = canvas.toDataURL('image/jpeg', 0.95);
+                // Gerar a imagem com alta qualidade
+                const image = canvas.toDataURL('image/jpeg', 0.95); // Mantém JPEG com alta qualidade
                 const link = document.createElement('a');
                 link.download = `${document.getElementById('eventName').textContent}-flyer.jpg`;
                 link.href = image;
