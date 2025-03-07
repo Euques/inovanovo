@@ -32,7 +32,6 @@
             position: relative;
             overflow: hidden;
             background-color: #000;
-            border-radius: 10px;
         }
 
         #background-container {
@@ -109,7 +108,7 @@
 
         #eventDate {
             font-size: clamp(24px, 8vw, 32px);
-            
+            font-weight: bold;
             color: #ff00ff;
             margin: 10px 0;
             line-height: 1;
@@ -225,12 +224,12 @@
                 images[index] = new Image();
                 images[index].onload = () => {
                     loadedCount++;
-                    if (loadedCount === totalImages) callback();
+                    if (loadedCount === totalImages) callback(images);
                 };
                 images[index].onerror = () => {
                     console.error(`Erro ao carregar imagem ${url}`);
                     loadedCount++;
-                    if (loadedCount === totalImages) callback();
+                    if (loadedCount === totalImages) callback(images);
                 };
                 images[index].crossOrigin = "anonymous";
                 images[index].src = url;
@@ -243,6 +242,7 @@
                 alert('Forneça eventId e bdayId na URL');
                 return;
             }
+            console.log(`Carregando flyer para eventId: ${eventId}, bdayId: ${bdayId}`);
             const eventRef = db.ref(`inovabar/eventos/${eventId}`);
             const bdayRef = db.ref(`inovabar/eventos/${eventId}/bday/${bdayId}`);
             eventRef.once('value', (eventSnapshot) => {
@@ -250,22 +250,33 @@
                 bdayRef.once('value', (bdaySnapshot) => {
                     const bdayData = bdaySnapshot.val();
                     if (eventData && bdayData) {
+                        console.log('eventData:', eventData);
+                        console.log('bdayData:', bdayData);
                         const imagesToPreload = [
                             eventData.flyer || 'https://via.placeholder.com/360x360',
                             bdayData.foto || 'https://via.placeholder.com/170'
                         ];
-                        preloadImages(imagesToPreload, () => {
-                            document.getElementById('flyer-image').src = imagesToPreload[0];
-                            document.getElementById('profilePic').src = imagesToPreload[1];
+                        preloadImages(imagesToPreload, (loadedImages) => {
+                            document.getElementById('flyer-image').src = loadedImages[0].src;
+                            document.getElementById('profilePic').src = loadedImages[1].src;
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
                             document.getElementById('eventDetails').textContent = eventData.descricao || 'Grupo Com Prazer, SamBV e Dj Edu Pirata';
+                            
+                            // Prioridade: bdayData.bday > eventData.data
                             const eventTimestamp = bdayData.bday || eventData.data;
+                            console.log('bdayData.bday:', bdayData.bday);
+                            console.log('eventData.data:', eventData.data);
+                            console.log('Timestamp selecionado:', eventTimestamp);
+                            
                             if (!eventTimestamp) {
-                                console.error('Timestamp não encontrado em bdayData.bday ou eventData.data');
+                                console.error('Nenhum timestamp encontrado!');
                                 document.getElementById('eventDate').textContent = 'Data não disponível';
                             } else {
-                                document.getElementById('eventDate').textContent = formatDate(eventTimestamp);
+                                const formattedDate = formatDate(eventTimestamp);
+                                console.log('Data formatada:', formattedDate);
+                                document.getElementById('eventDate').textContent = formattedDate;
                             }
+                            
                             document.getElementById('eventDescription').textContent = bdayData.regra || 'Com 20 pagantes, ganha entrada VIP...';
                             document.getElementById('flyer').style.display = 'block';
                         });
@@ -289,15 +300,16 @@
 
             html2canvas(flyer, { 
                 useCORS: true, 
-                scale: 6,
+                scale: 8,
                 backgroundColor: null,
-                logging: false,
+                logging: true,
                 width: flyer.offsetWidth,
-                height: flyer.offsetHeight
+                height: flyer.offsetHeight,
+                imageTimeout: 15000
             }).then(canvas => {
-                const image = canvas.toDataURL('image/png', 1.0);
+                const image = canvas.toDataURL('image/jpeg', 0.95);
                 const link = document.createElement('a');
-                link.download = `${document.getElementById('eventName').textContent}-flyer.png`;
+                link.download = `${document.getElementById('eventName').textContent}-flyer.jpg`;
                 link.href = image;
                 link.click();
 
@@ -305,7 +317,7 @@
                 spinner.style.display = 'none';
             }).catch(error => {
                 console.error('Erro ao gerar a imagem:', error);
-                alert('Erro ao gerar o flyer.');
+                alert('Erro ao gerar o flyer. Verifique o console.');
                 downloadIcon.style.display = 'inline-block';
                 spinner.style.display = 'none';
             });
