@@ -78,7 +78,7 @@
             padding: 15px;
             color: #fff;
             text-align: center;
-            margin-top: 50%; /* Adjusted as requested */
+            margin-top: 50%; /* Already adjusted as per previous request */
         }
 
         #profilePic {
@@ -209,17 +209,16 @@
 
         function formatDate(timestamp) {
             const date = new Date(timestamp);
+            const options = { timeZone: 'America/Sao_Paulo' };
+            
             const days = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
             const months = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
             
-            // Adjust for São Paulo timezone (UTC-3)
-            const offset = -3 * 60; // São Paulo is UTC-3
-            const localDate = new Date(date.getTime() + offset * 60 * 1000);
-
-            const dayOfWeek = days[localDate.getUTCDay()];
-            const day = String(localDate.getUTCDate()).padStart(2, '0');
-            const month = months[localDate.getUTCMonth()];
-            const hours = String(localDate.getUTCHours()).padStart(2, '0');
+            const dayOfWeek = days[date.getDay()];
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = months[date.getMonth()];
+            const hours = String(date.getHours()).padStart(2, '0');
+            
             return `${dayOfWeek} ${day}.${month} ${hours}H`;
         }
 
