@@ -27,50 +27,38 @@
         #flyer {
             width: 100%;
             max-width: 360px;
-            height: 640px; /* Proporção 9:16 para 360px de largura */
+            height: 740px;
             margin: 0 auto;
             position: relative;
             display: none;
             overflow: hidden;
             background-color: #000;
         }
-        #layer-bottom {
+        #flyer-top {
+            position: relative;
+            width: 100%;
+            height: 360px;
+            background-size: cover;
+            background-position: center;
+        }
+        #flyer-top::before {
+            content: '';
             position: absolute;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+        }
+        #flyer-bottom {
             background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-        #flyer-image {
-            width: 360px;
-            height: 360px; /* Proporção 1:1 */
-            object-fit: cover;
-            margin-top: 0;
-        }
-        #layer-middle {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://adm.inovabar.com.br/assets/flyerbg.png') no-repeat bottom;
-            background-size: cover;
-            z-index: 1;
-        }
-        #layer-top {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
+            padding: 20px;
+            text-align: center;
+            height: 380px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            padding: 15px;
-            box-sizing: border-box;
-            z-index: 2;
-            color: #fff;
+            justify-content: center;
+            padding-top: 90px; /* Espaço para a foto */
         }
         #profilePic {
             width: 170px !important;
@@ -78,18 +66,18 @@
             border-radius: 50%;
             border: 3px solid #ffffff7d;
             position: absolute;
-            top: 10px; /* Ajuste para alinhar com a imagem do flyer */
+            top: 180px;
             left: 50%;
-            transform: translateX(-50%);
-            z-index: 3;
+            transform: translate(-50%, -50%);
+            z-index: 2;
             object-fit: cover !important;
         }
         #eventName {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
             color: #ff00ff;
             text-transform: uppercase;
-            margin: 5px 0;
+            margin: 10px 0;
         }
         #eventDetails {
             font-size: 14px;
@@ -99,22 +87,22 @@
             line-height: 1.4;
         }
         #eventDate {
-            font-size: 32px;
+            font-size: 40px; /* Maior destaque como na imagem */
             font-weight: bold;
             color: #ff00ff;
-            margin: 10px 0;
+            margin: 15px 0;
             line-height: 1;
         }
         #eventDescription {
             font-size: 14px;
             font-weight: normal;
-            margin: 5px 0;
             color: #fff;
+            margin: 10px 0;
             line-height: 1.4;
         }
         #address {
             font-size: 12px;
-            margin: 5px 0;
+            margin: 10px 0;
             color: #ccc;
         }
         .button-group {
@@ -135,31 +123,27 @@
             #flyer {
                 max-width: 100%;
                 height: auto;
-                padding-top: 177.78%; /* 9:16 para largura 100% */
             }
-            #layer-bottom, #layer-middle, #layer-top {
-                position: absolute;
-                top: 0;
-                width: 100%;
-                height: 100%;
+            #flyer-top {
+                height: 0;
+                padding-top: 100%;
             }
-            #flyer-image {
-                width: 100%;
+            #flyer-bottom {
                 height: auto;
+                padding: 15px;
+                padding-top: 90px;
             }
             #profilePic {
-                width: 47% !important;
-                height: auto !important;
-                top: 2%;
+                top: 50%;
             }
             #eventName {
-                font-size: 5vw;
+                font-size: 6vw;
             }
             #eventDetails {
                 font-size: 3.5vw;
             }
             #eventDate {
-                font-size: 8vw;
+                font-size: 10vw; /* Maior destaque em mobile */
             }
             #eventDescription {
                 font-size: 3.5vw;
@@ -172,12 +156,9 @@
 </head>
 <body>
     <div id="flyer">
-        <div id="layer-bottom">
-            <img id="flyer-image" src="" alt="Flyer Image">
-            <img id="profilePic" src="" alt="Foto do aniversariante">
-        </div>
-        <div id="layer-middle"></div>
-        <div id="layer-top">
+        <div id="flyer-top"></div>
+        <img id="profilePic" src="" alt="Foto do aniversariante">
+        <div id="flyer-bottom">
             <div id="eventName"></div>
             <div id="eventDetails"></div>
             <div id="eventDate"></div>
@@ -190,7 +171,6 @@
         <button class="btn btn-success" onclick="downloadFlyer()" id="downloadBtn">Baixar Flyer</button>
     </div>
 
-    <!-- Scripts permanecem os mesmos -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
@@ -200,7 +180,6 @@
     <script src="https://unpkg.com/bootstrap@4/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
     <script>
-        // Scripts JavaScript permanecem os mesmos, apenas ajustando a lógica de carregamento
         var firebaseConfig = {
             apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
             authDomain: "blacknight-600de.firebaseapp.com",
@@ -225,7 +204,7 @@
         function formatDate(dateStr) {
             console.log('Data bruta do Firebase:', dateStr);
             if (!dateStr.includes('T')) {
-                dateStr += 'T19:00:00';
+                dateStr += 'T19:00:00'; // Adiciona hora padrão 19:00
             }
             const date = new Date(dateStr);
             const options = { timeZone: 'America/Sao_Paulo' };
@@ -277,8 +256,9 @@
                             bdayData.foto || 'https://via.placeholder.com/170'
                         ];
                         preloadImages(imagesToPreload, () => {
-                            document.getElementById('flyer-image').src = eventData.flyer || 'https://via.placeholder.com/360x360';
-                            document.getElementById('profilePic').src = bdayData.foto || 'https://via.placeholder.com/170';
+                            document.getElementById('flyer-top').style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/360x360'})`;
+                            const profilePic = document.getElementById('profilePic');
+                            profilePic.src = bdayData.foto || 'https://via.placeholder.com/170';
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
                             document.getElementById('eventDetails').textContent = eventData.descricao || 'Grupo Com Prazer, SamBV e Dj Edu Pirata';
                             document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08T19:00:00');
@@ -301,52 +281,59 @@
             const flyer = document.getElementById('flyer');
             const tempContainer = document.createElement('div');
             tempContainer.style.width = '360px';
-            tempContainer.style.height = '640px';
+            tempContainer.style.height = '740px';
             tempContainer.style.position = 'absolute';
             tempContainer.style.left = '-9999px';
             tempContainer.style.top = '-9999px';
             tempContainer.style.backgroundColor = '#000';
 
-            const layerBottomClone = document.createElement('div');
-            layerBottomClone.style.width = '360px';
-            layerBottomClone.style.height = '640px';
-            layerBottomClone.style.position = 'absolute';
-            layerBottomClone.style.top = '0';
-            layerBottomClone.innerHTML = `
-                <img src="${document.getElementById('flyer-image').src}" style="width: 360px; height: 360px; object-fit: cover; margin-top: 0;">
-                <img src="${document.getElementById('profilePic').src}" style="width: 170px; height: 170px; border-radius: 50%; border: 3px solid #ffffff7d; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 3; object-fit: cover;">
+            const flyerTopClone = document.createElement('div');
+            flyerTopClone.style.width = '360px';
+            flyerTopClone.style.height = '360px';
+            flyerTopClone.style.backgroundImage = document.getElementById('flyer-top').style.backgroundImage;
+            flyerTopClone.style.backgroundSize = 'cover';
+            flyerTopClone.style.backgroundPosition = 'center';
+            flyerTopClone.style.position = 'relative';
+            flyerTopClone.innerHTML = `
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);"></div>
             `;
 
-            const layerMiddleClone = document.createElement('div');
-            layerMiddleClone.style.width = '360px';
-            layerMiddleClone.style.height = '640px';
-            layerMiddleClone.style.background = `url('https://adm.inovabar.com.br/assets/flyerbg.png') no-repeat bottom`;
-            layerMiddleClone.style.backgroundSize = 'cover';
-            layerMiddleClone.style.position = 'absolute';
-            layerMiddleClone.style.bottom = '0';
+            const profilePicClone = document.createElement('img');
+            profilePicClone.src = document.getElementById('profilePic').src;
+            profilePicClone.style.width = '170px';
+            profilePicClone.style.height = '170px';
+            profilePicClone.style.borderRadius = '50%';
+            profilePicClone.style.border = '3px solid #ffffff7d';
+            profilePicClone.style.position = 'absolute';
+            profilePicClone.style.top = '180px';
+            profilePicClone.style.left = '50%';
+            profilePicClone.style.transform = 'translate(-50%, -50%)';
+            profilePicClone.style.zIndex = '2';
+            profilePicClone.style.objectFit = 'cover';
+            profilePicClone.crossOrigin = "anonymous";
 
-            const layerTopClone = document.createElement('div');
-            layerTopClone.style.width = '360px';
-            layerTopClone.style.height = '640px';
-            layerTopClone.style.position = 'absolute';
-            layerTopClone.style.bottom = '0';
-            layerTopClone.style.padding = '15px';
-            layerTopClone.style.boxSizing = 'border-box';
-            layerTopClone.style.display = 'flex';
-            layerTopClone.style.flexDirection = 'column';
-            layerTopClone.style.justifyContent = 'flex-end';
-            layerTopClone.style.color = '#fff';
-            layerTopClone.innerHTML = `
-                <div style="font-size: 20px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
+            const flyerBottomClone = document.createElement('div');
+            flyerBottomClone.style.width = '360px';
+            flyerBottomClone.style.height = '380px';
+            flyerBottomClone.style.backgroundColor = '#000';
+            flyerBottomClone.style.padding = '20px';
+            flyerBottomClone.style.paddingTop = '90px';
+            flyerBottomClone.style.textAlign = 'center';
+            flyerBottomClone.style.color = 'white';
+            flyerBottomClone.style.display = 'flex';
+            flyerBottomClone.style.flexDirection = 'column';
+            flyerBottomClone.style.justifyContent = 'center';
+            flyerBottomClone.innerHTML = `
+                <div style="font-size: 24px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 10px 0;">${document.getElementById('eventName').textContent}</div>
                 <div style="font-size: 14px; font-weight: normal; color: #fff; margin: 5px 0; line-height: 1.4;">${document.getElementById('eventDetails').textContent}</div>
-                <div style="font-size: 32px; font-weight: bold; color: #ff00ff; margin: 10px 0; line-height: 1;">${document.getElementById('eventDate').textContent}</div>
-                <div style="font-size: 14px; font-weight: normal; color: #fff; margin: 5px 0; line-height: 1.4;">${document.getElementById('eventDescription').textContent}</div>
-                <div style="font-size: 12px; color: #ccc; margin: 5px 0;">${document.getElementById('address').textContent}</div>
+                <div style="font-size: 40px; font-weight: bold; color: #ff00ff; margin: 15px 0; line-height: 1;">${document.getElementById('eventDate').textContent}</div>
+                <div style="font-size: 14px; font-weight: normal; color: #fff; margin: 10px 0; line-height: 1.4;">${document.getElementById('eventDescription').textContent}</div>
+                <div style="font-size: 12px; color: #ccc; margin: 10px 0;">${document.getElementById('address').textContent}</div>
             `;
 
-            tempContainer.appendChild(layerBottomClone);
-            tempContainer.appendChild(layerMiddleClone);
-            tempContainer.appendChild(layerTopClone);
+            tempContainer.appendChild(flyerTopClone);
+            tempContainer.appendChild(profilePicClone);
+            tempContainer.appendChild(flyerBottomClone);
             document.body.appendChild(tempContainer);
 
             setTimeout(() => {
