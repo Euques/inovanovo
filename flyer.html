@@ -93,7 +93,6 @@
 
         #eventName {
             font-size: clamp(16px, 5vw, 20px);
-            font-weight: bold;
             text-transform: uppercase;
             margin: 5px 0;
         }
@@ -108,7 +107,6 @@
 
         #eventDate {
             font-size: clamp(24px, 8vw, 32px);
-            color: #ff00ff;
             margin: 10px 0;
             line-height: 1;
         }
@@ -201,7 +199,10 @@
         }
 
         function formatDate(timestamp) {
-            const date = new Date(timestamp);
+            if (!timestamp || isNaN(Number(timestamp))) {
+                return 'Data inválida';
+            }
+            const date = new Date(Number(timestamp));
             const brtOffset = -3 * 60; // UTC-3 (BRT)
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset() + brtOffset);
 
@@ -254,8 +255,8 @@
                 bdayRef.once('value', (bdaySnapshot) => {
                     const bdayData = bdaySnapshot.val();
                     if (eventData && bdayData) {
-                        console.log('eventData:', JSON.stringify(eventData));
-                        console.log('bdayData:', JSON.stringify(bdayData));
+                        console.log('eventData:', JSON.stringify(eventData, null, 2));
+                        console.log('bdayData:', JSON.stringify(bdayData, null, 2));
                         const imagesToPreload = [
                             eventData.flyer || 'https://via.placeholder.com/360x360',
                             bdayData.foto || 'https://via.placeholder.com/170'
@@ -267,27 +268,35 @@
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
                             document.getElementById('eventDetails').textContent = eventData.descricao || 'Grupo Com Prazer, SamBV e Dj Edu Pirata';
                             
-                            const eventTimestamp = bdayData.bday || eventData.data;
+                            // Prioridade: bdayData.bday > eventData.data
+                            let eventTimestamp = bdayData.bday || eventData.data;
                             console.log(`bdayData.bday: ${bdayData.bday}, eventData.data: ${eventData.data}, Selecionado: ${eventTimestamp}`);
                             
                             if (!eventTimestamp || isNaN(Number(eventTimestamp))) {
-                                console.error('Timestamp inválido ou ausente!');
-                                document.getElementById('eventDate').textContent = 'Data não disponível';
-                            } else {
-                                const formattedDate = formatDate(Number(eventTimestamp));
-                                console.log(`Data formatada: ${formattedDate}`);
-                                document.getElementById('eventDate').textContent = formattedDate;
+                                console.error('Timestamp inválido ou ausente! Usando data atual como fallback.');
+                                eventTimestamp = Date.now(); // Fallback para data atual se inválido
                             }
+                            
+                            const formattedDate = formatDate(eventTimestamp);
+                            console.log(`Data formatada: ${formattedDate}`);
+                            document.getElementById('eventDate').textContent = formattedDate;
                             
                             document.getElementById('eventDescription').textContent = bdayData.regra || 'Com 20 pagantes, ganha entrada VIP...';
                             document.getElementById('flyer').style.display = 'block';
 
-                            // Extrair cor predominante após carregar a imagem
+                            // Extrair cor predominante
                             const colorThief = new ColorThief();
-                            const dominantColor = colorThief.getColor(loadedImages[0]); // Usa a imagem pré-carregada
-                            const rgbColor = `rgb(${dominantColor[0]}, ${dominantColor[1]}, ${dominantColor[2]})`;
-                            document.getElementById('eventName').style.color = rgbColor;
-                            console.log(`Cor predominante aplicada: ${rgbColor}`);
+                            try {
+                                const dominantColor = colorThief.getColor(loadedImages[0]);
+                                const rgbColor = `rgb(${dominantColor[0]}, ${dominantColor[1]}, ${dominantColor[2]})`;
+                                console.log(`Cor predominante extraída: ${rgbColor}`);
+                                document.getElementById('eventName').style.color = rgbColor;
+                                document.getElementById('eventDate').style.color = rgbColor; // Aplicar ao eventDate também
+                            } catch (error) {
+                                console.error('Erro ao extrair cor predominante:', error);
+                                document.getElementById('eventName').style.color = '#ff00ff'; // Fallback
+                                document.getElementById('eventDate').style.color = '#ff00ff';
+                            }
                         });
                     } else {
                         alert('Dados não encontrados.');
