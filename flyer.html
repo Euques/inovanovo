@@ -42,7 +42,7 @@
             width: 50px; /* Tamanho reduzido */
             height: auto;
             opacity: 0.5; /* Discreto com opacidade */
-            display: block;
+            display: none; /* Inicialmente oculto */
             z-index: 10;
         }
         #layer-bottom {
@@ -137,7 +137,7 @@
             margin: 5px;
             font-size: 16px;
             padding: 8px 16px;
-            display: flex;
+            display: inline-flex; /* Ajuste para alinhamento lado a lado */
             align-items: center;
             gap: 5px;
             font-weight: normal; /* Remover negrito dos botões */
@@ -205,7 +205,7 @@
     </div>
     <div class="button-group">
         <button class="btn btn-primary" onclick="loadFlyer()">
-            <i class="fas fa-sync-alt"></i> Carregar Flyer
+            Carregar
         </button>
         <button class="btn btn-success" onclick="downloadFlyer()" id="downloadBtn">
             <i class="fas fa-download"></i> Baixar Flyer
@@ -310,7 +310,7 @@
                             document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08T19:00:00');
                             document.getElementById('eventDescription').textContent = bdayData.regra || 'Com 20 pagantes, Nany ganha entrada VIP com acompanhante e R$100 de consumo para todos os Shows de 2025 + 1 garrafa de (Red Label, ou Bombay, ou Smirnoff) + 1 Balde de Heineken com 6 long neck.';
                             flyer.style.display = 'block';
-                            loading.style.display = 'none';
+                            loading.style.display = 'none'; // Oculta o loading ao carregar
                             document.getElementById('downloadBtn').style.display = 'inline';
                         });
                     } else {
@@ -360,7 +360,7 @@
             layerTopClone.style.position = 'absolute';
             layerTopClone.style.bottom = '0';
             layerTopClone.style.padding = '15px';
-            layerTopClone.style.boxSizing = 'border-box';
+            layerTopClone.style.box-sizing = 'border-box';
             layerTopClone.style.display = 'flex';
             layerTopClone.style.flex-direction = 'column';
             layerTopClone.style.justify-content = 'flex-end';
@@ -403,7 +403,8 @@
             }, 4000);
         }
 
-        window.onload = loadFlyer;
+        // Chama loadFlyer apenas ao clicar no botão, não no onload
+        // window.onload = loadFlyer; // Removido para evitar carregamento automático
     </script>
 </body>
 </html>
