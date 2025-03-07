@@ -36,6 +36,10 @@
             position: relative;
             overflow: hidden;
             background-color: #000;
+            /* Adiciona uma altura mínima para garantir que o conteúdo seja renderizado */
+            min-height: 1920px; /* Ajuste para a altura desejada da saída */
+            transform-origin: top left;
+            transform: scale(0.1875); /* 360/1920 = 0.1875 para visualização inicial */
         }
 
         #background-container {
@@ -59,7 +63,7 @@
 
         #flyer-image {
             width: 100%;
-            height: 56.25%;
+            height: 100%; /* Ajuste para ocupar toda a altura */
             object-fit: cover;
         }
 
@@ -70,10 +74,11 @@
             height: 100%;
             background: url('https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundobday.png?alt=media&token=26d842e9-d4a3-4672-8aad-e28bca804ea7') no-repeat bottom;
             background-size: cover;
+            background-position: center;
         }
 
         #layer-top {
-            position: relative;
+            position: absolute;
             z-index: 2;
             width: 100%;
             display: flex;
@@ -82,7 +87,8 @@
             padding: 15px;
             color: #fff;
             text-align: center;
-            margin-top: 50%;
+            top: 50%; /* Ajuste para centralizar verticalmente na visualização */
+            transform: translateY(-50%);
         }
 
         #profilePic {
@@ -117,7 +123,7 @@
         }
 
         #eventDate {
-            font-size: clamp(24px, 8vw, 32px);
+            font-size: clamp(24px, 5vw, 32px);
             margin: 10px 0;
             line-height: 1;
         }
@@ -155,6 +161,8 @@
             #flyer {
                 height: auto;
                 aspect-ratio: 9/16;
+                min-height: 1920px;
+                transform: scale(0.1875);
             }
             #eventDetails {
                 font-size: clamp(10px, 3vw, 14px);
@@ -336,25 +344,36 @@
             spinner.style.display = 'inline-block';
 
             // Dimensões desejadas: 1080x1920
-            const targetWidth = 1080;  // Largura desejada
-            const targetHeight = 1920; // Altura desejada
+            const targetWidth = 1080;
+            const targetHeight = 1920;
 
             // Calcula o fator de escala com base nas dimensões originais (360x640)
             const originalWidth = flyer.offsetWidth;
             const originalHeight = flyer.offsetHeight;
             const scale = Math.min(targetWidth / originalWidth, targetHeight / originalHeight);
 
+            // Ajusta temporariamente o tamanho do flyer para a resolução desejada durante a captura
+            flyer.style.width = `${targetWidth}px`;
+            flyer.style.height = `${targetHeight}px`;
+            flyer.style.transform = 'scale(1)';
+
             html2canvas(flyer, { 
                 useCORS: true, 
-                scale: scale, // Ajusta o scale para atingir 1080x1920
+                scale: scale,
                 backgroundColor: null,
                 logging: true,
-                width: targetWidth,  // Define a largura da saída
-                height: targetHeight, // Define a altura da saída
+                width: targetWidth,
+                height: targetHeight,
                 imageTimeout: 15000
             }).then(canvas => {
+                // Restaurar o tamanho original após a captura
+                flyer.style.width = '100%';
+                flyer.style.maxWidth = '360px';
+                flyer.style.height = '640px';
+                flyer.style.transform = 'scale(0.1875)';
+
                 // Gerar a imagem com alta qualidade
-                const image = canvas.toDataURL('image/jpeg', 0.95); // Mantém JPEG com alta qualidade
+                const image = canvas.toDataURL('image/jpeg', 0.95);
                 const link = document.createElement('a');
                 link.download = `${document.getElementById('eventName').textContent}-flyer.jpg`;
                 link.href = image;
@@ -365,6 +384,11 @@
             }).catch(error => {
                 console.error('Erro ao gerar a imagem:', error);
                 alert('Erro ao gerar o flyer. Verifique o console.');
+                // Restaurar o tamanho original em caso de erro
+                flyer.style.width = '100%';
+                flyer.style.maxWidth = '360px';
+                flyer.style.height = '640px';
+                flyer.style.transform = 'scale(0.1875)';
                 downloadIcon.style.display = 'inline-block';
                 spinner.style.display = 'none';
             });
