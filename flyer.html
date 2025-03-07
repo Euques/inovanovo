@@ -30,14 +30,13 @@
         }
 
         .flyer-container {
-            width: 100%;
-            max-width: 360px;
-            height: 640px;
+            width: 360px; /* Largura fixa para visualização */
+            height: 640px; /* Altura proporcional a 9:16 */
             margin: 20px auto;
             position: relative;
             overflow: hidden;
             transform-origin: top left;
-            transform: scale(1); /* Ajuste dinâmico para caber na tela */
+            transform: scale(1); /* Ajuste dinâmico via JavaScript */
         }
 
         #flyer {
@@ -65,13 +64,14 @@
             background-color: #000;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center; /* Centraliza a flyer-image */
         }
 
         #flyer-image {
-            width: 100%;
-            height: 100%; /* Ocupa toda a altura */
-            object-fit: cover;
+            width: 100%; /* Limita a largura */
+            height: auto; /* Mantém proporção 1:1 */
+            max-height: 1080px; /* Limita a altura para não exceder a largura */
+            object-fit: contain; /* Preserva a proporção 1:1 sem cortes */
         }
 
         #layer-middle {
@@ -79,9 +79,8 @@
             bottom: 0;
             width: 100%;
             height: 100%;
-            background: url('https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundobday.png?alt=media&token=26d842e9-d4a3-4672-8aad-e28bca804ea7') no-repeat bottom;
+            background: url('https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundobday.png?alt=media&token=26d842e9-d4a3-4672-8aad-e28bca804ea7') no-repeat center;
             background-size: cover;
-            background-position: center;
         }
 
         #layer-top {
@@ -91,7 +90,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 45px; /* Ajustado para escala 1080x1920 */
+            padding: 45px;
             color: #fff;
             text-align: center;
             top: 50%;
@@ -102,46 +101,46 @@
             width: 47%;
             aspect-ratio: 1;
             border-radius: 50%;
-            border: 9px solid #ffffff7d; /* Ajustado para escala 1080x1920 */
+            border: 9px solid #ffffff7d;
             object-fit: cover;
-            margin-bottom: 30px; /* Ajustado para escala 1080x1920 */
+            margin-bottom: 30px;
         }
 
         #eventName {
-            font-size: 60px; /* Ajustado para escala 1080x1920 */
+            font-size: 60px;
             text-transform: uppercase;
-            margin: 15px 0; /* Ajustado para escala 1080x1920 */
+            margin: 15px 0;
         }
 
         #eventDetails {
-            font-size: 42px; /* Ajustado para escala 1080x1920 */
+            font-size: 42px;
             font-family: 'Oswald', sans-serif;
             font-weight: 300;
             color: #fff;
-            margin: 15px 0; /* Ajustado para escala 1080x1920 */
+            margin: 15px 0;
             line-height: 1.4;
             text-transform: uppercase;
-            letter-spacing: 3px; /* Ajustado para escala 1080x1920 */
+            letter-spacing: 3px;
             width: 100%;
-            white-space: normal; /* Permitir quebra de linha */
+            white-space: normal;
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 100%;
         }
 
         #eventDate {
-            font-size: 96px; /* Ajustado para escala 1080x1920 */
-            margin: 30px 0; /* Ajustado para escala 1080x1920 */
+            font-size: 96px;
+            margin: 30px 0;
             line-height: 1;
         }
 
         #eventDescription {
-            font-size: 36px; /* Ajustado para escala 1080x1920 */
+            font-size: 36px;
             font-weight: normal;
-            margin: 15px 0; /* Ajustado para escala 1080x1920 */
+            margin: 15px 0;
             color: #fff;
             line-height: 1.4;
-            padding: 0 45px; /* Ajustado para escala 1080x1920 */
+            padding: 0 45px;
         }
 
         .button-group {
@@ -166,6 +165,7 @@
 
         @media (max-width: 360px) {
             .flyer-container {
+                width: 100%;
                 height: auto;
                 aspect-ratio: 9/16;
             }
