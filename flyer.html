@@ -37,86 +37,61 @@
         #flyer-top {
             position: relative;
             width: 100%;
-            height: 360px;
+            height: 740px;
+            background-image: url('https://adm.inovabar.com.br/assets/flyerbg.png');
             background-size: cover;
             background-position: center;
-        }
-        #flyer-top::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
-        }
-        #flyer-bottom {
-            background-color: #000;
-            padding: 20px;
-            text-align: center;
-            height: 380px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding-top: 90px; /* Espaço para a foto */
+            align-items: center;
+            text-align: center;
         }
         #profilePic {
             width: 170px !important;
             height: 170px !important;
             border-radius: 50%;
             border: 3px solid #ffffff7d;
-            position: absolute;
-            top: 180px;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2;
+            margin-bottom: 20px;
             object-fit: cover !important;
         }
         #eventName {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             color: #ff00ff;
             text-transform: uppercase;
-            margin: 10px 0;
+            margin: 5px 0;
         }
         #eventDetails {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: normal;
             color: #fff;
             margin: 5px 0;
             line-height: 1.4;
         }
         #eventDate {
-            font-size: 40px; /* Maior destaque como na imagem */
+            font-size: 48px;
             font-weight: bold;
             color: #ff00ff;
-            margin: 15px 0;
+            margin: 10px 0;
             line-height: 1;
         }
         #eventDescription {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: normal;
             color: #fff;
             margin: 10px 0;
             line-height: 1.4;
         }
-        #address {
-            font-size: 12px;
-            margin: 10px 0;
-            color: #ccc;
-        }
-        .button-group {
-            text-align: center;
-            padding: 10px 0;
-            background-color: #000;
-            width: 100%;
-            max-width: 360px;
-            margin: 0 auto;
-        }
-        .button-group button {
-            margin: 5px;
-            font-size: 16px;
-            padding: 8px 16px;
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #fff;
+            display: none;
+            z-index: 1000;
         }
 
         @media (max-width: 360px) {
@@ -125,16 +100,13 @@
                 height: auto;
             }
             #flyer-top {
-                height: 0;
-                padding-top: 100%;
-            }
-            #flyer-bottom {
                 height: auto;
-                padding: 15px;
-                padding-top: 90px;
+                padding-top: 50%;
+                padding-bottom: 50%;
             }
             #profilePic {
-                top: 50%;
+                width: 120px !important;
+                height: 120px !important;
             }
             #eventName {
                 font-size: 6vw;
@@ -143,27 +115,23 @@
                 font-size: 3.5vw;
             }
             #eventDate {
-                font-size: 10vw; /* Maior destaque em mobile */
+                font-size: 10vw;
             }
             #eventDescription {
                 font-size: 3.5vw;
-            }
-            #address {
-                font-size: 3vw;
             }
         }
     </style>
 </head>
 <body>
+    <div id="loading" class="loading">Carregando...</div>
     <div id="flyer">
-        <div id="flyer-top"></div>
-        <img id="profilePic" src="" alt="Foto do aniversariante">
-        <div id="flyer-bottom">
+        <div id="flyer-top">
+            <img id="profilePic" src="" alt="Foto do aniversariante">
             <div id="eventName"></div>
             <div id="eventDetails"></div>
             <div id="eventDate"></div>
             <div id="eventDescription"></div>
-            <div id="address"></div>
         </div>
     </div>
     <div class="button-group">
@@ -238,10 +206,20 @@
             });
         }
 
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
         function loadFlyer() {
+            showLoading();
             const { eventId, bdayId } = getUrlParams();
             if (!eventId || !bdayId) {
                 alert('Forneça eventId e bdayId na URL (ex.: ?eventId=-OKX77yN21Rj9NtsMEZd&bdayId=-OKaKdD-Y8SgKVQpiMgO)');
+                hideLoading();
                 return;
             }
             const eventRef = db.ref(`inovabar/eventos/${eventId}`);
@@ -252,32 +230,35 @@
                     const bdayData = bdaySnapshot.val();
                     if (eventData && bdayData) {
                         const imagesToPreload = [
-                            eventData.flyer || 'https://via.placeholder.com/360x360',
+                            'https://adm.inovabar.com.br/assets/flyerbg.png',
                             bdayData.foto || 'https://via.placeholder.com/170'
                         ];
                         preloadImages(imagesToPreload, () => {
-                            document.getElementById('flyer-top').style.backgroundImage = `url(${eventData.flyer || 'https://via.placeholder.com/360x360'})`;
+                            document.getElementById('flyer-top').style.backgroundImage = `url(https://adm.inovabar.com.br/assets/flyerbg.png)`;
                             const profilePic = document.getElementById('profilePic');
                             profilePic.src = bdayData.foto || 'https://via.placeholder.com/170';
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
                             document.getElementById('eventDetails').textContent = eventData.descricao || 'Grupo Com Prazer, SamBV e Dj Edu Pirata';
                             document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08T19:00:00');
                             document.getElementById('eventDescription').textContent = bdayData.regra || 'Com 20 pagantes, Nany ganha entrada VIP com acompanhante e R$100 de consumo para todos os Shows de 2025 + 1 garrafa de (Red Label, ou Bombay, ou Smirnoff) + 1 Balde de Heineken com 6 long neck.';
-                            document.getElementById('address').textContent = eventData.endereco || 'Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP';
                             document.getElementById('flyer').style.display = 'block';
                             document.getElementById('downloadBtn').style.display = 'inline';
+                            hideLoading();
                         });
                     } else {
                         alert('Dados não encontrados.');
+                        hideLoading();
                     }
                 });
             }).catch(error => {
                 console.error('Erro ao carregar dados:', error);
                 alert('Erro ao carregar os dados.');
+                hideLoading();
             });
         }
 
         function downloadFlyer() {
+            showLoading();
             const flyer = document.getElementById('flyer');
             const tempContainer = document.createElement('div');
             tempContainer.style.width = '360px';
@@ -289,51 +270,24 @@
 
             const flyerTopClone = document.createElement('div');
             flyerTopClone.style.width = '360px';
-            flyerTopClone.style.height = '360px';
-            flyerTopClone.style.backgroundImage = document.getElementById('flyer-top').style.backgroundImage;
+            flyerTopClone.style.height = '740px';
+            flyerTopClone.style.backgroundImage = 'url(https://adm.inovabar.com.br/assets/flyerbg.png)';
             flyerTopClone.style.backgroundSize = 'cover';
             flyerTopClone.style.backgroundPosition = 'center';
-            flyerTopClone.style.position = 'relative';
+            flyerTopClone.style.display = 'flex';
+            flyerTopClone.style.flexDirection = 'column';
+            flyerTopClone.style.justifyContent = 'center';
+            flyerTopClone.style.alignItems = 'center';
+            flyerTopClone.style.textAlign = 'center';
             flyerTopClone.innerHTML = `
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);"></div>
-            `;
-
-            const profilePicClone = document.createElement('img');
-            profilePicClone.src = document.getElementById('profilePic').src;
-            profilePicClone.style.width = '170px';
-            profilePicClone.style.height = '170px';
-            profilePicClone.style.borderRadius = '50%';
-            profilePicClone.style.border = '3px solid #ffffff7d';
-            profilePicClone.style.position = 'absolute';
-            profilePicClone.style.top = '180px';
-            profilePicClone.style.left = '50%';
-            profilePicClone.style.transform = 'translate(-50%, -50%)';
-            profilePicClone.style.zIndex = '2';
-            profilePicClone.style.objectFit = 'cover';
-            profilePicClone.crossOrigin = "anonymous";
-
-            const flyerBottomClone = document.createElement('div');
-            flyerBottomClone.style.width = '360px';
-            flyerBottomClone.style.height = '380px';
-            flyerBottomClone.style.backgroundColor = '#000';
-            flyerBottomClone.style.padding = '20px';
-            flyerBottomClone.style.paddingTop = '90px';
-            flyerBottomClone.style.textAlign = 'center';
-            flyerBottomClone.style.color = 'white';
-            flyerBottomClone.style.display = 'flex';
-            flyerBottomClone.style.flexDirection = 'column';
-            flyerBottomClone.style.justifyContent = 'center';
-            flyerBottomClone.innerHTML = `
-                <div style="font-size: 24px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 10px 0;">${document.getElementById('eventName').textContent}</div>
-                <div style="font-size: 14px; font-weight: normal; color: #fff; margin: 5px 0; line-height: 1.4;">${document.getElementById('eventDetails').textContent}</div>
-                <div style="font-size: 40px; font-weight: bold; color: #ff00ff; margin: 15px 0; line-height: 1;">${document.getElementById('eventDate').textContent}</div>
-                <div style="font-size: 14px; font-weight: normal; color: #fff; margin: 10px 0; line-height: 1.4;">${document.getElementById('eventDescription').textContent}</div>
-                <div style="font-size: 12px; color: #ccc; margin: 10px 0;">${document.getElementById('address').textContent}</div>
+                <img src="${document.getElementById('profilePic').src}" style="width: 170px; height: 170px; border-radius: 50%; border: 3px solid #ffffff7d; margin-bottom: 20px; object-fit: cover;" crossorigin="anonymous">
+                <div style="font-size: 28px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
+                <div style="font-size: 16px; font-weight: normal; color: #fff; margin: 5px 0; line-height: 1.4;">${document.getElementById('eventDetails').textContent}</div>
+                <div style="font-size: 48px; font-weight: bold; color: #ff00ff; margin: 10px 0; line-height: 1;">${document.getElementById('eventDate').textContent}</div>
+                <div style="font-size: 16px; font-weight: normal; color: #fff; margin: 10px 0; line-height: 1.4;">${document.getElementById('eventDescription').textContent}</div>
             `;
 
             tempContainer.appendChild(flyerTopClone);
-            tempContainer.appendChild(profilePicClone);
-            tempContainer.appendChild(flyerBottomClone);
             document.body.appendChild(tempContainer);
 
             setTimeout(() => {
@@ -349,10 +303,12 @@
                     link.href = image;
                     link.click();
                     document.body.removeChild(tempContainer);
+                    hideLoading();
                 }).catch(error => {
                     console.error('Erro ao gerar a imagem:', error);
                     alert('Erro ao gerar o flyer.');
                     document.body.removeChild(tempContainer);
+                    hideLoading();
                 });
             }, 4000);
         }
