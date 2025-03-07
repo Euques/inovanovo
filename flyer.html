@@ -78,7 +78,7 @@
             padding: 15px;
             color: #fff;
             text-align: center;
-            margin-top: 50%; /* Already adjusted as per previous request */
+            margin-top: 50%;
         }
 
         #profilePic {
@@ -141,13 +141,6 @@
 
         #loadingSpinner {
             display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #ff00ff;
-            font-size: 24px;
-            z-index: 1000;
         }
 
         @media (max-width: 360px) {
@@ -176,9 +169,9 @@
     </div>
     <div class="button-group">
         <button class="btn btn-success" onclick="downloadFlyer()">
-            <i class="fas fa-download"></i> Baixar Flyer
+            <i id="downloadIcon" class="fas fa-download"></i>
+            <i id="loadingSpinner" class="fas fa-spinner fa-spin" style="display: none;"></i> Baixar Flyer
         </button>
-        <i id="loadingSpinner" class="fas fa-spinner fa-spin"></i>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -209,8 +202,9 @@
 
         function formatDate(timestamp) {
             const date = new Date(timestamp);
-            const options = { timeZone: 'America/Sao_Paulo' };
-            
+            const brtOffset = -3 * 60; // UTC-3 (BRT) em minutos
+            date.setMinutes(date.getMinutes() + date.getTimezoneOffset() + brtOffset);
+
             const days = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
             const months = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
             
@@ -264,7 +258,7 @@
                             document.getElementById('profilePic').src = imagesToPreload[1];
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
                             document.getElementById('eventDetails').textContent = eventData.descricao || 'Grupo Com Prazer, SamBV e Dj Edu Pirata';
-                            document.getElementById('eventDate').textContent = formatDate(bdayData.bday || 1741449600000); // Use provided timestamp as default
+                            document.getElementById('eventDate').textContent = formatDate(bdayData.bday || 1741449600000);
                             document.getElementById('eventDescription').textContent = bdayData.regra || 'Com 20 pagantes, ganha entrada VIP...';
                             document.getElementById('flyer').style.display = 'block';
                         });
@@ -280,12 +274,15 @@
 
         function downloadFlyer() {
             const flyer = document.getElementById('flyer');
+            const downloadIcon = document.getElementById('downloadIcon');
             const spinner = document.getElementById('loadingSpinner');
-            spinner.style.display = 'block';
+
+            downloadIcon.style.display = 'none';
+            spinner.style.display = 'inline-block';
 
             html2canvas(flyer, { 
                 useCORS: true, 
-                scale: 4,
+                scale: 4, // Mantido para alta resolução
                 backgroundColor: null,
                 logging: false,
                 width: flyer.offsetWidth,
@@ -296,10 +293,13 @@
                 link.download = `${document.getElementById('eventName').textContent}-flyer.png`;
                 link.href = image;
                 link.click();
+
+                downloadIcon.style.display = 'inline-block';
                 spinner.style.display = 'none';
             }).catch(error => {
                 console.error('Erro ao gerar a imagem:', error);
                 alert('Erro ao gerar o flyer.');
+                downloadIcon.style.display = 'inline-block';
                 spinner.style.display = 'none';
             });
         }
