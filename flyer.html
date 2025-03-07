@@ -200,7 +200,7 @@
 
         function formatDate(timestamp) {
             if (!timestamp || isNaN(Number(timestamp))) {
-                return 'Data inválida';
+                return 'Data não disponível';
             }
             const date = new Date(Number(timestamp));
             const brtOffset = -3 * 60; // UTC-3 (BRT)
@@ -215,6 +215,12 @@
             const hours = String(date.getHours()).padStart(2, '0');
             
             return `${dayOfWeek} ${day}.${month} ${hours}H`;
+        }
+
+        // Função para clarear uma cor RGB
+        function lightenColor(r, g, b, factor = 0.7) {
+            const lighten = (value) => Math.min(255, Math.round(value + (255 - value) * factor));
+            return `rgb(${lighten(r)}, ${lighten(g)}, ${lighten(b)})`;
         }
 
         function preloadImages(urls, callback) {
@@ -268,33 +274,34 @@
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
                             document.getElementById('eventDetails').textContent = eventData.descricao || 'Grupo Com Prazer, SamBV e Dj Edu Pirata';
                             
-                            // Prioridade: bdayData.bday > eventData.data
-                            let eventTimestamp = bdayData.bday || eventData.data;
-                            console.log(`bdayData.bday: ${bdayData.bday}, eventData.data: ${eventData.data}, Selecionado: ${eventTimestamp}`);
+                            // Usar exclusivamente eventData.data como fonte do timestamp
+                            const eventTimestamp = eventData.data;
+                            console.log(`eventData.data: ${eventData.data}, Selecionado: ${eventTimestamp}`);
                             
                             if (!eventTimestamp || isNaN(Number(eventTimestamp))) {
-                                console.error('Timestamp inválido ou ausente! Usando data atual como fallback.');
-                                eventTimestamp = Date.now(); // Fallback para data atual se inválido
+                                console.error('Timestamp inválido ou ausente em eventData.data!');
+                                document.getElementById('eventDate').textContent = 'Data não disponível';
+                            } else {
+                                const formattedDate = formatDate(Number(eventTimestamp));
+                                console.log(`Data formatada: ${formattedDate}`);
+                                document.getElementById('eventDate').textContent = formattedDate;
                             }
-                            
-                            const formattedDate = formatDate(eventTimestamp);
-                            console.log(`Data formatada: ${formattedDate}`);
-                            document.getElementById('eventDate').textContent = formattedDate;
                             
                             document.getElementById('eventDescription').textContent = bdayData.regra || 'Com 20 pagantes, ganha entrada VIP...';
                             document.getElementById('flyer').style.display = 'block';
 
-                            // Extrair cor predominante
+                            // Extrair e clarear cor predominante
                             const colorThief = new ColorThief();
                             try {
                                 const dominantColor = colorThief.getColor(loadedImages[0]);
-                                const rgbColor = `rgb(${dominantColor[0]}, ${dominantColor[1]}, ${dominantColor[2]})`;
-                                console.log(`Cor predominante extraída: ${rgbColor}`);
-                                document.getElementById('eventName').style.color = rgbColor;
-                                document.getElementById('eventDate').style.color = rgbColor; // Aplicar ao eventDate também
+                                const [r, g, b] = dominantColor;
+                                const lightenedColor = lightenColor(r, g, b, 0.7); // Ajuste de luminosidade
+                                console.log(`Cor predominante original: rgb(${r}, ${g}, ${b}), Clareada: ${lightenedColor}`);
+                                document.getElementById('eventName').style.color = lightenedColor;
+                                document.getElementById('eventDate').style.color = lightenedColor;
                             } catch (error) {
                                 console.error('Erro ao extrair cor predominante:', error);
-                                document.getElementById('eventName').style.color = '#ff00ff'; // Fallback
+                                document.getElementById('eventName').style.color = '#ff00ff';
                                 document.getElementById('eventDate').style.color = '#ff00ff';
                             }
                         });
