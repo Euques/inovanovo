@@ -26,20 +26,27 @@
             flex-direction: column;
             min-height: 100vh;
             font-family: 'Roboto', sans-serif;
+            align-items: center;
         }
 
-        #flyer {
+        .flyer-container {
             width: 100%;
             max-width: 360px;
             height: 640px;
             margin: 20px auto;
             position: relative;
             overflow: hidden;
-            background-color: #000;
-            /* Adiciona uma altura mínima para garantir que o conteúdo seja renderizado */
-            min-height: 1920px; /* Ajuste para a altura desejada da saída */
             transform-origin: top left;
-            transform: scale(0.1875); /* 360/1920 = 0.1875 para visualização inicial */
+            transform: scale(1); /* Ajuste dinâmico para caber na tela */
+        }
+
+        #flyer {
+            width: 1080px; /* Dimensões nativas para captura */
+            height: 1920px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #000;
         }
 
         #background-container {
@@ -63,7 +70,7 @@
 
         #flyer-image {
             width: 100%;
-            height: 100%; /* Ajuste para ocupar toda a altura */
+            height: 100%; /* Ocupa toda a altura */
             object-fit: cover;
         }
 
@@ -84,10 +91,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 15px;
+            padding: 45px; /* Ajustado para escala 1080x1920 */
             color: #fff;
             text-align: center;
-            top: 50%; /* Ajuste para centralizar verticalmente na visualização */
+            top: 50%;
             transform: translateY(-50%);
         }
 
@@ -95,46 +102,46 @@
             width: 47%;
             aspect-ratio: 1;
             border-radius: 50%;
-            border: 3px solid #ffffff7d;
+            border: 9px solid #ffffff7d; /* Ajustado para escala 1080x1920 */
             object-fit: cover;
-            margin-bottom: 10px;
+            margin-bottom: 30px; /* Ajustado para escala 1080x1920 */
         }
 
         #eventName {
-            font-size: clamp(16px, 5vw, 20px);
+            font-size: 60px; /* Ajustado para escala 1080x1920 */
             text-transform: uppercase;
-            margin: 5px 0;
+            margin: 15px 0; /* Ajustado para escala 1080x1920 */
         }
 
         #eventDetails {
-            font-size: clamp(12px, 3.5vw, 14px);
+            font-size: 42px; /* Ajustado para escala 1080x1920 */
             font-family: 'Oswald', sans-serif;
             font-weight: 300;
             color: #fff;
-            margin: 5px 0;
+            margin: 15px 0; /* Ajustado para escala 1080x1920 */
             line-height: 1.4;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 3px; /* Ajustado para escala 1080x1920 */
             width: 100%;
-            white-space: nowrap;
+            white-space: normal; /* Permitir quebra de linha */
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 100%;
         }
 
         #eventDate {
-            font-size: clamp(24px, 5vw, 32px);
-            margin: 10px 0;
+            font-size: 96px; /* Ajustado para escala 1080x1920 */
+            margin: 30px 0; /* Ajustado para escala 1080x1920 */
             line-height: 1;
         }
 
         #eventDescription {
-            font-size: clamp(10px, 3vw, 12px);
+            font-size: 36px; /* Ajustado para escala 1080x1920 */
             font-weight: normal;
-            margin: 5px 0;
+            margin: 15px 0; /* Ajustado para escala 1080x1920 */
             color: #fff;
             line-height: 1.4;
-            padding: 0 15px;
+            padding: 0 45px; /* Ajustado para escala 1080x1920 */
         }
 
         .button-group {
@@ -158,32 +165,29 @@
         }
 
         @media (max-width: 360px) {
-            #flyer {
+            .flyer-container {
                 height: auto;
                 aspect-ratio: 9/16;
-                min-height: 1920px;
-                transform: scale(0.1875);
-            }
-            #eventDetails {
-                font-size: clamp(10px, 3vw, 14px);
             }
         }
     </style>
 </head>
 <body>
-    <div id="flyer">
-        <div id="background-container">
-            <div id="layer-bottom">
-                <img id="flyer-image" src="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundoflyer.jpg?alt=media&token=769fba9c-e1dc-40f5-93e3-b8ab8c416f3d" alt="Flyer Image">
+    <div class="flyer-container">
+        <div id="flyer">
+            <div id="background-container">
+                <div id="layer-bottom">
+                    <img id="flyer-image" src="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundoflyer.jpg?alt=media&token=769fba9c-e1dc-40f5-93e3-b8ab8c416f3d" alt="Flyer Image">
+                </div>
+                <div id="layer-middle"></div>
             </div>
-            <div id="layer-middle"></div>
-        </div>
-        <div id="layer-top">
-            <img id="profilePic" src="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Fcarregando.gif?alt=media&token=7445b774-f39d-4323-8cee-e79b55453850" alt="Foto do aniversariante">
-            <div id="eventName"></div>
-            <div id="eventDetails"></div>
-            <div id="eventDate"></div>
-            <div id="eventDescription"></div>
+            <div id="layer-top">
+                <img id="profilePic" src="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Fcarregando.gif?alt=media&token=7445b774-f39d-4323-8cee-e79b55453850" alt="Foto do aniversariante">
+                <div id="eventName"></div>
+                <div id="eventDetails"></div>
+                <div id="eventDate"></div>
+                <div id="eventDescription"></div>
+            </div>
         </div>
     </div>
     <div class="button-group">
@@ -323,6 +327,9 @@
                                 document.getElementById('eventName').style.color = '#ff00ff';
                                 document.getElementById('eventDate').style.color = '#ff00ff';
                             }
+
+                            // Ajustar a escala do contêiner para visualização
+                            adjustFlyerContainerScale();
                         });
                     } else {
                         alert('Dados não encontrados.');
@@ -335,8 +342,19 @@
             });
         }
 
+        function adjustFlyerContainerScale() {
+            const flyerContainer = document.querySelector('.flyer-container');
+            const targetWidth = 360; // Largura desejada para visualização
+            const flyerWidth = 1080; // Largura nativa do flyer
+            const scale = targetWidth / flyerWidth; // 360/1080 = 0.3333
+            flyerContainer.style.transform = `scale(${scale})`;
+            flyerContainer.style.width = `${targetWidth}px`;
+            flyerContainer.style.height = `${1920 * scale}px`; // Mantém a proporção 9:16
+        }
+
         function downloadFlyer() {
             const flyer = document.getElementById('flyer');
+            const flyerContainer = document.querySelector('.flyer-container');
             const downloadIcon = document.getElementById('downloadIcon');
             const spinner = document.getElementById('loadingSpinner');
 
@@ -347,30 +365,22 @@
             const targetWidth = 1080;
             const targetHeight = 1920;
 
-            // Calcula o fator de escala com base nas dimensões originais (360x640)
-            const originalWidth = flyer.offsetWidth;
-            const originalHeight = flyer.offsetHeight;
-            const scale = Math.min(targetWidth / originalWidth, targetHeight / originalHeight);
-
-            // Ajusta temporariamente o tamanho do flyer para a resolução desejada durante a captura
-            flyer.style.width = `${targetWidth}px`;
-            flyer.style.height = `${targetHeight}px`;
-            flyer.style.transform = 'scale(1)';
+            // Ajusta temporariamente o contêiner para captura
+            flyerContainer.style.transform = 'scale(1)';
+            flyerContainer.style.width = `${targetWidth}px`;
+            flyerContainer.style.height = `${targetHeight}px`;
 
             html2canvas(flyer, { 
                 useCORS: true, 
-                scale: scale,
+                scale: 1, // Já está em 1080x1920, não precisa de escala adicional
                 backgroundColor: null,
                 logging: true,
                 width: targetWidth,
                 height: targetHeight,
                 imageTimeout: 15000
             }).then(canvas => {
-                // Restaurar o tamanho original após a captura
-                flyer.style.width = '100%';
-                flyer.style.maxWidth = '360px';
-                flyer.style.height = '640px';
-                flyer.style.transform = 'scale(0.1875)';
+                // Restaurar a escala do contêiner após a captura
+                adjustFlyerContainerScale();
 
                 // Gerar a imagem com alta qualidade
                 const image = canvas.toDataURL('image/jpeg', 0.95);
@@ -384,11 +394,8 @@
             }).catch(error => {
                 console.error('Erro ao gerar a imagem:', error);
                 alert('Erro ao gerar o flyer. Verifique o console.');
-                // Restaurar o tamanho original em caso de erro
-                flyer.style.width = '100%';
-                flyer.style.maxWidth = '360px';
-                flyer.style.height = '640px';
-                flyer.style.transform = 'scale(0.1875)';
+                // Restaurar a escala do contêiner em caso de erro
+                adjustFlyerContainerScale();
                 downloadIcon.style.display = 'inline-block';
                 spinner.style.display = 'none';
             });
