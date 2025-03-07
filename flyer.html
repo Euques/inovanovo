@@ -202,7 +202,7 @@
 
         function formatDate(timestamp) {
             const date = new Date(timestamp);
-            const brtOffset = -3 * 60; // UTC-3 (BRT) em minutos
+            const brtOffset = -3 * 60; // UTC-3 (BRT)
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset() + brtOffset);
 
             const days = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
@@ -258,7 +258,13 @@
                             document.getElementById('profilePic').src = imagesToPreload[1];
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
                             document.getElementById('eventDetails').textContent = eventData.descricao || 'Grupo Com Prazer, SamBV e Dj Edu Pirata';
-                            document.getElementById('eventDate').textContent = formatDate(bdayData.bday || 1741449600000);
+                            const eventTimestamp = bdayData.bday || eventData.data;
+                            if (!eventTimestamp) {
+                                console.error('Timestamp não encontrado em bdayData.bday ou eventData.data');
+                                document.getElementById('eventDate').textContent = 'Data não disponível';
+                            } else {
+                                document.getElementById('eventDate').textContent = formatDate(eventTimestamp);
+                            }
                             document.getElementById('eventDescription').textContent = bdayData.regra || 'Com 20 pagantes, ganha entrada VIP...';
                             document.getElementById('flyer').style.display = 'block';
                         });
@@ -282,7 +288,7 @@
 
             html2canvas(flyer, { 
                 useCORS: true, 
-                scale: 4, // Mantido para alta resolução
+                scale: 6,
                 backgroundColor: null,
                 logging: false,
                 width: flyer.offsetWidth,
