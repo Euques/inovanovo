@@ -12,7 +12,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.css" rel="stylesheet" />
     <style>
         body {
             background-color: #000;
@@ -29,9 +28,8 @@
             width: 100%;
             max-width: 360px;
             height: 640px;
-            margin: 0 auto;
+            margin: 20px auto;
             position: relative;
-            display: none;
             overflow: hidden;
             background-color: #000;
         }
@@ -56,10 +54,9 @@
         }
 
         #flyer-image {
-            width: 360px;
-            height: 360px;
+            width: 100%;
+            height: 56.25%; /* 360/640 ratio */
             object-fit: cover;
-            margin-top: 0;
         }
 
         #layer-middle {
@@ -71,32 +68,30 @@
             background-size: cover;
         }
 
-      #layer-top {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    max-width: 360px;
-    display: flex
-;
-    flex-direction: column;
-    align-items: center;
-    padding: 15px;
-    color: #fff;
-    text-align: center;
-    margin-top: 150px;
-}
+        #layer-top {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            color: #fff;
+            text-align: center;
+            margin-top: 23.4375%; /* Adjusted for better positioning */
+        }
 
         #profilePic {
-            width: 170px !important;
-            height: 170px !important;
+            width: 47%;
+            aspect-ratio: 1;
             border-radius: 50%;
             border: 3px solid #ffffff7d;
-            object-fit: cover !important;
+            object-fit: cover;
             margin-bottom: 10px;
         }
 
         #eventName {
-            font-size: 20px;
+            font-size: clamp(16px, 5vw, 20px);
             font-weight: bold;
             color: #ff00ff;
             text-transform: uppercase;
@@ -104,7 +99,7 @@
         }
 
         #eventDetails {
-            font-size: 14px;
+            font-size: clamp(12px, 3.5vw, 14px);
             font-weight: normal;
             color: #fff;
             margin: 5px 0;
@@ -112,21 +107,21 @@
         }
 
         #eventDate {
-            font-size: 32px;
+            font-size: clamp(24px, 8vw, 32px);
             font-weight: bold;
             color: #ff00ff;
             margin: 10px 0;
             line-height: 1;
         }
 
-    #eventDescription {
-    font-size: 12px;
-    font-weight: normal;
-    margin: 5px 0;
-    color: #fff;
-    line-height: 1.4;
-    padding: 0 15px;
-}
+        #eventDescription {
+            font-size: clamp(10px, 3vw, 12px);
+            font-weight: normal;
+            margin: 5px 0;
+            color: #fff;
+            line-height: 1.4;
+            padding: 0 15px;
+        }
 
         .button-group {
             text-align: center;
@@ -146,45 +141,19 @@
 
         #loadingSpinner {
             display: none;
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             color: #ff00ff;
             font-size: 24px;
+            z-index: 1000;
         }
 
         @media (max-width: 360px) {
             #flyer {
-                max-width: 100%;
                 height: auto;
-                padding-top: 177.78%;
-            }
-
-            #flyer-image {
-                width: 100%;
-                height: auto;
-            }
-
-            #profilePic {
-                width: 47% !important;
-                height: auto !important;
-            }
-
-            #eventName {
-                font-size: 5vw;
-            }
-
-            #eventDetails {
-                font-size: 3.5vw;
-            }
-
-            #eventDate {
-                font-size: 8vw;
-            }
-
-            #eventDescription {
-                font-size: 3.5vw;
+                aspect-ratio: 9/16;
             }
         }
     </style>
@@ -206,10 +175,7 @@
         </div>
     </div>
     <div class="button-group">
-        <button class="btn btn-primary" onclick="loadFlyer()">
-            <i class="fas fa-sync-alt"></i> Carregar
-        </button>
-        <button class="btn btn-success" onclick="downloadFlyer()" id="downloadBtn">
+        <button class="btn btn-success" onclick="downloadFlyer()">
             <i class="fas fa-download"></i> Baixar Flyer
         </button>
         <i id="loadingSpinner" class="fas fa-spinner fa-spin"></i>
@@ -218,11 +184,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/bootstrap@4/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
     <script>
         var firebaseConfig = {
             apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
@@ -246,14 +208,11 @@
         }
 
         function formatDate(dateStr) {
-            if (!dateStr.includes('T')) {
-                dateStr += 'T19:00:00';
-            }
             const date = new Date(dateStr);
             const options = { timeZone: 'America/Sao_Paulo' };
             const days = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
             const months = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
-            const dayOfWeek = days[date.getDay()];
+            const dayOfWeek = days[date.toLocaleDateString('pt-BR', { weekday: 'short', ...options }).toUpperCase().slice(0, 3)];
             const day = String(date.getDate()).padStart(2, '0');
             const month = months[date.getMonth()];
             const hours = String(date.getHours()).padStart(2, '0');
@@ -298,14 +257,13 @@
                             bdayData.foto || 'https://via.placeholder.com/170'
                         ];
                         preloadImages(imagesToPreload, () => {
-                            document.getElementById('flyer-image').src = eventData.flyer || 'https://via.placeholder.com/360x360';
-                            document.getElementById('profilePic').src = bdayData.foto || 'https://via.placeholder.com/170';
+                            document.getElementById('flyer-image').src = imagesToPreload[0];
+                            document.getElementById('profilePic').src = imagesToPreload[1];
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
                             document.getElementById('eventDetails').textContent = eventData.descricao || 'Grupo Com Prazer, SamBV e Dj Edu Pirata';
-                            document.getElementById('eventDate').textContent = formatDate(bdayData.bday || '2025-03-08T19:00:00');
+                            document.getElementById('eventDate').textContent = formatDate(bdayData.bday || new Date());
                             document.getElementById('eventDescription').textContent = bdayData.regra || 'Com 20 pagantes, ganha entrada VIP...';
                             document.getElementById('flyer').style.display = 'block';
-                            document.getElementById('downloadBtn').style.display = 'inline';
                         });
                     } else {
                         alert('Dados não encontrados.');
@@ -319,71 +277,28 @@
 
         function downloadFlyer() {
             const flyer = document.getElementById('flyer');
-            const tempContainer = document.createElement('div');
-            tempContainer.style.width = '360px';
-            tempContainer.style.height = '640px';
-            tempContainer.style.position = 'absolute';
-            tempContainer.style.left = '-9999px';
-            tempContainer.style.top = '-9999px';
-            tempContainer.style.backgroundColor = '#000';
-
-            const backgroundContainerClone = document.createElement('div');
-            backgroundContainerClone.style.width = '360px';
-            backgroundContainerClone.style.height = '640px';
-            backgroundContainerClone.style.position = 'absolute';
-            backgroundContainerClone.innerHTML = `
-                <div style="position: absolute; top: 0; width: 100%; height: 100%; background-color: #000; display: flex; justify-content: center; align-items: flex-start;">
-                    <img src="${document.getElementById('flyer-image').src}" style="width: 360px; height: 360px; object-fit: cover; margin-top: 0;">
-                </div>
-                <div style="position: absolute; bottom: 0; width: 100%; height: 100%; background: url('https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundobg.png?alt=media&token=f39b5c9a-321b-4e6c-bd5c-db057abfea97') no-repeat bottom; background-size: cover;"></div>
-            `;
-
-            const layerTopClone = document.createElement('div');
-            layerTopClone.style.width = '360px';
-            layerTopClone.style.position = 'relative';
-            layerTopClone.style.padding = '15px';
-            layerTopClone.style.display = 'flex';
-            layerTopClone.style.flexDirection = 'column';
-            layerTopClone.style.alignItems = 'center';
-            layerTopClone.style.color = '#fff';
-            layerTopClone.style.textAlign = 'center';
-            layerTopClone.style.marginTop = '20px';
-            layerTopClone.innerHTML = `
-                <img src="${document.getElementById('profilePic').src}" style="width: 170px; height: 170px; border-radius: 50%; border: 3px solid #ffffff7d; object-fit: cover; margin-bottom: 10px;">
-                <div style="font-size: 20px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
-                <div style="font-size: 14px; font-weight: normal; color: #fff; margin: 5px 0; line-height: 1.4;">${document.getElementById('eventDetails').textContent}</div>
-                <div style="font-size: 32px; font-weight: bold; color: #ff00ff; margin: 10px 0; line-height: 1;">${document.getElementById('eventDate').textContent}</div>
-                <div style="font-size: 12px; font-weight: normal; color: #fff; margin: 5px 0; line-height: 1.4; padding: 0 15px;">${document.getElementById('eventDescription').textContent}</div>
-            `;
-
-            tempContainer.appendChild(backgroundContainerClone);
-            tempContainer.appendChild(layerTopClone);
-            document.body.appendChild(tempContainer);
-
             const spinner = document.getElementById('loadingSpinner');
             spinner.style.display = 'block';
 
-            setTimeout(() => {
-                html2canvas(tempContainer, { 
-                    useCORS: true, 
-                    scale: 4, // Increased scale for higher resolution
-                    allowTaint: false,
-                    backgroundColor: null 
-                }).then(canvas => {
-                    const image = canvas.toDataURL('image/png');
-                    const link = document.createElement('a');
-                    link.download = `${document.getElementById('eventName').textContent}-flyer.png`;
-                    link.href = image;
-                    link.click();
-                    document.body.removeChild(tempContainer);
-                    spinner.style.display = 'none';
-                }).catch(error => {
-                    console.error('Erro ao gerar a imagem:', error);
-                    alert('Erro ao gerar o flyer.');
-                    document.body.removeChild(tempContainer);
-                    spinner.style.display = 'none';
-                });
-            }, 1000); // Reduced timeout for faster processing
+            html2canvas(flyer, { 
+                useCORS: true, 
+                scale: 4,
+                backgroundColor: null,
+                logging: false,
+                width: flyer.offsetWidth,
+                height: flyer.offsetHeight
+            }).then(canvas => {
+                const image = canvas.toDataURL('image/png', 1.0);
+                const link = document.createElement('a');
+                link.download = `${document.getElementById('eventName').textContent}-flyer.png`;
+                link.href = image;
+                link.click();
+                spinner.style.display = 'none';
+            }).catch(error => {
+                console.error('Erro ao gerar a imagem:', error);
+                alert('Erro ao gerar o flyer.');
+                spinner.style.display = 'none';
+            });
         }
 
         window.onload = loadFlyer;
