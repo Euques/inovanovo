@@ -36,6 +36,14 @@
             background-color: #000;
         }
 
+        #background-container {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
         #layer-bottom {
             position: absolute;
             top: 0;
@@ -61,24 +69,20 @@
             height: 100%;
             background: url('https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundobg.png?alt=media&token=f39b5c9a-321b-4e6c-bd5c-db057abfea97') no-repeat bottom;
             background-size: cover;
-            z-index: 1;
         }
 
         #layer-top {
-            position: absolute;
-            bottom: 0;
+            position: relative;
+            z-index: 2;
             width: 100%;
-            height: 100%;
+            max-width: 360px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
             align-items: center;
             padding: 15px;
-            padding-bottom: 50px; /* Margem na base */
-            box-sizing: border-box;
-            z-index: 2;
             color: #fff;
             text-align: center;
+            margin-top: 20px; /* Margin to avoid overlapping address */
         }
 
         #profilePic {
@@ -86,12 +90,8 @@
             height: 170px !important;
             border-radius: 50%;
             border: 3px solid #ffffff7d;
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 3;
             object-fit: cover !important;
+            margin-bottom: 10px;
         }
 
         #eventName {
@@ -119,13 +119,13 @@
         }
 
         #eventDescription {
-    font-size: 14px;
-    font-weight: normal;
-    margin: 5px 0;
-    color: #fff;
-    line-height: 1.4;
-    padding: 0px 15px 45px;
-}
+            font-size: 14px;
+            font-weight: normal;
+            margin: 5px 0;
+            color: #fff;
+            line-height: 1.4;
+            padding: 0 15px;
+        }
 
         .button-group {
             text-align: center;
@@ -134,6 +134,7 @@
             width: 100%;
             max-width: 360px;
             margin: 0 auto;
+            position: relative;
         }
 
         .button-group button {
@@ -142,18 +143,21 @@
             padding: 8px 16px;
         }
 
+        #loadingSpinner {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff00ff;
+            font-size: 24px;
+        }
+
         @media (max-width: 360px) {
             #flyer {
                 max-width: 100%;
                 height: auto;
                 padding-top: 177.78%;
-            }
-
-            #layer-bottom, #layer-middle, #layer-top {
-                position: absolute;
-                top: 0;
-                width: 100%;
-                height: 100%;
             }
 
             #flyer-image {
@@ -164,7 +168,6 @@
             #profilePic {
                 width: 47% !important;
                 height: auto !important;
-                top: 2%;
             }
 
             #eventName {
@@ -187,10 +190,12 @@
 </head>
 <body>
     <div id="flyer">
-        <div id="layer-bottom">
-            <img id="flyer-image" src="" alt="Flyer Image">
+        <div id="background-container">
+            <div id="layer-bottom">
+                <img id="flyer-image" src="" alt="Flyer Image">
+            </div>
+            <div id="layer-middle"></div>
         </div>
-        <div id="layer-middle"></div>
         <div id="layer-top">
             <img id="profilePic" src="" alt="Foto do aniversariante">
             <div id="eventName"></div>
@@ -206,6 +211,7 @@
         <button class="btn btn-success" onclick="downloadFlyer()" id="downloadBtn">
             <i class="fas fa-download"></i> Baixar Flyer
         </button>
+        <i id="loadingSpinner" class="fas fa-spinner fa-spin"></i>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -320,51 +326,46 @@
             tempContainer.style.top = '-9999px';
             tempContainer.style.backgroundColor = '#000';
 
-            const layerBottomClone = document.createElement('div');
-            layerBottomClone.style.width = '360px';
-            layerBottomClone.style.height = '640px';
-            layerBottomClone.style.position = 'absolute';
-            layerBottomClone.innerHTML = `
-                <img src="${document.getElementById('flyer-image').src}" style="width: 360px; height: 360px; object-fit: cover; margin-top: 0;">
+            const backgroundContainerClone = document.createElement('div');
+            backgroundContainerClone.style.width = '360px';
+            backgroundContainerClone.style.height = '640px';
+            backgroundContainerClone.style.position = 'absolute';
+            backgroundContainerClone.innerHTML = `
+                <div style="position: absolute; top: 0; width: 100%; height: 100%; background-color: #000; display: flex; justify-content: center; align-items: flex-start;">
+                    <img src="${document.getElementById('flyer-image').src}" style="width: 360px; height: 360px; object-fit: cover; margin-top: 0;">
+                </div>
+                <div style="position: absolute; bottom: 0; width: 100%; height: 100%; background: url('https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundobg.png?alt=media&token=f39b5c9a-321b-4e6c-bd5c-db057abfea97') no-repeat bottom; background-size: cover;"></div>
             `;
-
-            const layerMiddleClone = document.createElement('div');
-            layerMiddleClone.style.width = '360px';
-            layerMiddleClone.style.height = '640px';
-            layerMiddleClone.style.background = `url('https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffundobg.png?alt=media&token=f39b5c9a-321b-4e6c-bd5c-db057abfea97') no-repeat bottom`;
-            layerMiddleClone.style.backgroundSize = 'cover';
-            layerMiddleClone.style.position = 'absolute';
 
             const layerTopClone = document.createElement('div');
             layerTopClone.style.width = '360px';
-            layerTopClone.style.height = '640px';
-            layerTopClone.style.position = 'absolute';
+            layerTopClone.style.position = 'relative';
             layerTopClone.style.padding = '15px';
-            layerTopClone.style.paddingBottom = '50px';
-            layerTopClone.style.boxSizing = 'border-box';
             layerTopClone.style.display = 'flex';
             layerTopClone.style.flexDirection = 'column';
-            layerTopClone.style.justifyContent = 'flex-end';
             layerTopClone.style.alignItems = 'center';
             layerTopClone.style.color = '#fff';
             layerTopClone.style.textAlign = 'center';
+            layerTopClone.style.marginTop = '20px';
             layerTopClone.innerHTML = `
-                <img src="${document.getElementById('profilePic').src}" style="width: 170px; height: 170px; border-radius: 50%; border: 3px solid #ffffff7d; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); object-fit: cover;">
-                <div style="font-size: 18px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
+                <img src="${document.getElementById('profilePic').src}" style="width: 170px; height: 170px; border-radius: 50%; border: 3px solid #ffffff7d; object-fit: cover; margin-bottom: 10px;">
+                <div style="font-size: 20px; font-weight: bold; color: #ff00ff; text-transform: uppercase; margin: 5px 0;">${document.getElementById('eventName').textContent}</div>
                 <div style="font-size: 14px; font-weight: normal; color: #fff; margin: 5px 0; line-height: 1.4;">${document.getElementById('eventDetails').textContent}</div>
-                <div style="font-size: 28px; font-weight: bold; color: #ff00ff; margin: 10px 0; line-height: 1;">${document.getElementById('eventDate').textContent}</div>
-                <div style="font-size: 12px; font-weight: normal; color: #fff; margin: 5px 0; line-height: 1.4;">${document.getElementById('eventDescription').textContent}</div>
+                <div style="font-size: 32px; font-weight: bold; color: #ff00ff; margin: 10px 0; line-height: 1;">${document.getElementById('eventDate').textContent}</div>
+                <div style="font-size: 14px; font-weight: normal; color: #fff; margin: 5px 0; line-height: 1.4; padding: 0 15px;">${document.getElementById('eventDescription').textContent}</div>
             `;
 
-            tempContainer.appendChild(layerBottomClone);
-            tempContainer.appendChild(layerMiddleClone);
+            tempContainer.appendChild(backgroundContainerClone);
             tempContainer.appendChild(layerTopClone);
             document.body.appendChild(tempContainer);
+
+            const spinner = document.getElementById('loadingSpinner');
+            spinner.style.display = 'block';
 
             setTimeout(() => {
                 html2canvas(tempContainer, { 
                     useCORS: true, 
-                    scale: 2,
+                    scale: 4, // Increased scale for higher resolution
                     allowTaint: false,
                     backgroundColor: null 
                 }).then(canvas => {
@@ -374,12 +375,14 @@
                     link.href = image;
                     link.click();
                     document.body.removeChild(tempContainer);
+                    spinner.style.display = 'none';
                 }).catch(error => {
                     console.error('Erro ao gerar a imagem:', error);
                     alert('Erro ao gerar o flyer.');
                     document.body.removeChild(tempContainer);
+                    spinner.style.display = 'none';
                 });
-            }, 4000);
+            }, 1000); // Reduced timeout for faster processing
         }
 
         window.onload = loadFlyer;
