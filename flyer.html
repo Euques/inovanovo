@@ -217,10 +217,52 @@
             return `${dayOfWeek} ${day}.${month} ${hours}H`;
         }
 
-        // Função para clarear uma cor RGB
-        function lightenColor(r, g, b, factor = 0.7) {
-            const lighten = (value) => Math.min(255, Math.round(value + (255 - value) * factor));
-            return `rgb(${lighten(r)}, ${lighten(g)}, ${lighten(b)})`;
+        // Função para converter RGB para HSL e ajustar saturação
+        function vividColor(r, g, b) {
+            // Normalizar RGB para 0-1
+            r /= 255;
+            g /= 255;
+            b /= 255;
+
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0; // Achromatic
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+
+            // Aumentar saturação em 50% (máximo 1)
+            s = Math.min(1, s * 1.5);
+            // Ajustar leve luminosidade para evitar tons muito escuros
+            l = Math.min(0.9, l * 1.2);
+
+            // Converter de volta para RGB
+            const hue2rgb = (p, q, t) => {
+                if (t < 0) t += 1;
+                if (t > 1) t -= 1;
+                if (t < 1/6) return p + (q - p) * 6 * t;
+                if (t < 1/2) return q;
+                if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                return p;
+            };
+
+            let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            let p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1/3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1/3);
+
+            return `rgb(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)})`;
         }
 
         function preloadImages(urls, callback) {
@@ -274,7 +316,6 @@
                             document.getElementById('eventName').textContent = bdayData.apelido || bdayData.promocao || 'Sem nome';
                             document.getElementById('eventDetails').textContent = eventData.descricao || 'Grupo Com Prazer, SamBV e Dj Edu Pirata';
                             
-                            // Usar exclusivamente eventData.data como fonte do timestamp
                             const eventTimestamp = eventData.data;
                             console.log(`eventData.data: ${eventData.data}, Selecionado: ${eventTimestamp}`);
                             
@@ -290,15 +331,15 @@
                             document.getElementById('eventDescription').textContent = bdayData.regra || 'Com 20 pagantes, ganha entrada VIP...';
                             document.getElementById('flyer').style.display = 'block';
 
-                            // Extrair e clarear cor predominante
+                            // Extrair e tornar a cor mais vívida
                             const colorThief = new ColorThief();
                             try {
                                 const dominantColor = colorThief.getColor(loadedImages[0]);
                                 const [r, g, b] = dominantColor;
-                                const lightenedColor = lightenColor(r, g, b, 0.7); // Ajuste de luminosidade
-                                console.log(`Cor predominante original: rgb(${r}, ${g}, ${b}), Clareada: ${lightenedColor}`);
-                                document.getElementById('eventName').style.color = lightenedColor;
-                                document.getElementById('eventDate').style.color = lightenedColor;
+                                const vividColorResult = vividColor(r, g, b);
+                                console.log(`Cor predominante original: rgb(${r}, ${g}, ${b}), Vívida: ${vividColorResult}`);
+                                document.getElementById('eventName').style.color = vividColorResult;
+                                document.getElementById('eventDate').style.color = vividColorResult;
                             } catch (error) {
                                 console.error('Erro ao extrair cor predominante:', error);
                                 document.getElementById('eventName').style.color = '#ff00ff';
