@@ -34,17 +34,14 @@
             margin-bottom: 10px;
             color: #00aaff;
         }
-        .bday-list {
-            list-style: none;
-            padding: 0;
-        }
-        .bday-item {
+        .bday-card {
             display: flex;
             align-items: center;
-            padding: 10px;
-            background: #222;
+            padding: 12px;
+            background: #333;
             border-radius: 10px;
             margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         .flyer-img, .bday-photo {
             margin-right: 10px;
@@ -62,7 +59,7 @@
         }
         .bday-details {
             flex: 1;
-            padding: 5px 0;
+            padding: 2px 0;
         }
         .bday-name {
             font-size: 1rem;
@@ -71,19 +68,19 @@
         }
         .bday-info {
             font-size: 0.8rem;
-            color: #aaa;
+            color: #ccc;
             margin-bottom: 5px;
         }
         .counts {
             font-size: 0.8rem;
-            color: #aaa;
-            margin-bottom: 5px;
+            color: #ccc;
         }
         .guest-count { color: #ffd700; }
         .checkin-count { color: #32cd32; }
         .bday-buttons {
             display: flex;
             gap: 5px;
+            align-items: center;
         }
         .btn-custom {
             display: flex;
@@ -92,7 +89,7 @@
             width: 40px;
             height: 40px;
             font-size: 1rem;
-            background: #333;
+            background: #444;
             color: #fff;
             border-radius: 50%;
             text-decoration: none;
@@ -111,24 +108,33 @@
                 margin-left: auto;
                 flex-wrap: nowrap;
             }
+            .bday-card {
+                min-height: 80px; /* Garante altura mínima para alinhamento */
+            }
         }
 
         /* Mobile */
         @media (max-width: 768px) {
-            .bday-item {
-                flex-direction: row;
-                align-items: center;
+            .bday-card {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 10px;
             }
             .flyer-img, .bday-photo {
-                margin-right: 5px;
-                margin-bottom: 0;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            .bday-details {
+                width: 100%;
             }
             .counts {
                 display: flex;
                 gap: 10px;
+                margin-bottom: 10px;
             }
             .bday-buttons {
-                justify-content: flex-end;
+                justify-content: flex-start;
+                width: 100%;
             }
         }
 
@@ -151,6 +157,11 @@
                 font-size: 0.7rem;
             }
             .event-date {
+                font-size: 0.9rem;
+            }
+            .btn-custom {
+                width: 36px;
+                height: 36px;
                 font-size: 0.9rem;
             }
         }
@@ -294,7 +305,7 @@
                         var whatsappLink = `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=oi,%20sobre%20o%20seu%20${encodeURIComponent(bday.apelido)}%20no%20${formatEventDisplay(event.eventDate, event.horario)}%20com%20${encodeURIComponent(eventosData[event.eventId].descricao || 'festa')}%20no%20Inova%20Bar`;
 
                         var item = document.createElement("li");
-                        item.className = "bday-item";
+                        item.className = "bday-card";
                         item.setAttribute('data-event-id', event.eventId);
                         item.setAttribute('data-bday-apelido', bday.apelido);
                         item.innerHTML = `
@@ -307,12 +318,12 @@
                                     <span class="guest-count">Convidados: ${guestCount}</span>
                                     <span class="checkin-count">Check-ins: ${checkInCount}</span>
                                 </div>
-                                <div class="bday-buttons">
-                                    <a href="${nomeNaListaLink}" target="_blank" class="btn-custom"><i class="fas fa-list"></i></a>
-                                    <a href="${convidadosLink}" target="_blank" class="btn-custom"><i class="fas fa-users"></i></a>
-                                    <a href="${flyerLink}" target="_blank" class="btn-custom"><i class="fas fa-image"></i></a>
-                                    <a href="${whatsappLink}" target="_blank" class="btn-custom"><i class="fab fa-whatsapp"></i></a>
-                                </div>
+                            </div>
+                            <div class="bday-buttons">
+                                <a href="${nomeNaListaLink}" target="_blank" class="btn-custom"><i class="fas fa-list"></i></a>
+                                <a href="${convidadosLink}" target="_blank" class="btn-custom"><i class="fas fa-users"></i></a>
+                                <a href="${flyerLink}" target="_blank" class="btn-custom"><i class="fas fa-image"></i></a>
+                                <a href="${whatsappLink}" target="_blank" class="btn-custom"><i class="fab fa-whatsapp"></i></a>
                             </div>
                         `;
                         bdayList.appendChild(item);
@@ -330,7 +341,7 @@
                     // Monitorar mudanças em listas/geral/ausentes
                     var ausentesRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/listas/geral/ausentes`);
                     ausentesRef.on("value", function() {
-                        section.querySelectorAll('.bday-item').forEach(item => {
+                        section.querySelectorAll('.bday-card').forEach(item => {
                             var bdayApelido = item.getAttribute('data-bday-apelido');
                             if (bdayApelido) updateCounts(event.eventId, bdayApelido, item);
                         });
@@ -341,7 +352,7 @@
                         var bday = bdayInfo.data;
                         var listasRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/listas/${bday.apelido}`);
                         listasRef.on("value", function() {
-                            section.querySelectorAll(`.bday-item[data-bday-apelido="${bday.apelido}"]`).forEach(item => {
+                            section.querySelectorAll(`.bday-card[data-bday-apelido="${bday.apelido}"]`).forEach(item => {
                                 if (item) updateCounts(event.eventId, bday.apelido, item);
                             });
                         });
