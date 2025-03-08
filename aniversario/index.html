@@ -33,7 +33,7 @@
             font-weight: bold;
             margin-bottom: 10px;
             color: #00aaff;
-            padding-left: 15px; /* Alinhamento com o card */
+            padding-left: 15px; /* Alinhamento com o padding do card */
         }
         .bday-card {
             display: flex;
@@ -252,7 +252,8 @@
             var eventData = eventosData[eventId];
             if (section && section.querySelector('.event-date')) {
                 var bdayCount = countBdays(eventId);
-                section.querySelector('.event-date').textContent = `${formatEventDisplay(eventData.data, eventData.horario || '')} - ${bdayCount} Aniversariante${bdayCount !== 1 ? 's' : ''}`;
+                var horario = eventData.horario || 'N/A'; // Fallback para horário
+                section.querySelector('.event-date').textContent = `${formatEventDisplay(eventData.data, horario)} - ${bdayCount} Aniversariante${bdayCount !== 1 ? 's' : ''}`;
             } else {
                 console.warn(`Elemento .event-date não encontrado para o eventId: ${eventId}`);
             }
