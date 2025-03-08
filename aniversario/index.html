@@ -89,6 +89,41 @@
         .checkin-count {
             color: #28a745;
         }
+
+        /* Media Queries para Responsividade */
+        @media (max-width: 768px) {
+            .bday-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            .flyer-img, .bday-photo {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            .bday-details {
+                padding: 10px;
+            }
+            .event-date {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .flyer-img {
+                width: 80px;
+                height: 80px;
+            }
+            .bday-photo {
+                width: 60px;
+                height: 60px;
+            }
+            .bday-name {
+                font-size: 16px;
+            }
+            .bday-info {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -117,7 +152,7 @@
         var cliente = "inovabar";
         var eventosData = {};
 
-        // Funções de formatação de data do seu código original
+        // Funções de formatação de data
         function getDiaSemana(data) {
             var dias = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
             return dias[new Date(data).getDay()];
@@ -128,14 +163,22 @@
             return meses[new Date(data).getMonth()];
         }
 
-        function formatEventDisplay(data) {
+        function formatEventDisplay(data, horario) {
             var dia = new Date(data).getDate().toString().padStart(2, '0');
             var mes = getMesAbrev(data);
             var diaSemana = getDiaSemana(data);
-            return `${diaSemana} ${dia} ${mes}`;
+            return `${diaSemana} ${dia} ${mes} ${horario || ''}`;
         }
 
-        // Contar convidados (em geral/ausentes/[promoter])
+        function formatBdayDate(dateStr) {
+            var date = new Date(dateStr);
+            var day = date.getDate().toString().padStart(2, '0');
+            var month = (date.getMonth() + 1).toString().padStart(2, '0');
+            var year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        // Contar convidados e check-ins
         function countGuests(eventId, promoter) {
             var eventData = eventosData[eventId];
             if (!eventData || !eventData.listas || !eventData.listas.geral || !eventData.listas.geral.ausentes) {
@@ -145,7 +188,6 @@
             return Object.values(ausentes).filter(guest => guest.promoter === promoter).length;
         }
 
-        // Contar check-ins (em listas/[apelido])
         function countCheckIns(eventId, bdayApelido) {
             var eventData = eventosData[eventId];
             if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) {
@@ -163,7 +205,6 @@
                 bdayContainer.innerHTML = '';
                 eventosData = snapshot.val();
 
-                // Criar lista de eventos com seus aniversariantes
                 var events = [];
 
                 snapshot.forEach(function(eventSnapshot) {
@@ -183,20 +224,20 @@
                         events.push({
                             eventId: eventId,
                             eventDate: evento.data,
+                            horario: evento.horario || '13h', // Assumindo horário, ajuste se necessário
                             flyer: evento.flyer,
-                            bdays: bdays
+                            bdays: bdays,
+                            bdayCount: bdays.length
                         });
                     }
                 });
 
-                // Ordenar eventos pela data (última festa primeiro)
                 events.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
 
-                // Exibir eventos e aniversariantes
                 events.forEach(function(event) {
                     var section = document.createElement("div");
                     section.className = "event-section";
-                    section.innerHTML = `<div class="event-date">${formatEventDisplay(event.eventDate)}</div>`;
+                    section.innerHTML = `<div class="event-date">${formatEventDisplay(event.eventDate, event.horario)} - ${event.bdayCount} Aniversariante${event.bdayCount !== 1 ? 's' : ''}</div>`;
                     var bdayList = document.createElement("ul");
                     bdayList.className = "bday-list";
 
@@ -208,6 +249,7 @@
                         var nomeNaListaLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}`;
                         var convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}#bday569`;
                         var flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayInfo.bdayId}`;
+                        var whatsappLink = `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=oi,%20sobre%20o%20seu%20${encodeURIComponent(bday.apelido)}%20no%20${formatEventDisplay(event.eventDate, event.horario)}%20com%20${encodeURIComponent(evento.descricao || 'festa')}%20no%20Inova%20Bar`;
 
                         var item = document.createElement("li");
                         item.className = "bday-item";
@@ -216,17 +258,14 @@
                             <img src="${bday.foto || ''}" class="bday-photo" onerror="this.style.display='none'" alt="Foto" loading="lazy">
                             <div class="bday-details">
                                 <div class="bday-name">${bday.nome || bday.apelido}</div>
-                                <div class="bday-info"><strong>Apelido:</strong> ${bday.apelido}</div>
-                                <div class="bday-info"><strong>Nome:</strong> ${bday.promocao}</div>
-                                <div class="bday-info"><strong>Data:</strong> ${bday.bday}</div>
-                                <div class="bday-info"><strong>Status:</strong> ${bday.status}</div>
-                                <div class="bday-info"><strong>WhatsApp:</strong> ${bday.whats}</div>
+                                <div class="bday-info"><strong>Data:</strong> ${formatBdayDate(bday.bday)}</div>
                                 <div class="guest-count">Convidados: ${guestCount}</div>
                                 <div class="checkin-count">Check-ins: ${checkInCount}</div>
                                 <div class="bday-links">
                                     <a href="${nomeNaListaLink}" target="_blank">Nome na Lista</a>
                                     <a href="${convidadosLink}" target="_blank">Convidados</a>
                                     <a href="${flyerLink}" target="_blank">Flyer</a>
+                                    <a href="${whatsappLink}" target="_blank">WhatsApp</a>
                                 </div>
                             </div>
                         `;
