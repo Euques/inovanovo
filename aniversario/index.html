@@ -90,7 +90,6 @@
             color: #28a745;
         }
 
-        /* Media Queries para Responsividade */
         @media (max-width: 768px) {
             .bday-item {
                 flex-direction: column;
@@ -152,7 +151,6 @@
         var cliente = "inovabar";
         var eventosData = {};
 
-        // Funções de formatação de data
         function getDiaSemana(data) {
             var dias = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
             return dias[new Date(data).getDay()];
@@ -178,14 +176,13 @@
             return `${day}/${month}/${year}`;
         }
 
-        // Contar convidados e check-ins
         function countGuests(eventId, promoter) {
             var eventData = eventosData[eventId];
             if (!eventData || !eventData.listas || !eventData.listas.geral || !eventData.listas.geral.ausentes) {
                 return 0;
             }
             var ausentes = eventData.listas.geral.ausentes;
-            return Object.values(ausentes).filter(guest => guest.promoter === promoter).length;
+            return Object.values(ausentes).filter(guest => guest.promoter === promoter).length || 0;
         }
 
         function countCheckIns(eventId, bdayApelido) {
@@ -193,8 +190,25 @@
             if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) {
                 return 0;
             }
-            var checkIns = Object.values(eventData.listas[bdayApelido]).filter(guest => guest.nome.includes("✅")).length;
-            return checkIns;
+            var checkIns = Object.values(eventData.listas[bdayApelido]).filter(guest => guest.nome && guest.nome.includes("✅")).length;
+            return checkIns || 0;
+        }
+
+        function countBdays(eventId) {
+            var eventData = eventosData[eventId];
+            return eventData && eventData.bday ? Object.keys(eventData.bday).length : 0;
+        }
+
+        function updateCounts(eventId, bdayApelido, item) {
+            var guestCount = countGuests(eventId, bdayApelido);
+            var checkInCount = countCheckIns(eventId, bdayApelido);
+            item.querySelector('.guest-count').textContent = `Convidados: ${guestCount}`;
+            item.querySelector('.checkin-count').textContent = `Check-ins: ${checkInCount}`;
+        }
+
+        function updateBdayCount(eventId, section) {
+            var bdayCount = countBdays(eventId);
+            section.querySelector('.event-date').textContent = `${formatEventDisplay(eventosData[eventId].data, eventosData[eventId].horario || '13h')} - ${bdayCount} Aniversariante${bdayCount !== 1 ? 's' : ''}`;
         }
 
         function populateBdayList() {
@@ -202,32 +216,25 @@
             var eventosRef = firebase.database().ref(cliente + "/eventos");
 
             eventosRef.on("value", function(snapshot) {
+                eventosData = snapshot.val() || {};
                 bdayContainer.innerHTML = '';
-                eventosData = snapshot.val();
 
                 var events = [];
-
                 snapshot.forEach(function(eventSnapshot) {
                     var eventId = eventSnapshot.key;
                     var evento = eventSnapshot.val();
 
-                    if (evento.bday && evento.data) {
-                        var bdays = [];
-                        Object.keys(evento.bday).forEach(function(bdayId) {
-                            var bday = evento.bday[bdayId];
-                            bdays.push({
-                                bdayId: bdayId,
-                                data: bday
-                            });
-                        });
-
+                    if (evento && evento.bday && evento.data) {
                         events.push({
                             eventId: eventId,
                             eventDate: evento.data,
-                            horario: evento.horario || '13h', // Assumindo horário, ajuste se necessário
+                            horario: evento.horario || '13h',
                             flyer: evento.flyer,
-                            bdays: bdays,
-                            bdayCount: bdays.length
+                            bdays: Object.keys(evento.bday || {}).map(bdayId => ({
+                                bdayId: bdayId,
+                                data: evento.bday[bdayId]
+                            })),
+                            bdayCount: Object.keys(evento.bday || {}).length
                         });
                     }
                 });
@@ -237,6 +244,7 @@
                 events.forEach(function(event) {
                     var section = document.createElement("div");
                     section.className = "event-section";
+                    section.setAttribute('data-event-id', event.eventId);
                     section.innerHTML = `<div class="event-date">${formatEventDisplay(event.eventDate, event.horario)} - ${event.bdayCount} Aniversariante${event.bdayCount !== 1 ? 's' : ''}</div>`;
                     var bdayList = document.createElement("ul");
                     bdayList.className = "bday-list";
@@ -249,10 +257,12 @@
                         var nomeNaListaLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}`;
                         var convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}#bday569`;
                         var flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayInfo.bdayId}`;
-                        var whatsappLink = `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=oi,%20sobre%20o%20seu%20${encodeURIComponent(bday.apelido)}%20no%20${formatEventDisplay(event.eventDate, event.horario)}%20com%20${encodeURIComponent(evento.descricao || 'festa')}%20no%20Inova%20Bar`;
+                        var whatsappLink = `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=oi,%20sobre%20o%20seu%20${encodeURIComponent(bday.apelido)}%20no%20${formatEventDisplay(event.eventDate, event.horario)}%20com%20${encodeURIComponent(eventosData[event.eventId].descricao || 'festa')}%20no%20Inova%20Bar`;
 
                         var item = document.createElement("li");
                         item.className = "bday-item";
+                        item.setAttribute('data-event-id', event.eventId);
+                        item.setAttribute('data-bday-apelido', bday.apelido);
                         item.innerHTML = `
                             <img src="${event.flyer || ''}" class="flyer-img" onerror="this.style.display='none'" alt="Flyer" loading="lazy">
                             <img src="${bday.foto || ''}" class="bday-photo" onerror="this.style.display='none'" alt="Foto" loading="lazy">
@@ -274,6 +284,32 @@
 
                     section.appendChild(bdayList);
                     bdayContainer.appendChild(section);
+
+                    // Monitorar mudanças nos aniversariantes
+                    var bdayRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/bday`);
+                    bdayRef.on("value", function(snapshot) {
+                        updateBdayCount(event.eventId, section);
+                    });
+
+                    // Monitorar mudanças em listas/geral/ausentes
+                    var ausentesRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/listas/geral/ausentes`);
+                    ausentesRef.on("value", function() {
+                        section.querySelectorAll('.bday-item').forEach(item => {
+                            var bdayApelido = item.getAttribute('data-bday-apelido');
+                            updateCounts(event.eventId, bdayApelido, item);
+                        });
+                    });
+
+                    // Monitorar mudanças em listas/[bdayApelido]
+                    event.bdays.forEach(function(bdayInfo) {
+                        var bday = bdayInfo.data;
+                        var listasRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/listas/${bday.apelido}`);
+                        listasRef.on("value", function() {
+                            section.querySelectorAll(`.bday-item[data-bday-apelido="${bday.apelido}"]`).forEach(item => {
+                                updateCounts(event.eventId, bday.apelido, item);
+                            });
+                        });
+                    });
                 });
             });
         }
