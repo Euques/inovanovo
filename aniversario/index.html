@@ -11,122 +11,103 @@
             background-color: #000;
             color: #fff;
             font-family: 'Arial', sans-serif;
-            line-height: 1.6;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
         }
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
-            margin-top: 50px;
+            padding: 10px;
         }
         h1 {
             text-align: center;
-            margin-bottom: 30px;
-            font-size: 2rem;
+            margin: 20px 0;
+            font-size: 1.8rem;
         }
         .event-section {
-            margin-bottom: 40px;
-            background: #1c1c1c;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s;
-        }
-        .event-section:hover {
-            transform: translateY(-5px);
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            background: #1a1a1a;
         }
         .event-date {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: bold;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #333;
+            margin-bottom: 5px;
+            color: #00aaff;
+        }
+        .event-count {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 10px;
         }
         .bday-list {
             list-style: none;
             padding: 0;
         }
         .bday-item {
-            margin-bottom: 15px;
-            background: #2a2a2a;
-            border-radius: 10px;
-            padding: 10px;
+            margin-bottom: 5px;
+            padding: 5px 10px;
+            background: #222;
             display: flex;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s;
-        }
-        .bday-item:hover {
-            transform: translateY(-2px);
         }
         .flyer-img, .bday-photo {
-            margin-right: 15px;
+            margin-right: 10px;
             object-fit: cover;
         }
         .flyer-img {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
         }
         .bday-photo {
-            width: 80px;
-            height: 80px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
         }
         .bday-details {
             flex: 1;
-            padding: 5px 0;
+            padding: 2px 0;
         }
         .bday-name {
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
         }
         .bday-info {
-            font-size: 0.9rem;
-            margin-bottom: 5px;
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-bottom: 2px;
         }
         .counts {
             display: flex;
-            gap: 15px;
-            margin-bottom: 10px;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: #aaa;
         }
-        .guest-count, .checkin-count {
-            font-weight: bold;
-        }
-        .guest-count {
-            color: #ffc107;
-        }
-        .checkin-count {
-            color: #28a745;
-        }
+        .guest-count { color: #ffd700; }
+        .checkin-count { color: #32cd32; }
         .bday-buttons {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            gap: 5px;
         }
         .btn-custom {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            font-size: 0.8rem;
-            border-radius: 5px;
+            gap: 3px;
+            padding: 3px 6px;
+            font-size: 0.7rem;
+            background: #333;
+            color: #fff;
+            border-radius: 3px;
             text-decoration: none;
-            transition: background-color 0.3s;
         }
-        .btn-custom:hover {
-            opacity: 0.9;
+        .btn-custom i {
+            color: #fff;
         }
-        .btn-list { background-color: #007bff; color: #fff; }
-        .btn-list i { color: #fff; }
-        .btn-guests { background-color: #17a2b8; color: #fff; }
-        .btn-guests i { color: #fff; }
-        .btn-flyer { background-color: #dc3545; color: #fff; }
-        .btn-flyer i { color: #fff; }
-        .btn-whatsapp { background-color: #28a745; color: #fff; }
-        .btn-whatsapp i { color: #fff; }
 
+        /* Responsivo */
         @media (max-width: 768px) {
             .bday-item {
                 flex-direction: column;
@@ -134,13 +115,13 @@
             }
             .flyer-img, .bday-photo {
                 margin-right: 0;
-                margin-bottom: 10px;
+                margin-bottom: 5px;
             }
             .bday-details {
-                padding: 10px 0;
+                padding: 5px 0;
             }
             .event-date {
-                font-size: 1.2rem;
+                font-size: 1rem;
             }
             .bday-buttons {
                 justify-content: center;
@@ -148,34 +129,34 @@
             .btn-custom {
                 width: 100%;
                 justify-content: center;
-                margin-bottom: 5px;
+                margin-bottom: 3px;
             }
         }
 
         @media (max-width: 480px) {
             .container {
-                padding: 10px;
+                padding: 5px;
             }
             .flyer-img {
-                width: 80px;
-                height: 80px;
+                width: 50px;
+                height: 50px;
             }
             .bday-photo {
-                width: 60px;
-                height: 60px;
+                width: 40px;
+                height: 40px;
             }
             .bday-name {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
             .bday-info {
-                font-size: 0.8rem;
+                font-size: 0.7rem;
             }
             .event-date {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
             .counts {
                 flex-direction: column;
-                gap: 5px;
+                gap: 3px;
             }
         }
     </style>
@@ -262,6 +243,7 @@
             if (section && section.querySelector('.event-date')) {
                 var bdayCount = countBdays(eventId);
                 section.querySelector('.event-date').textContent = `${formatEventDisplay(eventData.data, eventData.horario || '')} - ${bdayCount} Aniversariante${bdayCount !== 1 ? 's' : ''}`;
+                section.querySelector('.event-count').textContent = `Essa festa tem ${bdayCount} Aniversariante${bdayCount !== 1 ? 's' : ''}`;
             } else {
                 console.warn(`Elemento .event-date não encontrado para o eventId: ${eventId}`);
             }
@@ -275,7 +257,6 @@
                 eventosData = snapshot.val() || {};
                 bdayContainer.innerHTML = '';
 
-                // Agrupar aniversariantes por evento
                 var events = [];
                 snapshot.forEach(function(eventSnapshot) {
                     var eventId = eventSnapshot.key;
@@ -297,14 +278,16 @@
                     }
                 });
 
-                // Ordenar eventos por data (mais recente primeiro)
                 events.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
 
-                // Renderizar cada evento como uma seção
                 events.forEach(function(event) {
                     var section = document.createElement("div");
                     section.className = "event-section";
                     section.setAttribute('data-event-id', event.eventId);
+                    section.innerHTML = `
+                        <div class="event-date"></div>
+                        <div class="event-count"></div>
+                    `;
                     updateBdayCount(event.eventId, section); // Inicializa o contador
                     var bdayList = document.createElement("ul");
                     bdayList.className = "bday-list";
@@ -328,16 +311,16 @@
                             <img src="${bday.foto || ''}" class="bday-photo" onerror="this.style.display='none'" alt="Foto" loading="lazy">
                             <div class="bday-details">
                                 <div class="bday-name">${bday.nome || bday.apelido}</div>
-                                <div class="bday-info"><strong>Data:</strong> ${formatBdayDate(bday.bday)}</div>
+                                <div class="bday-info">Aniversariante</div>
                                 <div class="counts">
                                     <span class="guest-count">Convidados: ${guestCount}</span>
                                     <span class="checkin-count">Check-ins: ${checkInCount}</span>
                                 </div>
                                 <div class="bday-buttons">
-                                    <a href="${nomeNaListaLink}" target="_blank" class="btn-custom btn-list"><i class="fas fa-list"></i> Nome na Lista</a>
-                                    <a href="${convidadosLink}" target="_blank" class="btn-custom btn-guests"><i class="fas fa-users"></i> Convidados</a>
-                                    <a href="${flyerLink}" target="_blank" class="btn-custom btn-flyer"><i class="fas fa-image"></i> Flyer</a>
-                                    <a href="${whatsappLink}" target="_blank" class="btn-custom btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                                    <a href="${nomeNaListaLink}" target="_blank" class="btn-custom"><i class="fas fa-list"></i></a>
+                                    <a href="${convidadosLink}" target="_blank" class="btn-custom"><i class="fas fa-users"></i></a>
+                                    <a href="${flyerLink}" target="_blank" class="btn-custom"><i class="fas fa-image"></i></a>
+                                    <a href="${whatsappLink}" target="_blank" class="btn-custom"><i class="fab fa-whatsapp"></i></a>
                                 </div>
                             </div>
                         `;
