@@ -21,10 +21,10 @@
             text-align: center;
             margin-bottom: 30px;
         }
-        .bday-section {
+        .event-section {
             margin-bottom: 40px;
         }
-        .bday-date {
+        .event-date {
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 15px;
@@ -70,6 +70,14 @@
         .bday-info {
             font-size: 14px;
             margin-bottom: 3px;
+        }
+        .bday-links a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        .bday-links a:hover {
+            text-decoration: underline;
         }
         .guest-count, .checkin-count {
             font-size: 14px;
@@ -124,7 +132,7 @@
             var dia = new Date(data).getDate().toString().padStart(2, '0');
             var mes = getMesAbrev(data);
             var diaSemana = getDiaSemana(data);
-            return `${diaSemana} ${dia}.${mes}`;
+            return `${diaSemana} ${dia} ${mes}`;
         }
 
         // Contar convidados (em geral/ausentes/[promoter])
@@ -155,48 +163,56 @@
                 bdayContainer.innerHTML = '';
                 eventosData = snapshot.val();
 
-                // Agrupar aniversariantes por data de aniversário
-                var bdaysByDate = {};
+                // Criar lista de eventos com seus aniversariantes
+                var events = [];
 
                 snapshot.forEach(function(eventSnapshot) {
                     var eventId = eventSnapshot.key;
                     var evento = eventSnapshot.val();
 
-                    if (evento.bday) {
+                    if (evento.bday && evento.data) {
+                        var bdays = [];
                         Object.keys(evento.bday).forEach(function(bdayId) {
                             var bday = evento.bday[bdayId];
-                            var bdayDate = bday.bday;
-
-                            if (!bdaysByDate[bdayDate]) {
-                                bdaysByDate[bdayDate] = [];
-                            }
-                            bdaysByDate[bdayDate].push({
-                                eventId: eventId,
+                            bdays.push({
                                 bdayId: bdayId,
-                                data: bday,
-                                flyer: evento.flyer
+                                data: bday
                             });
+                        });
+
+                        events.push({
+                            eventId: eventId,
+                            eventDate: evento.data,
+                            flyer: evento.flyer,
+                            bdays: bdays
                         });
                     }
                 });
 
-                // Ordenar datas em ordem decrescente (última festa primeiro)
-                Object.keys(bdaysByDate).sort((a, b) => new Date(b) - new Date(a)).forEach(function(bdayDate) {
+                // Ordenar eventos pela data (última festa primeiro)
+                events.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
+
+                // Exibir eventos e aniversariantes
+                events.forEach(function(event) {
                     var section = document.createElement("div");
-                    section.className = "bday-section";
-                    section.innerHTML = `<div class="bday-date">${formatEventDisplay(bdayDate)}</div>`;
+                    section.className = "event-section";
+                    section.innerHTML = `<div class="event-date">${formatEventDisplay(event.eventDate)}</div>`;
                     var bdayList = document.createElement("ul");
                     bdayList.className = "bday-list";
 
-                    bdaysByDate[bdayDate].forEach(function(bdayInfo) {
+                    event.bdays.forEach(function(bdayInfo) {
                         var bday = bdayInfo.data;
-                        var guestCount = countGuests(bdayInfo.eventId, bday.apelido);
-                        var checkInCount = countCheckIns(bdayInfo.eventId, bday.apelido);
+                        var guestCount = countGuests(event.eventId, bday.apelido);
+                        var checkInCount = countCheckIns(event.eventId, bday.apelido);
+
+                        var nomeNaListaLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}`;
+                        var convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}#bday569`;
+                        var flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayInfo.bdayId}`;
 
                         var item = document.createElement("li");
                         item.className = "bday-item";
                         item.innerHTML = `
-                            <img src="${bdayInfo.flyer || ''}" class="flyer-img" onerror="this.style.display='none'" alt="Flyer" loading="lazy">
+                            <img src="${event.flyer || ''}" class="flyer-img" onerror="this.style.display='none'" alt="Flyer" loading="lazy">
                             <img src="${bday.foto || ''}" class="bday-photo" onerror="this.style.display='none'" alt="Foto" loading="lazy">
                             <div class="bday-details">
                                 <div class="bday-name">${bday.nome || bday.apelido}</div>
@@ -207,6 +223,11 @@
                                 <div class="bday-info"><strong>WhatsApp:</strong> ${bday.whats}</div>
                                 <div class="guest-count">Convidados: ${guestCount}</div>
                                 <div class="checkin-count">Check-ins: ${checkInCount}</div>
+                                <div class="bday-links">
+                                    <a href="${nomeNaListaLink}" target="_blank">Nome na Lista</a>
+                                    <a href="${convidadosLink}" target="_blank">Convidados</a>
+                                    <a href="${flyerLink}" target="_blank">Flyer</a>
+                                </div>
                             </div>
                         `;
                         bdayList.appendChild(item);
