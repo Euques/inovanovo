@@ -33,7 +33,7 @@
             font-weight: bold;
             margin-bottom: 10px;
             color: #00aaff;
-            padding-left: 10px; /* Alinhamento com o card */
+            padding-left: 15px; /* Alinhamento com o card */
         }
         .bday-card {
             display: flex;
@@ -44,8 +44,12 @@
             margin-bottom: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
+        .bday-images {
+            display: flex;
+            gap: 10px;
+            margin-right: 15px;
+        }
         .flyer-img, .bday-photo {
-            margin-right: 10px;
             object-fit: cover;
         }
         .flyer-img {
@@ -112,9 +116,6 @@
                 margin-left: auto;
                 flex-wrap: nowrap;
             }
-            .flyer-img, .bday-photo {
-                margin-right: 15px;
-            }
         }
 
         /* Mobile */
@@ -125,13 +126,7 @@
                 padding: 10px;
             }
             .bday-images {
-                display: flex;
-                gap: 10px;
                 margin-bottom: 10px;
-            }
-            .flyer-img, .bday-photo {
-                margin-right: 0;
-                margin-bottom: 0;
             }
             .bday-details {
                 width: 100%;
