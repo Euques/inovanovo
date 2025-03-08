@@ -127,7 +127,6 @@
         .btn-whatsapp { background-color: #28a745; color: #fff; }
         .btn-whatsapp i { color: #fff; }
 
-        /* Responsivo */
         @media (max-width: 768px) {
             .bday-item {
                 flex-direction: column;
@@ -259,9 +258,13 @@
         }
 
         function updateBdayCount(eventId, section) {
-            var bdayCount = countBdays(eventId);
             var eventData = eventosData[eventId];
-            section.querySelector('.event-date').textContent = `${formatEventDisplay(eventData.data, eventData.horario || '')} - ${bdayCount} Aniversariante${bdayCount !== 1 ? 's' : ''}`;
+            if (section && section.querySelector('.event-date')) {
+                var bdayCount = countBdays(eventId);
+                section.querySelector('.event-date').textContent = `${formatEventDisplay(eventData.data, eventData.horario || '')} - ${bdayCount} Aniversariante${bdayCount !== 1 ? 's' : ''}`;
+            } else {
+                console.warn(`Elemento .event-date não encontrado para o eventId: ${eventId}`);
+            }
         }
 
         function populateBdayList() {
@@ -280,7 +283,7 @@
                         var section = document.createElement("div");
                         section.className = "event-section";
                         section.setAttribute('data-event-id', eventId);
-                        updateBdayCount(eventId, section);
+                        updateBdayCount(eventId, section); // Inicializa o contador
                         var bdayList = document.createElement("ul");
                         bdayList.className = "bday-list";
 
@@ -325,7 +328,7 @@
                         // Monitorar mudanças nos aniversariantes
                         var bdayRef = firebase.database().ref(cliente + `/eventos/${eventId}/bday`);
                         bdayRef.on("value", function(snapshot) {
-                            updateBdayCount(eventId, section);
+                            updateBdayCount(eventId, section); // Atualiza o contador de aniversariantes
                         });
 
                         // Monitorar mudanças em listas/geral/ausentes
@@ -333,7 +336,7 @@
                         ausentesRef.on("value", function() {
                             section.querySelectorAll('.bday-item').forEach(item => {
                                 var bdayApelido = item.getAttribute('data-bday-apelido');
-                                updateCounts(eventId, bdayApelido, item);
+                                if (bdayApelido) updateCounts(eventId, bdayApelido, item);
                             });
                         });
 
@@ -343,7 +346,7 @@
                             var listasRef = firebase.database().ref(cliente + `/eventos/${eventId}/listas/${bday.apelido}`);
                             listasRef.on("value", function() {
                                 section.querySelectorAll(`.bday-item[data-bday-apelido="${bday.apelido}"]`).forEach(item => {
-                                    updateCounts(eventId, bday.apelido, item);
+                                    if (item) updateCounts(eventId, bday.apelido, item);
                                 });
                             });
                         });
