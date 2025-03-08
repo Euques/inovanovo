@@ -22,24 +22,17 @@
         }
         h1 {
             text-align: center;
-            margin: 20px 0;
+            margin: 15px 0;
             font-size: 1.8rem;
         }
         .event-section {
-            margin-bottom: 10px;
-            padding: 5px 10px;
-            background: #1a1a1a;
+            padding: 5px 0;
         }
         .event-date {
             font-size: 1.2rem;
             font-weight: bold;
             margin-bottom: 5px;
             color: #00aaff;
-        }
-        .event-count {
-            font-size: 0.9rem;
-            color: #ccc;
-            margin-bottom: 10px;
         }
         .bday-list {
             list-style: none;
@@ -48,7 +41,6 @@
         .bday-item {
             margin-bottom: 5px;
             padding: 5px 10px;
-            background: #222;
             display: flex;
             align-items: center;
         }
@@ -81,10 +73,9 @@
             margin-bottom: 2px;
         }
         .counts {
-            display: flex;
-            gap: 10px;
             font-size: 0.8rem;
             color: #aaa;
+            margin-bottom: 5px;
         }
         .guest-count { color: #ffd700; }
         .checkin-count { color: #32cd32; }
@@ -93,43 +84,49 @@
             gap: 5px;
         }
         .btn-custom {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 3px;
-            padding: 3px 6px;
-            font-size: 0.7rem;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            font-size: 0.9rem;
             background: #333;
             color: #fff;
-            border-radius: 3px;
+            border-radius: 50%;
             text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .btn-custom:hover {
+            opacity: 0.8;
         }
         .btn-custom i {
             color: #fff;
         }
 
-        /* Responsivo */
+        /* Desktop */
+        @media (min-width: 769px) {
+            .bday-buttons {
+                margin-left: auto;
+                flex-wrap: nowrap;
+            }
+        }
+
+        /* Mobile */
         @media (max-width: 768px) {
             .bday-item {
-                flex-direction: column;
-                text-align: center;
+                flex-direction: row;
+                align-items: center;
             }
             .flyer-img, .bday-photo {
-                margin-right: 0;
-                margin-bottom: 5px;
+                margin-right: 5px;
+                margin-bottom: 0;
             }
-            .bday-details {
-                padding: 5px 0;
-            }
-            .event-date {
-                font-size: 1rem;
+            .counts {
+                display: flex;
+                gap: 10px;
             }
             .bday-buttons {
-                justify-content: center;
-            }
-            .btn-custom {
-                width: 100%;
-                justify-content: center;
-                margin-bottom: 3px;
+                justify-content: flex-end;
             }
         }
 
@@ -153,10 +150,6 @@
             }
             .event-date {
                 font-size: 0.9rem;
-            }
-            .counts {
-                flex-direction: column;
-                gap: 3px;
             }
         }
     </style>
@@ -243,7 +236,6 @@
             if (section && section.querySelector('.event-date')) {
                 var bdayCount = countBdays(eventId);
                 section.querySelector('.event-date').textContent = `${formatEventDisplay(eventData.data, eventData.horario || '')} - ${bdayCount} Aniversariante${bdayCount !== 1 ? 's' : ''}`;
-                section.querySelector('.event-count').textContent = `Essa festa tem ${bdayCount} Aniversariante${bdayCount !== 1 ? 's' : ''}`;
             } else {
                 console.warn(`Elemento .event-date não encontrado para o eventId: ${eventId}`);
             }
@@ -284,11 +276,8 @@
                     var section = document.createElement("div");
                     section.className = "event-section";
                     section.setAttribute('data-event-id', event.eventId);
-                    section.innerHTML = `
-                        <div class="event-date"></div>
-                        <div class="event-count"></div>
-                    `;
-                    updateBdayCount(event.eventId, section); // Inicializa o contador
+                    section.innerHTML = `<div class="event-date"></div>`;
+                    updateBdayCount(event.eventId, section);
                     var bdayList = document.createElement("ul");
                     bdayList.className = "bday-list";
 
