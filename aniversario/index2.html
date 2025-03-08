@@ -346,7 +346,7 @@
                             eventDate: evento.data,
                             flyer: evento.flyer,
                             descricao: evento.descricao || 'Sem descrição',
-                            regras: evento.regras || 'Sem regras',
+                            regras: eventosData[eventId].regras || 'Sem regras', // Usa o valor do Firebase como fallback
                             bdays: bdays
                         });
                     }
