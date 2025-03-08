@@ -65,6 +65,7 @@
         .bday-details {
             flex: 1;
             padding: 2px 0;
+            text-align: left; /* Alinhamento à esquerda */
         }
         .bday-name {
             font-size: 1rem;
@@ -111,6 +112,14 @@
         @media (min-width: 769px) {
             .bday-card {
                 min-height: 80px;
+                flex-direction: row; /* Mantém imagens e textos lado a lado */
+                align-items: center;
+            }
+            .bday-images {
+                justify-content: flex-start; /* Alinha imagens à esquerda */
+            }
+            .bday-details {
+                text-align: left; /* Mantém textos à esquerda */
             }
             .bday-buttons {
                 margin-left: auto;
@@ -217,8 +226,7 @@
             var mes = getMesAbrev(data);
             var diaSemana = getDiaSemana(data);
             var horas = eventDate.getHours().toString().padStart(2, '0'); // Extrai a hora
-            var minutos = eventDate.getMinutes().toString().padStart(2, '0'); // Extrai os minutos
-            var horario = `${horas}:${minutos}`; // Formato HH:MM
+            var horario = `${horas}H`; // Formato HHH (ex.: 19H)
             // Ajuste para UTC-3 (fuso horário do Brasil)
             eventDate.setHours(eventDate.getHours() - 3); // Subtrai 3 horas para UTC-3
             return `${diaSemana} ${dia} ${mes} ${horario}`.trim();
@@ -291,7 +299,6 @@
                         events.push({
                             eventId: eventId,
                             eventDate: evento.data,
-                            horario: evento.horario || '',
                             flyer: evento.flyer,
                             bdays: bdays
                         });
@@ -306,7 +313,7 @@
                     section.setAttribute('data-event-id', event.eventId);
                     section.innerHTML = `<div class="event-date"></div>`;
                     updateBdayCount(event.eventId, section);
-                    var bdayList = document.createElement("ul");
+                    var bdayList = document.createElement("div"); // Substitui <ul> por <div>
                     bdayList.className = "bday-list";
 
                     event.bdays.forEach(function(bdayInfo) {
@@ -319,7 +326,7 @@
                         var flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayInfo.bdayId}`;
                         var whatsappLink = `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=oi,%20sobre%20o%20seu%20${encodeURIComponent(bday.apelido)}%20no%20${formatEventDisplay(event.eventDate)}%20com%20${encodeURIComponent(eventosData[event.eventId].descricao || 'festa')}%20no%20Inova%20Bar`;
 
-                        var item = document.createElement("li");
+                        var item = document.createElement("div"); // Substitui <li> por <div>
                         item.className = "bday-card";
                         item.setAttribute('data-event-id', event.eventId);
                         item.setAttribute('data-bday-apelido', bday.apelido);
