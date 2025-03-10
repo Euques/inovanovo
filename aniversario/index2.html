@@ -303,21 +303,30 @@
 
         // Contagem para Aniversariantes
         function countBdayGuests(eventId, bdayApelido) {
-            var eventData = eventosData[eventId];
-            if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
-            var guests = eventData.listas[bdayApelido];
-            return Object.keys(guests || {}).length || 0;
-        }
+    var eventData = eventosData[eventId];
+    if (!eventData || !eventData.bday) return 0;
+    
+    let guestCount = 0;
 
-        function countBdayCheckIns(eventId, bdayApelido) {
-            var eventData = eventosData[eventId];
-            if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
-            var guests = eventData.listas[bdayApelido];
-            var checkIns = Object.values(guests || {}).filter(guest => 
-                guest && guest.nome && typeof guest.nome === 'string' && guest.nome.includes("✅")
-            ).length;
-            return checkIns || 0;
+    Object.values(eventData.bday).forEach(bday => {
+        if (bday.apelido === bdayApelido) {
+            guestCount++;
         }
+    });
+
+    return guestCount;
+}
+
+
+       function countBdayCheckIns(eventId, bdayApelido) {
+    var eventData = eventosData[eventId];
+    if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
+    
+    var guests = eventData.listas[bdayApelido];
+    return Object.values(guests).filter(guest => 
+        guest && guest.nome && typeof guest.nome === 'string' && guest.nome.includes("✅")
+    ).length;
+}
 
         // Contagem para Eventos
         function countEventGuests(eventId) {
