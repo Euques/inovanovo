@@ -68,6 +68,9 @@
         }
         .bday-group {
             margin-top: 15px;
+            background: #333; /* Fundo cinza para destacar os aniversariantes */
+            border-radius: 10px;
+            padding: 15px;
         }
         .bday-list {
             display: flex;
@@ -292,20 +295,20 @@
             return `${diaSemana} ${dia} ${mes} ${horas}H`.trim();
         }
 
-        function formatBdayDate(bdayTimestamp) {
-            if (!bdayTimestamp) return "Data não informada";
-            const [day, month, year] = bdayTimestamp.split('/');
-            return `${day}/${month}/${year}`;
+        function formatWhatsNumber(whats) {
+            if (!whats) return "WhatsApp não informado";
+            return whats.replace(/\D/g, '');
         }
 
-        function countGuests(eventId, bdayApelido) {
+        // Contagem para Aniversariantes
+        function countBdayGuests(eventId, bdayApelido) {
             var eventData = eventosData[eventId];
             if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
             var guests = eventData.listas[bdayApelido];
             return Object.keys(guests || {}).length || 0;
         }
 
-        function countCheckIns(eventId, bdayApelido) {
+        function countBdayCheckIns(eventId, bdayApelido) {
             var eventData = eventosData[eventId];
             if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
             var guests = eventData.listas[bdayApelido];
@@ -315,6 +318,7 @@
             return checkIns || 0;
         }
 
+        // Contagem para Eventos
         function countEventGuests(eventId) {
             var eventData = eventosData[eventId];
             if (!eventData || !eventData.listas || !eventData.listas.geral || !eventData.listas.geral.ausentes) return 0;
@@ -325,8 +329,9 @@
             var eventData = eventosData[eventId];
             if (!eventData || !eventData.bday) return 0;
             var totalCheckIns = 0;
-            Object.values(eventData.bday).forEach(bday => {
-                totalCheckIns += countCheckIns(eventId, bday.apelido);
+            Object.keys(eventData.bday || {}).forEach(bdayId => {
+                var bday = eventData.bday[bdayId];
+                totalCheckIns += countBdayCheckIns(eventId, bday.apelido);
             });
             return totalCheckIns;
         }
@@ -336,9 +341,9 @@
             return eventData && eventData.bday ? Object.keys(eventData.bday || {}).length : 0;
         }
 
-        function updateCounts(eventId, bdayApelido, item) {
-            var guestCount = countGuests(eventId, bdayApelido);
-            var checkInCount = countCheckIns(eventId, bdayApelido);
+        function updateBdayCounts(eventId, bdayApelido, item) {
+            var guestCount = countBdayGuests(eventId, bdayApelido);
+            var checkInCount = countBdayCheckIns(eventId, bdayApelido);
             item.querySelector('.guest-count').textContent = `Convidados: ${guestCount}`;
             item.querySelector('.checkin-count').textContent = `Check-ins: ${checkInCount}`;
         }
@@ -437,8 +442,8 @@
 
                     event.bdays.forEach(function(bdayInfo) {
                         var bday = bdayInfo.data;
-                        var guestCount = countGuests(event.eventId, bday.apelido);
-                        var checkInCount = countCheckIns(event.eventId, bday.apelido);
+                        var guestCount = countBdayGuests(event.eventId, bday.apelido);
+                        var checkInCount = countBdayCheckIns(event.eventId, bday.apelido);
 
                         var nomeNaListaLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}`;
                         var convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}#bday569`;
@@ -456,7 +461,7 @@
                             </div>
                             <div class="bday-details">
                                 <div class="bday-name">${bday.nome || bday.apelido}</div>
-                                <div class="bday-info">Data: ${formatBdayDate(bday.bday)}</div>
+                                <div class="bday-info">WhatsApp: ${formatWhatsNumber(bday.whats)}</div>
                                 <div class="counts">
                                     <span class="guest-count">Convidados: ${guestCount}</span>
                                     <span class="checkin-count">Check-ins: ${checkInCount}</span>
@@ -471,7 +476,7 @@
                             </div>
                         `;
                         bdayList.appendChild(item);
-                        updateCounts(event.eventId, bday.apelido, item); // Atualiza os contadores imediatamente
+                        updateBdayCounts(event.eventId, bday.apelido, item); // Atualiza os contadores dos aniversariantes
                     });
 
                     bdayGroup.appendChild(bdayList);
@@ -486,10 +491,6 @@
                     var ausentesRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/listas/geral/ausentes`);
                     ausentesRef.on("value", function() {
                         updateEventCounts(event.eventId, eventInfo);
-                        section.querySelectorAll('.bday-card').forEach(item => {
-                            var bdayApelido = item.getAttribute('data-bday-apelido');
-                            if (bdayApelido) updateCounts(event.eventId, bdayApelido, item);
-                        });
                     });
 
                     event.bdays.forEach(function(bdayInfo) {
@@ -497,7 +498,7 @@
                         var listasRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/listas/${bday.apelido}`);
                         listasRef.on("value", function() {
                             section.querySelectorAll(`.bday-card[data-bday-apelido="${bday.apelido}"]`).forEach(item => {
-                                if (item) updateCounts(event.eventId, bday.apelido, item);
+                                if (item) updateBdayCounts(event.eventId, bday.apelido, item);
                             });
                         });
                     });
