@@ -40,6 +40,7 @@
             align-items: flex-start;
             gap: 15px;
             padding-left: 15px;
+            margin-bottom: 15px;
         }
         .event-flyer img {
             max-width: 150px;
@@ -62,13 +63,16 @@
         .event-buttons {
             margin-top: 10px;
             display: flex;
-            gap: 10px;
+            gap: 5px;
+            align-items: center;
+        }
+        .bday-group {
+            margin-top: 15px;
         }
         .bday-list {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
-            margin-top: 15px;
         }
         .bday-card {
             display: flex;
@@ -85,15 +89,8 @@
             gap: 10px;
             margin-right: 15px;
         }
-        .flyer-img, .bday-photo {
-            object-fit: cover;
-        }
-        .flyer-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 5px;
-        }
         .bday-photo {
+            object-fit: cover;
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -220,9 +217,8 @@
             .container {
                 padding: 5px;
             }
-            .flyer-img {
-                width: 50px;
-                height: 50px;
+            .event-flyer img {
+                max-width: 100px;
             }
             .bday-photo {
                 width: 40px;
@@ -313,8 +309,26 @@
             var eventData = eventosData[eventId];
             if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
             var guests = eventData.listas[bdayApelido];
-            var checkIns = Object.values(guests || {}).filter(guest => guest.nome && guest.nome.includes("✅")).length;
+            var checkIns = Object.values(guests || {}).filter(guest => 
+                guest && guest.nome && typeof guest.nome === 'string' && guest.nome.includes("✅")
+            ).length;
             return checkIns || 0;
+        }
+
+        function countEventGuests(eventId) {
+            var eventData = eventosData[eventId];
+            if (!eventData || !eventData.listas || !eventData.listas.geral || !eventData.listas.geral.ausentes) return 0;
+            return Object.keys(eventData.listas.geral.ausentes || {}).length || 0;
+        }
+
+        function countEventCheckIns(eventId) {
+            var eventData = eventosData[eventId];
+            if (!eventData || !eventData.bday) return 0;
+            var totalCheckIns = 0;
+            Object.values(eventData.bday).forEach(bday => {
+                totalCheckIns += countCheckIns(eventId, bday.apelido);
+            });
+            return totalCheckIns;
         }
 
         function countBdays(eventId) {
@@ -327,6 +341,13 @@
             var checkInCount = countCheckIns(eventId, bdayApelido);
             item.querySelector('.guest-count').textContent = `Convidados: ${guestCount}`;
             item.querySelector('.checkin-count').textContent = `Check-ins: ${checkInCount}`;
+        }
+
+        function updateEventCounts(eventId, eventInfo) {
+            var guestCount = countEventGuests(eventId);
+            var checkInCount = countEventCheckIns(eventId);
+            eventInfo.querySelector('.guest-count-value').textContent = `${guestCount}`;
+            eventInfo.querySelector('.checkin-count-value').textContent = `${checkInCount}`;
         }
 
         function updateBdayCount(eventId, section) {
@@ -406,8 +427,11 @@
                         </div>
                     `;
                     updateBdayCount(event.eventId, section);
+                    updateEventCounts(event.eventId, eventInfo);
                     section.appendChild(eventInfo);
 
+                    var bdayGroup = document.createElement("div");
+                    bdayGroup.className = "bday-group";
                     var bdayList = document.createElement("div");
                     bdayList.className = "bday-list";
 
@@ -428,7 +452,6 @@
                         item.setAttribute('data-bday-apelido', bday.apelido);
                         item.innerHTML = `
                             <div class="bday-images">
-                                <img src="${event.flyer || ''}" class="flyer-img" onerror="this.style.display='none'" alt="Flyer" loading="lazy">
                                 <img src="${bday.foto || ''}" class="bday-photo" onerror="this.style.display='none'" alt="Foto" loading="lazy">
                             </div>
                             <div class="bday-details">
@@ -451,7 +474,8 @@
                         updateCounts(event.eventId, bday.apelido, item); // Atualiza os contadores imediatamente
                     });
 
-                    section.appendChild(bdayList);
+                    bdayGroup.appendChild(bdayList);
+                    section.appendChild(bdayGroup);
                     bdayContainer.appendChild(section);
 
                     var bdayRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/bday`);
@@ -461,6 +485,7 @@
 
                     var ausentesRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/listas/geral/ausentes`);
                     ausentesRef.on("value", function() {
+                        updateEventCounts(event.eventId, eventInfo);
                         section.querySelectorAll('.bday-card').forEach(item => {
                             var bdayApelido = item.getAttribute('data-bday-apelido');
                             if (bdayApelido) updateCounts(event.eventId, bdayApelido, item);
