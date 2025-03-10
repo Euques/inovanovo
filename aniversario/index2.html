@@ -135,47 +135,37 @@
 
         .bday-buttons {
             display: flex;
-            gap: 5px;
+            gap: 10px; /* Aumentei o gap para melhor espaçamento */
             justify-content: flex-start;
             margin-top: 10px;
         }
 
         .btn-custom {
-            color: #ffd700;
+            color: #fff; /* Ícones brancos conforme a imagem */
             text-decoration: none;
             font-size: 1.2em;
-            padding: 5px 10px;
+            padding: 5px;
             display: flex;
             align-items: center;
-            gap: 5px;
-            border: 1px solid #ffd700;
-            border-radius: 5px;
-            transition: background-color 0.2s ease, color 0.2s ease;
+            transition: color 0.2s ease;
         }
 
         .btn-custom:hover {
-            color: #fff;
-            background-color: #ffd700;
-        }
-
-        .btn-custom i {
-            margin-right: 5px;
+            color: #ffd700; /* Cor dourada ao passar o mouse */
         }
 
         .copy-link {
             background: none;
-            border: 1px solid #ffd700;
-            cursor: pointer;
-            color: #ffd700;
+            border: none;
+            color: #fff;
             font-size: 1.2em;
-            padding: 5px 10px;
-            border-radius: 5px;
-            transition: background-color 0.2s ease, color 0.2s ease;
+            padding: 5px;
+            cursor: pointer;
+            transition: color 0.2s ease;
         }
 
         .copy-link:hover {
-            color: #fff;
-            background-color: #ffd700;
+            color: #ffd700;
         }
 
         @media (max-width: 768px) {
@@ -243,17 +233,17 @@
         }
 
         function countGuests(eventId, bdayApelido) {
-            var eventData = eventosData[eventId];
+            const eventData = eventosData[eventId];
             if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
-            return Object.values(eventData.listas[bdayApelido] || {}).length || 0;
+            const guests = eventData.listas[bdayApelido];
+            return Object.keys(guests).length || 0;
         }
 
         function countCheckIns(eventId, bdayApelido) {
-            var eventData = eventosData[eventId];
+            const eventData = eventosData[eventId];
             if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
-            var checkIns = Object.values(eventData.listas[bdayApelido] || {}).filter(guest =>
-                guest.nome && guest.nome.includes("✅")
-            ).length;
+            const guests = eventData.listas[bdayApelido];
+            const checkIns = Object.values(guests).filter(guest => guest.nome && guest.nome.includes("✅")).length;
             return checkIns || 0;
         }
 
@@ -264,19 +254,21 @@
         }
 
         function updateCounts(eventId, bdayApelido, item) {
-            var guestCount = countGuests(eventId, bdayApelido);
-            var checkInCount = countCheckIns(eventId, bdayApelido);
-            item.querySelector('.guest-count-value').textContent = `${guestCount}`;
-            item.querySelector('.checkin-count-value').textContent = `${checkInCount}`;
+            const guestCount = countGuests(eventId, bdayApelido);
+            const checkInCount = countCheckIns(eventId, bdayApelido);
+            const guestElement = item.querySelector('.guest-count-value');
+            const checkInElement = item.querySelector('.checkin-count-value');
+            if (guestElement) guestElement.textContent = `${guestCount}`;
+            if (checkInElement) checkInElement.textContent = `${checkInCount}`;
         }
 
         function updateEventCounts(eventId, eventInfo) {
-            var eventData = eventosData[eventId];
-            var guestCount = 0;
-            var checkInCount = 0;
+            const eventData = eventosData[eventId];
+            let guestCount = 0;
+            let checkInCount = 0;
 
             if (eventData && eventData.listas && eventData.listas.geral && eventData.listas.geral.ausentes) {
-                guestCount = Object.values(eventData.listas.geral.ausentes).length;
+                guestCount = Object.keys(eventData.listas.geral.ausentes).length;
             }
 
             if (eventData && eventData.bday) {
@@ -285,8 +277,10 @@
                 });
             }
 
-            eventInfo.querySelector('.guest-count-value').textContent = `${guestCount}`;
-            eventInfo.querySelector('.checkin-count-value').textContent = `${checkInCount}`;
+            const guestElement = eventInfo.querySelector('.guest-count-value');
+            const checkInElement = eventInfo.querySelector('.checkin-count-value');
+            if (guestElement) guestElement.textContent = `${guestCount}`;
+            if (checkInElement) checkInElement.textContent = `${checkInCount}`;
         }
 
         function sendLinksLink(bday, event, bdayId) {
@@ -351,8 +345,8 @@
                                 Check-ins: <span class="checkin-count-value">0</span>
                             </div>
                             <div class="event-buttons">
-                                <a href="https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}" target="_blank" class="btn-custom"><i class="fas fa-door-open"></i> Acessar</a>
-                                <button class="copy-link" data-link="https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}"><i class="fas fa-copy"></i> Copiar Link</button>
+                                <a href="https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}" target="_blank" class="btn-custom"><i class="fas fa-door-open"></i></a>
+                                <button class="copy-link" data-link="https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}"><i class="fas fa-copy"></i></button>
                             </div>
                         </div>
                     `;
@@ -400,6 +394,9 @@
                             </div>
                         `;
                         bdayList.appendChild(item);
+
+                        // Atualiza os contadores imediatamente após criar o card
+                        updateCounts(event.eventId, bday.apelido, item);
                     });
 
                     section.appendChild(bdayList);
