@@ -61,6 +61,12 @@
             color: #ccc;
         }
 
+        .event-buttons {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
         .bday-list {
             display: flex;
             flex-wrap: wrap;
@@ -71,13 +77,25 @@
         .bday-card {
             background-color: #2a2a2a;
             border-radius: 8px;
-            padding: 10px;
-            width: calc(33.33% - 15px); /* 3 colunas com gap */
+            padding: 15px;
+            width: calc(33.33% - 15px);
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .bday-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.15);
+        }
+
+        .bday-card-top {
             display: flex;
             align-items: center;
             gap: 10px;
-            min-width: 0; /* Evita overflow em telas pequenas */
         }
 
         .bday-images img {
@@ -85,11 +103,12 @@
             height: 60px;
             border-radius: 50%;
             object-fit: cover;
+            flex-shrink: 0;
         }
 
         .bday-details {
             flex: 1;
-            overflow: hidden; /* Evita que o texto quebre o layout */
+            overflow: hidden;
         }
 
         .bday-name {
@@ -117,21 +136,48 @@
         .bday-buttons {
             display: flex;
             gap: 5px;
-            flex-shrink: 0; /* Evita que os botões sejam espremidos */
+            justify-content: flex-start;
+            margin-top: 10px;
         }
 
         .btn-custom {
             color: #ffd700;
             text-decoration: none;
             font-size: 1.2em;
-            padding: 5px;
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid #ffd700;
+            border-radius: 5px;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         .btn-custom:hover {
             color: #fff;
+            background-color: #ffd700;
         }
 
-        /* Media Queries para responsividade */
+        .btn-custom i {
+            margin-right: 5px;
+        }
+
+        .copy-link {
+            background: none;
+            border: 1px solid #ffd700;
+            cursor: pointer;
+            color: #ffd700;
+            font-size: 1.2em;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .copy-link:hover {
+            color: #fff;
+            background-color: #ffd700;
+        }
+
         @media (max-width: 768px) {
             .event-info {
                 flex-direction: column;
@@ -143,13 +189,13 @@
             }
 
             .bday-card {
-                width: calc(50% - 15px); /* 2 colunas */
+                width: calc(50% - 15px);
             }
         }
 
         @media (max-width: 480px) {
             .bday-card {
-                width: 100%; /* 1 coluna */
+                width: 100%;
             }
 
             .event-flyer img {
@@ -196,14 +242,12 @@
             return date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' });
         }
 
-        // Conta o total de convidados na lista de um aniversariante
         function countGuests(eventId, bdayApelido) {
             var eventData = eventosData[eventId];
             if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
             return Object.values(eventData.listas[bdayApelido] || {}).length || 0;
         }
 
-        // Conta os check-ins (nomes com "✅") na lista de um aniversariante
         function countCheckIns(eventId, bdayApelido) {
             var eventData = eventosData[eventId];
             if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
@@ -219,7 +263,6 @@
             section.querySelector('.event-date').textContent = `${formatEventDisplay(eventData.data)} - ${bdayCount} Aniversariante${bdayCount !== 1 ? 's' : ''}`;
         }
 
-        // Atualiza as contagens no card do aniversariante
         function updateCounts(eventId, bdayApelido, item) {
             var guestCount = countGuests(eventId, bdayApelido);
             var checkInCount = countCheckIns(eventId, bdayApelido);
@@ -227,7 +270,6 @@
             item.querySelector('.checkin-count-value').textContent = `${checkInCount}`;
         }
 
-        // Atualiza as contagens na seção do evento
         function updateEventCounts(eventId, eventInfo) {
             var eventData = eventosData[eventId];
             var guestCount = 0;
@@ -245,6 +287,15 @@
 
             eventInfo.querySelector('.guest-count-value').textContent = `${guestCount}`;
             eventInfo.querySelector('.checkin-count-value').textContent = `${checkInCount}`;
+        }
+
+        function sendLinksLink(bday, event, bdayId) {
+            const nomeNaListaLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}`;
+            const convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}#bday569`;
+            const flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayId}`;
+            
+            const mensagem = `Olá, ${bday.nome || bday.apelido}! Tudo pronto para o seu grande dia no ${formatEventDisplay(event.eventDate)}! Aqui estão seus links especiais:\n\n- Lista de Convidados: ${nomeNaListaLink}\n- Ver Convidados: ${convidadosLink}\n- Flyer Personalizado: ${flyerLink}\n\nAproveite muito e nos vemos lá! 🎉`;
+            return `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=${encodeURIComponent(mensagem)}`;
         }
 
         function populateBdayList() {
@@ -299,6 +350,10 @@
                                 Convidados: <span class="guest-count-value">0</span>
                                 Check-ins: <span class="checkin-count-value">0</span>
                             </div>
+                            <div class="event-buttons">
+                                <a href="https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}" target="_blank" class="btn-custom"><i class="fas fa-door-open"></i> Acessar</a>
+                                <button class="copy-link" data-link="https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}"><i class="fas fa-copy"></i> Copiar Link</button>
+                            </div>
                         </div>
                     `;
                     updateEventCounts(event.eventId, eventInfo);
@@ -316,21 +371,24 @@
                         const convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}#bday569`;
                         const flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayInfo.bdayId}`;
                         const whatsappLink = `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=oi,%20sobre%20o%20seu%20${encodeURIComponent(bday.apelido)}%20no%20${formatEventDisplay(event.eventDate)}%20com%20${encodeURIComponent(eventosData[event.eventId].descricao || 'festa')}%20no%20Inova%20Bar`;
+                        const linksLink = sendLinksLink(bday, event, bdayInfo.bdayId);
 
                         const item = document.createElement("div");
                         item.className = "bday-card";
                         item.setAttribute('data-event-id', event.eventId);
                         item.setAttribute('data-bday-apelido', bday.apelido);
                         item.innerHTML = `
-                            <div class="bday-images">
-                                <img src="${bday.foto || ''}" class="bday-photo" onerror="this.style.display='none'" alt="Foto" loading="lazy">
-                            </div>
-                            <div class="bday-details">
-                                <div class="bday-name">${bday.nome || bday.apelido}</div>
-                                <div class="bday-info">Data: ${formatBdayDate(bday.bday)}</div>
-                                <div class="counts">
-                                    <span>Convidados: <span class="guest-count-value">${guestCount}</span></span>
-                                    <span>Check-ins: <span class="checkin-count-value">${checkInCount}</span></span>
+                            <div class="bday-card-top">
+                                <div class="bday-images">
+                                    <img src="${bday.foto || ''}" class="bday-photo" onerror="this.style.display='none'" alt="Foto" loading="lazy">
+                                </div>
+                                <div class="bday-details">
+                                    <div class="bday-name">${bday.nome || bday.apelido}</div>
+                                    <div class="bday-info">Data: ${formatBdayDate(bday.bday)}</div>
+                                    <div class="counts">
+                                        <span>Convidados: <span class="guest-count-value">${guestCount}</span></span>
+                                        <span>Check-ins: <span class="checkin-count-value">${checkInCount}</span></span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="bday-buttons">
@@ -338,6 +396,7 @@
                                 <a href="${convidadosLink}" target="_blank" class="btn-custom"><i class="fas fa-users"></i></a>
                                 <a href="${flyerLink}" target="_blank" class="btn-custom"><i class="fas fa-image"></i></a>
                                 <a href="${whatsappLink}" target="_blank" class="btn-custom"><i class="fab fa-whatsapp"></i></a>
+                                <a href="${linksLink}" target="_blank" class="btn-custom"><i class="fas fa-link"></i></a>
                             </div>
                         `;
                         bdayList.appendChild(item);
@@ -378,6 +437,18 @@
         window.onload = function () {
             populateBdayList();
         };
+
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.copy-link')) {
+                const button = e.target.closest('.copy-link');
+                const link = button.getAttribute('data-link');
+                navigator.clipboard.writeText(link).then(() => {
+                    alert('Link copiado para a área de transferência!');
+                }).catch(err => {
+                    console.error('Erro ao copiar link: ', err);
+                });
+            }
+        });
     </script>
 </body>
 
