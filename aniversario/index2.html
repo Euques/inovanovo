@@ -351,7 +351,7 @@
             var guestCount = countBdayGuests(eventId, bdayApelido);
             var checkInCount = countBdayCheckIns(eventId, bdayApelido);
             item.querySelector('.guest-count').textContent = `Convidados: ${guestCount}`;
-            item.querySelector('.checkin-count').textContent = `Check-ins: ${checkInCount}`;
+            item.querySelector('.checkin-count').textContent = `Presentes: ${checkInCount}`;
         }
 
         function updateEventCounts(eventId, eventInfo) {
@@ -429,7 +429,7 @@
                             <div class="event-rules">${event.regras}</div>
                             <div class="event-counts">
                                 Convidados: <span class="guest-count-value">0</span>
-                                Check-ins: <span class="checkin-count-value">0</span>
+                                Presentes: <span class="checkin-count-value">0</span>
                             </div>
                             <div class="event-buttons">
                                 <a href="https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}" target="_blank" class="btn-custom"><i class="fas fa-link"></i></a>
@@ -470,7 +470,7 @@
                                 <div class="bday-info">WhatsApp: ${formatWhatsNumber(bday.whats)}</div>
                                 <div class="counts">
                                     <span class="guest-count">Convidados: ${guestCount}</span>
-                                    <span class="checkin-count">Check-ins: ${checkInCount}</span>
+                                    <span class="checkin-count">Presentes: ${checkInCount}</span>
                                 </div>
                             </div>
                             <div class="bday-buttons">
