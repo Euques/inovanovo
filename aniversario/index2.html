@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -69,7 +68,7 @@
         }
         .bday-group {
             margin-top: 15px;
-            background: #333; /* Fundo cinza para destacar os aniversariantes */
+            background: #333;
             border-radius: 10px;
             padding: 15px;
         }
@@ -303,30 +302,22 @@
 
         // Contagem para Aniversariantes
         function countBdayGuests(eventId, bdayApelido) {
-    var eventData = eventosData[eventId];
-    if (!eventData || !eventData.bday) return 0;
-    
-    let guestCount = 0;
-
-    Object.values(eventData.bday).forEach(bday => {
-        if (bday.apelido === bdayApelido) {
-            guestCount++;
+            var eventData = eventosData[eventId];
+            if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
+            
+            var guests = eventData.listas[bdayApelido];
+            return Object.keys(guests).length; // Conta o número de UIDs
         }
-    });
 
-    return guestCount;
-}
-
-
-       function countBdayCheckIns(eventId, bdayApelido) {
-    var eventData = eventosData[eventId];
-    if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
-    
-    var guests = eventData.listas[bdayApelido];
-    return Object.values(guests).filter(guest => 
-        guest && guest.nome && typeof guest.nome === 'string' && guest.nome.includes("✅")
-    ).length;
-}
+        function countBdayCheckIns(eventId, bdayApelido) {
+            var eventData = eventosData[eventId];
+            if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
+            
+            var guests = eventData.listas[bdayApelido];
+            return Object.values(guests).filter(guest => 
+                guest && guest.nome && typeof guest.nome === 'string' && guest.nome.includes("✅")
+            ).length;
+        }
 
         // Contagem para Eventos
         function countEventGuests(eventId) {
@@ -486,7 +477,7 @@
                             </div>
                         `;
                         bdayList.appendChild(item);
-                        updateBdayCounts(event.eventId, bday.apelido, item); // Atualiza os contadores dos aniversariantes
+                        updateBdayCounts(event.eventId, bday.apelido, item);
                     });
 
                     bdayGroup.appendChild(bdayList);
