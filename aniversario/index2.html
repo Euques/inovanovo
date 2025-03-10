@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt_BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,6 +35,48 @@
             color: #00aaff;
             padding-left: 15px;
         }
+        .event-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding-left: 15px;
+            margin-bottom: 15px;
+        }
+        .event-flyer img {
+            max-width: 150px;
+            border-radius: 5px;
+            height: auto;
+        }
+        .event-details {
+            flex: 1;
+        }
+        .event-description,
+        .event-rules {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+        .event-counts {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #ccc;
+        }
+        .event-buttons {
+            margin-top: 10px;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        .bday-group {
+            margin-top: 15px;
+            background: #333;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .bday-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
         .bday-card {
             display: flex;
             align-items: center;
@@ -50,15 +92,8 @@
             gap: 10px;
             margin-right: 15px;
         }
-        .flyer-img, .bday-photo {
-            object-fit: cover;
-        }
-        .flyer-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 5px;
-        }
         .bday-photo {
+            object-fit: cover;
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -108,6 +143,21 @@
         .btn-custom i {
             color: #fff;
         }
+        .copy-link {
+            background: #444;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            padding: 0;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: opacity 0.2s;
+        }
+        .copy-link:hover {
+            opacity: 0.8;
+        }
 
         /* Desktop */
         @media (min-width: 769px) {
@@ -125,6 +175,9 @@
             .bday-buttons {
                 margin-left: auto;
                 flex-wrap: nowrap;
+            }
+            .event-info {
+                flex-direction: row;
             }
         }
 
@@ -154,15 +207,21 @@
                 justify-content: center;
                 width: 100%;
             }
+            .event-info {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .event-flyer img {
+                max-width: 100%;
+            }
         }
 
         @media (max-width: 480px) {
             .container {
                 padding: 5px;
             }
-            .flyer-img {
-                width: 50px;
-                height: 50px;
+            .event-flyer img {
+                max-width: 100px;
             }
             .bday-photo {
                 width: 40px;
@@ -178,6 +237,11 @@
                 font-size: 0.9rem;
             }
             .btn-custom {
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+            }
+            .copy-link {
                 width: 36px;
                 height: 36px;
                 font-size: 0.9rem;
@@ -231,27 +295,45 @@
             return `${diaSemana} ${dia} ${mes} ${horas}H`.trim();
         }
 
-        function formatBdayDate(dateStr) {
-            var date = new Date(dateStr);
-            var day = date.getDate().toString().padStart(2, '0');
-            var month = (date.getMonth() + 1).toString().padStart(2, '0');
-            var year = date.getFullYear();
-            return `${day}/${month}/${year}`;
+        function formatWhatsNumber(whats) {
+            if (!whats) return "WhatsApp não informado";
+            return whats.replace(/\D/g, '');
         }
 
-        // Contagem corrigida para contar UIDs em listas > B-day [apelido]
-        function countGuests(eventId, promoter) {
+        // Contagem para Aniversariantes - Ajustada para contar UIDs em listas > B-day [apelido]
+        function countBdayGuests(eventId, bdayApelido) {
             var eventData = eventosData[eventId];
-            if (!eventData || !eventData.listas || !eventData.listas[promoter]) return 0;
-            var guests = eventData.listas[promoter];
+            if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
+            var guests = eventData.listas[bdayApelido];
             return Object.keys(guests).length; // Conta o número de UIDs
         }
 
-        function countCheckIns(eventId, bdayApelido) {
+        function countBdayCheckIns(eventId, bdayApelido) {
             var eventData = eventosData[eventId];
             if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
-            var checkIns = Object.values(eventData.listas[bdayApelido] || {}).filter(guest => guest.nome && guest.nome.includes("✅")).length;
-            return checkIns || 0;
+            
+            var guests = eventData.listas[bdayApelido];
+            return Object.values(guests).filter(guest => 
+                guest && guest.nome && typeof guest.nome === 'string' && guest.nome.includes("✅")
+            ).length;
+        }
+
+        // Contagem para Eventos
+        function countEventGuests(eventId) {
+            var eventData = eventosData[eventId];
+            if (!eventData || !eventData.listas || !eventData.listas.geral || !eventData.listas.geral.ausentes) return 0;
+            return Object.keys(eventData.listas.geral.ausentes || {}).length || 0;
+        }
+
+        function countEventCheckIns(eventId) {
+            var eventData = eventosData[eventId];
+            if (!eventData || !eventData.bday) return 0;
+            var totalCheckIns = 0;
+            Object.keys(eventData.bday || {}).forEach(bdayId => {
+                var bday = eventData.bday[bdayId];
+                totalCheckIns += countBdayCheckIns(eventId, bday.apelido);
+            });
+            return totalCheckIns;
         }
 
         function countBdays(eventId) {
@@ -259,22 +341,37 @@
             return eventData && eventData.bday ? Object.keys(eventData.bday || {}).length : 0;
         }
 
-        function updateCounts(eventId, bdayApelido, item) {
-            var guestCount = countGuests(eventId, bdayApelido);
-            var checkInCount = countCheckIns(eventId, bdayApelido);
+        function updateBdayCounts(eventId, bdayApelido, item) {
+            var guestCount = countBdayGuests(eventId, bdayApelido);
+            var checkInCount = countBdayCheckIns(eventId, bdayApelido);
             item.querySelector('.guest-count').textContent = `Convidados: ${guestCount}`;
             item.querySelector('.checkin-count').textContent = `Check-ins: ${checkInCount}`;
+        }
+
+        function updateEventCounts(eventId, eventInfo) {
+            var guestCount = countEventGuests(eventId);
+            var checkInCount = countEventCheckIns(eventId);
+            eventInfo.querySelector('.guest-count-value').textContent = `${guestCount}`;
+            eventInfo.querySelector('.checkin-count-value').textContent = `${checkInCount}`;
         }
 
         function updateBdayCount(eventId, section) {
             var eventData = eventosData[eventId];
             if (section && section.querySelector('.event-date')) {
                 var bdayCount = countBdays(eventId);
-                console.log(`Timestamp para eventId ${eventId}: ${eventData.data}`);
                 section.querySelector('.event-date').textContent = `${formatEventDisplay(eventData.data)} - ${bdayCount} Aniversariante${bdayCount !== 1 ? 's' : ''}`;
             } else {
                 console.warn(`Elemento .event-date não encontrado para o eventId: ${eventId}`);
             }
+        }
+
+        function sendLinksLink(bday, event, bdayId) {
+            const nomeNaListaLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}`;
+            const convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}#bday569`;
+            const flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayId}`;
+            
+            const mensagem = `Olá, ${bday.nome || bday.apelido}! Tudo pronto para o seu grande dia no ${formatEventDisplay(event.eventDate)}! Aqui estão seus links especiais:\n\n- Lista de Convidados: ${nomeNaListaLink}\n- Ver Convidados: ${convidadosLink}\n- Flyer Personalizado: ${flyerLink}\n\nAproveite muito e nos vemos lá! 🎉`;
+            return `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=${encodeURIComponent(mensagem)}`;
         }
 
         function populateBdayList() {
@@ -300,6 +397,8 @@
                             eventId: eventId,
                             eventDate: evento.data,
                             flyer: evento.flyer,
+                            descricao: evento.descricao || 'Sem descrição',
+                            regras: evento.regra || 'Sem regras especificadas',
                             bdays: bdays
                         });
                     }
@@ -312,19 +411,45 @@
                     section.className = "event-section";
                     section.setAttribute('data-event-id', event.eventId);
                     section.innerHTML = `<div class="event-date"></div>`;
+
+                    const eventInfo = document.createElement("div");
+                    eventInfo.className = "event-info";
+                    eventInfo.innerHTML = `
+                        <div class="event-flyer">
+                            <img src="${event.flyer || ''}" class="flyer-img" onerror="this.style.display='none'" alt="Flyer do Evento" loading="lazy">
+                        </div>
+                        <div class="event-details">
+                            <div class="event-description">${event.descricao}</div>
+                            <div class="event-rules">${event.regras}</div>
+                            <div class="event-counts">
+                                Convidados: <span class="guest-count-value">0</span>
+                                Check-ins: <span class="checkin-count-value">0</span>
+                            </div>
+                            <div class="event-buttons">
+                                <a href="https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}" target="_blank" class="btn-custom"><i class="fas fa-door-open"></i></a>
+                                <button class="copy-link" data-link="https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}"><i class="fas fa-copy"></i></button>
+                            </div>
+                        </div>
+                    `;
                     updateBdayCount(event.eventId, section);
+                    updateEventCounts(event.eventId, eventInfo);
+                    section.appendChild(eventInfo);
+
+                    var bdayGroup = document.createElement("div");
+                    bdayGroup.className = "bday-group";
                     var bdayList = document.createElement("div");
                     bdayList.className = "bday-list";
 
                     event.bdays.forEach(function(bdayInfo) {
                         var bday = bdayInfo.data;
-                        var guestCount = countGuests(event.eventId, bday.apelido);
-                        var checkInCount = countCheckIns(event.eventId, bday.apelido);
+                        var guestCount = countBdayGuests(event.eventId, bday.apelido);
+                        var checkInCount = countBdayCheckIns(event.eventId, bday.apelido);
 
                         var nomeNaListaLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}`;
                         var convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}#bday569`;
                         var flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayInfo.bdayId}`;
                         var whatsappLink = `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=oi,%20sobre%20o%20seu%20${encodeURIComponent(bday.apelido)}%20no%20${formatEventDisplay(event.eventDate)}%20com%20${encodeURIComponent(eventosData[event.eventId].descricao || 'festa')}%20no%20Inova%20Bar`;
+                        var linksLink = sendLinksLink(bday, event, bdayInfo.bdayId);
 
                         var item = document.createElement("div");
                         item.className = "bday-card";
@@ -332,12 +457,11 @@
                         item.setAttribute('data-bday-apelido', bday.apelido);
                         item.innerHTML = `
                             <div class="bday-images">
-                                <img src="${event.flyer || ''}" class="flyer-img" onerror="this.style.display='none'" alt="Flyer" loading="lazy">
                                 <img src="${bday.foto || ''}" class="bday-photo" onerror="this.style.display='none'" alt="Foto" loading="lazy">
                             </div>
                             <div class="bday-details">
                                 <div class="bday-name">${bday.nome || bday.apelido}</div>
-                                <div class="bday-info">Data: ${formatBdayDate(bday.bday)}</div>
+                                <div class="bday-info">WhatsApp: ${formatWhatsNumber(bday.whats)}</div>
                                 <div class="counts">
                                     <span class="guest-count">Convidados: ${guestCount}</span>
                                     <span class="checkin-count">Check-ins: ${checkInCount}</span>
@@ -348,13 +472,15 @@
                                 <a href="${convidadosLink}" target="_blank" class="btn-custom"><i class="fas fa-users"></i></a>
                                 <a href="${flyerLink}" target="_blank" class="btn-custom"><i class="fas fa-image"></i></a>
                                 <a href="${whatsappLink}" target="_blank" class="btn-custom"><i class="fab fa-whatsapp"></i></a>
+                                <a href="${linksLink}" target="_blank" class="btn-custom"><i class="fas fa-link"></i></a>
                             </div>
                         `;
                         bdayList.appendChild(item);
-                        updateCounts(event.eventId, bday.apelido, item);
+                        updateBdayCounts(event.eventId, bday.apelido, item);
                     });
 
-                    section.appendChild(bdayList);
+                    bdayGroup.appendChild(bdayList);
+                    section.appendChild(bdayGroup);
                     bdayContainer.appendChild(section);
 
                     var bdayRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/bday`);
@@ -364,10 +490,7 @@
 
                     var ausentesRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/listas/geral/ausentes`);
                     ausentesRef.on("value", function() {
-                        section.querySelectorAll('.bday-card').forEach(item => {
-                            var bdayApelido = item.getAttribute('data-bday-apelido');
-                            if (bdayApelido) updateCounts(event.eventId, bdayApelido, item);
-                        });
+                        updateEventCounts(event.eventId, eventInfo);
                     });
 
                     event.bdays.forEach(function(bdayInfo) {
@@ -375,7 +498,7 @@
                         var listasRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/listas/${bday.apelido}`);
                         listasRef.on("value", function() {
                             section.querySelectorAll(`.bday-card[data-bday-apelido="${bday.apelido}"]`).forEach(item => {
-                                if (item) updateCounts(event.eventId, bday.apelido, item);
+                                if (item) updateBdayCounts(event.eventId, bday.apelido, item);
                             });
                         });
                     });
@@ -385,397 +508,21 @@
             });
         }
 
-        populateBdayList();
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aniversariantes Inova Bar</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: 'Arial', sans-serif;
-            line-height: 1.5;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 10px;
-        }
-        h1 {
-            text-align: center;
-            margin: 15px 0;
-            font-size: 1.8rem;
-        }
-        .event-section {
-            padding: 5px 0;
-        }
-        .event-date {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #00aaff;
-            padding-left: 15px;
-        }
-        .bday-card {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background: #333;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            flex-wrap: wrap;
-        }
-        .bday-images {
-            display: flex;
-            gap: 10px;
-            margin-right: 15px;
-        }
-        .flyer-img, .bday-photo {
-            object-fit: cover;
-        }
-        .flyer-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 5px;
-        }
-        .bday-photo {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-        }
-        .bday-details {
-            flex: 1;
-            padding: 2px 0;
-            text-align: left;
-        }
-        .bday-name {
-            font-size: 1rem;
-            font-weight: bold;
-            margin-bottom: 2px;
-        }
-        .bday-info {
-            font-size: 0.8rem;
-            color: #ccc;
-            margin-bottom: 5px;
-        }
-        .counts {
-            font-size: 0.8rem;
-            color: #ccc;
-        }
-        .guest-count { color: #ffd700; }
-        .checkin-count { color: #32cd32; }
-        .bday-buttons {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-        .btn-custom {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            font-size: 1rem;
-            background: #444;
-            color: #fff;
-            border-radius: 50%;
-            text-decoration: none;
-            transition: opacity 0.2s;
-        }
-        .btn-custom:hover {
-            opacity: 0.8;
-        }
-        .btn-custom i {
-            color: #fff;
-        }
-
-        /* Desktop */
-        @media (min-width: 769px) {
-            .bday-card {
-                min-height: 80px;
-                flex-direction: row;
-                align-items: center;
-            }
-            .bday-images {
-                justify-content: flex-start;
-            }
-            .bday-details {
-                text-align: left;
-            }
-            .bday-buttons {
-                margin-left: auto;
-                flex-wrap: nowrap;
-            }
-        }
-
-        /* Mobile */
-        @media (max-width: 768px) {
-            .bday-card {
-                flex-direction: row;
-                align-items: center;
-                padding: 10px;
-                text-align: center;
-            }
-            .bday-images {
-                margin-bottom: 10px;
-                justify-content: center;
-            }
-            .bday-details {
-                width: 100%;
-                text-align: left;
-            }
-            .counts {
-                display: flex;
-                gap: 10px;
-                margin-bottom: 10px;
-                justify-content: left;
-            }
-            .bday-buttons {
-                justify-content: center;
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 5px;
-            }
-            .flyer-img {
-                width: 50px;
-                height: 50px;
-            }
-            .bday-photo {
-                width: 40px;
-                height: 40px;
-            }
-            .bday-name {
-                font-size: 0.9rem;
-            }
-            .bday-info {
-                font-size: 0.7rem;
-            }
-            .event-date {
-                font-size: 0.9rem;
-            }
-            .btn-custom {
-                width: 36px;
-                height: 36px;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Aniversariantes Inova Bar</h1>
-        <div id="bdayContainer"></div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-    <script>
-        var firebaseConfig = {
-            apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
-            authDomain: "blacknight-600de.firebaseapp.com",
-            databaseURL: "https://blacknight-600de.firebaseio.com",
-            projectId: "blacknight-600de",
-            storageBucket: "blacknight-600de.appspot.com",
-            messagingSenderId: "588926432348",
-            appId: "1:588926432348:web:47b2b4a1b421d4b2a0e299",
-            measurementId: "G-559VYPVJ5Q"
+        window.onload = function() {
+            populateBdayList();
         };
-        firebase.initializeApp(firebaseConfig);
 
-        var cliente = "inovabar";
-        var eventosData = {};
-
-        function getDiaSemana(data) {
-            var dias = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
-            return dias[new Date(data).getDay()];
-        }
-
-        function getMesAbrev(data) {
-            var meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
-            return meses[new Date(data).getMonth()];
-        }
-
-        function formatEventDisplay(data) {
-            var eventDate = new Date(data);
-            var dia = eventDate.getDate().toString().padStart(2, '0');
-            var mes = getMesAbrev(data);
-            var diaSemana = getDiaSemana(data);
-            var horas = eventDate.getHours().toString().padStart(2, '0');
-            eventDate.setHours(eventDate.getHours() - 3); // Ajuste para UTC-3
-            return `${diaSemana} ${dia} ${mes} ${horas}H`.trim();
-        }
-
-        function formatBdayDate(dateStr) {
-            var date = new Date(dateStr);
-            var day = date.getDate().toString().padStart(2, '0');
-            var month = (date.getMonth() + 1).toString().padStart(2, '0');
-            var year = date.getFullYear();
-            return `${day}/${month}/${year}`;
-        }
-
-        // Contagem corrigida para contar UIDs em listas > B-day [apelido]
-        function countGuests(eventId, promoter) {
-            var eventData = eventosData[eventId];
-            if (!eventData || !eventData.listas || !eventData.listas[promoter]) return 0;
-            var guests = eventData.listas[promoter];
-            return Object.keys(guests).length; // Conta o número de UIDs
-        }
-
-        function countCheckIns(eventId, bdayApelido) {
-            var eventData = eventosData[eventId];
-            if (!eventData || !eventData.listas || !eventData.listas[bdayApelido]) return 0;
-            var checkIns = Object.values(eventData.listas[bdayApelido] || {}).filter(guest => guest.nome && guest.nome.includes("✅")).length;
-            return checkIns || 0;
-        }
-
-        function countBdays(eventId) {
-            var eventData = eventosData[eventId];
-            return eventData && eventData.bday ? Object.keys(eventData.bday || {}).length : 0;
-        }
-
-        function updateCounts(eventId, bdayApelido, item) {
-            var guestCount = countGuests(eventId, bdayApelido); // Usando bdayApelido como promoter
-            var checkInCount = countCheckIns(eventId, bdayApelido);
-            item.querySelector('.guest-count').textContent = `Convidados: ${guestCount}`;
-            item.querySelector('.checkin-count').textContent = `Check-ins: ${checkInCount}`;
-        }
-
-        function updateBdayCount(eventId, section) {
-            var eventData = eventosData[eventId];
-            if (section && section.querySelector('.event-date')) {
-                var bdayCount = countBdays(eventId);
-                console.log(`Timestamp para eventId ${eventId}: ${eventData.data}`);
-                section.querySelector('.event-date').textContent = `${formatEventDisplay(eventData.data)} - ${bdayCount} Aniversariante${bdayCount !== 1 ? 's' : ''}`;
-            } else {
-                console.warn(`Elemento .event-date não encontrado para o eventId: ${eventId}`);
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.copy-link')) {
+                const button = e.target.closest('.copy-link');
+                const link = button.getAttribute('data-link');
+                navigator.clipboard.writeText(link).then(() => {
+                    alert('Link copiado para a área de transferência!');
+                }).catch(err => {
+                    console.error('Erro ao copiar link: ', err);
+                });
             }
-        }
-
-        function populateBdayList() {
-            var bdayContainer = document.getElementById("bdayContainer");
-            var eventosRef = firebase.database().ref(cliente + "/eventos");
-
-            eventosRef.on("value", function(snapshot) {
-                eventosData = snapshot.val() || {};
-                bdayContainer.innerHTML = '';
-
-                var events = [];
-                snapshot.forEach(function(eventSnapshot) {
-                    var eventId = eventSnapshot.key;
-                    var evento = eventSnapshot.val();
-
-                    if (evento && evento.bday && evento.data) {
-                        var bdays = Object.keys(evento.bday || {}).map(bdayId => ({
-                            bdayId: bdayId,
-                            data: evento.bday[bdayId]
-                        }));
-
-                        events.push({
-                            eventId: eventId,
-                            eventDate: evento.data,
-                            flyer: evento.flyer,
-                            bdays: bdays
-                        });
-                    }
-                });
-
-                events.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
-
-                events.forEach(function(event) {
-                    var section = document.createElement("div");
-                    section.className = "event-section";
-                    section.setAttribute('data-event-id', event.eventId);
-                    section.innerHTML = `<div class="event-date"></div>`;
-                    updateBdayCount(event.eventId, section);
-                    var bdayList = document.createElement("div");
-                    bdayList.className = "bday-list";
-
-                    event.bdays.forEach(function(bdayInfo) {
-                        var bday = bdayInfo.data;
-                        var guestCount = countGuests(event.eventId, bday.apelido);
-                        var checkInCount = countCheckIns(event.eventId, bday.apelido);
-
-                        var nomeNaListaLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}`;
-                        var convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}#bday569`;
-                        var flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayInfo.bdayId}`;
-                        var whatsappLink = `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=oi,%20sobre%20o%20seu%20${encodeURIComponent(bday.apelido)}%20no%20${formatEventDisplay(event.eventDate)}%20com%20${encodeURIComponent(eventosData[event.eventId].descricao || 'festa')}%20no%20Inova%20Bar`;
-
-                        var item = document.createElement("div");
-                        item.className = "bday-card";
-                        item.setAttribute('data-event-id', event.eventId);
-                        item.setAttribute('data-bday-apelido', bday.apelido);
-                        item.innerHTML = `
-                            <div class="bday-images">
-                                <img src="${event.flyer || ''}" class="flyer-img" onerror="this.style.display='none'" alt="Flyer" loading="lazy">
-                                <img src="${bday.foto || ''}" class="bday-photo" onerror="this.style.display='none'" alt="Foto" loading="lazy">
-                            </div>
-                            <div class="bday-details">
-                                <div class="bday-name">${bday.nome || bday.apelido}</div>
-                                <div class="bday-info">Data: ${formatBdayDate(bday.bday)}</div>
-                                <div class="counts">
-                                    <span class="guest-count">Convidados: ${guestCount}</span>
-                                    <span class="checkin-count">Check-ins: ${checkInCount}</span>
-                                </div>
-                            </div>
-                            <div class="bday-buttons">
-                                <a href="${nomeNaListaLink}" target="_blank" class="btn-custom"><i class="fas fa-list"></i></a>
-                                <a href="${convidadosLink}" target="_blank" class="btn-custom"><i class="fas fa-users"></i></a>
-                                <a href="${flyerLink}" target="_blank" class="btn-custom"><i class="fas fa-image"></i></a>
-                                <a href="${whatsappLink}" target="_blank" class="btn-custom"><i class="fab fa-whatsapp"></i></a>
-                            </div>
-                        `;
-                        bdayList.appendChild(item);
-                        updateCounts(event.eventId, bday.apelido, item);
-                    });
-
-                    section.appendChild(bdayList);
-                    bdayContainer.appendChild(section);
-
-                    var bdayRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/bday`);
-                    bdayRef.on("value", function(snapshot) {
-                        updateBdayCount(event.eventId, section);
-                    });
-
-                    var ausentesRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/listas/geral/ausentes`);
-                    ausentesRef.on("value", function() {
-                        section.querySelectorAll('.bday-card').forEach(item => {
-                            var bdayApelido = item.getAttribute('data-bday-apelido');
-                            if (bdayApelido) updateCounts(event.eventId, bdayApelido, item);
-                        });
-                    });
-
-                    event.bdays.forEach(function(bdayInfo) {
-                        var bday = bdayInfo.data;
-                        var listasRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/listas/${bday.apelido}`);
-                        listasRef.on("value", function() {
-                            section.querySelectorAll(`.bday-card[data-bday-apelido="${bday.apelido}"]`).forEach(item => {
-                                if (item) updateCounts(event.eventId, bday.apelido, item);
-                            });
-                        });
-                    });
-                });
-            }, function(error) {
-                console.error("Erro ao carregar dados: ", error);
-            });
-        }
-
-        populateBdayList();
+        });
     </script>
 </body>
 </html>
