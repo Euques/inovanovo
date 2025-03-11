@@ -37,10 +37,17 @@
         };
 
         // Inicializa o Firebase
-        firebase.initializeApp(firebaseConfig);
+        try {
+            firebase.initializeApp(firebaseConfig);
+            console.log("Firebase inicializado com sucesso!");
+        } catch (error) {
+            console.error("Erro ao inicializar o Firebase:", error);
+            alert("Erro ao inicializar o Firebase. Verifique a configuração.");
+            throw error; // Para a execução se falhar
+        }
 
         // Variáveis globais
-        var cliente = "inovabar"; // Substitua pelo seu cliente, se necessário
+        var cliente = "inovabar";
         var eventosData = {};
 
         // Contagem de Convidados do Aniversariante
@@ -237,7 +244,8 @@
                     });
                 });
             }, function(error) {
-                console.error("Erro ao carregar dados: ", error);
+                console.error("Erro ao carregar dados do Firebase:", error);
+                alert("Erro ao carregar dados: " + error.message);
             });
         }
 
