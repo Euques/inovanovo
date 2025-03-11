@@ -365,14 +365,25 @@
             }
         }
 
+       
+
         function sendLinksLink(bday, event, bdayId) {
-            const nomeNaListaLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}`;
-            const convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}#bday569`;
-            const flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayId}`;
-            
-            const mensagem = `Olá, ${bday.nome || bday.apelido}! Tudo pronto para o seu grande dia no ${formatEventDisplay(event.eventDate)}! Aqui estão seus links especiais:\n\n- Lista de Convidados: ${nomeNaListaLink}\n- Ver Convidados: ${convidadosLink}\n- Flyer Personalizado: ${flyerLink}\n\nAproveite muito e nos vemos lá! 🎉`;
-            return `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=${encodeURIComponent(mensagem)}`;
-        }
+    const nomeNaListaLink = `https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}`;
+    const convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}#bday569`;
+    const flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayId}`;
+    
+    // Nome do aniversariante (usa "nome" se disponível, senão "apelido")
+    const nomeAniversariante = bday.nome || bday.apelido;
+    
+    // Data formatada do evento
+    const dataFormatada = formatEventDisplay(event.eventDate);
+    
+    // Mensagem personalizada com espaçamento
+    const mensagem = `Olá, ${nomeAniversariante}!\nTudo pronto para seu grande dia no Inova Bar ${dataFormatada}!\nAqui vai alguns links para você mandar bem na divulgação:\n\n\nLista para convidar seus amigos:\n${nomeNaListaLink}\n\nPara ver quais amigos colocaram o nome na lista:\n${convidadosLink}\n\nSeu Flyer Personalizado:\n${flyerLink}\n\nFeliz Aniversário, vai ser o máximo!`;
+    
+    // Retorna o link do WhatsApp com a mensagem codificada
+    return `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=${encodeURIComponent(mensagem)}`;
+}
 
         function populateBdayList() {
             var bdayContainer = document.getElementById("bdayContainer");
