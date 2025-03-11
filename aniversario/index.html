@@ -379,7 +379,7 @@
     const dataFormatada = formatEventDisplay(event.eventDate);
     
     // Mensagem personalizada com espaçamento
-    const mensagem = `Olá, ${nomeAniversariante}!\nTudo pronto para seu grande dia no Inova Bar ${dataFormatada}!\nAqui vai alguns links para você mandar bem na divulgação:\n\n\nLista para convidar seus amigos:\n${nomeNaListaLink}\n\nPara ver quais amigos colocaram o nome na lista:\n${convidadosLink}\n\nSeu Flyer Personalizado:\n${flyerLink}\n\nFeliz Aniversário, vai ser o máximo!`;
+    const mensagem = `Olá, ${nomeAniversariante}, tudo pronto para seu grande dia no Inova Bar ${dataFormatada}!\nAqui vai alguns links para você mandar bem na divulgação:\n\nLista para convidar seus amigos:\n${nomeNaListaLink}\n\nPara ver quais amigos colocaram o nome na lista:\n${convidadosLink}\n\nSeu Flyer Personalizado:\n${flyerLink}\n\nFeliz Aniversário, vai ser o máximo! 😍`;
     
     // Retorna o link do WhatsApp com a mensagem codificada
     return `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=${encodeURIComponent(mensagem)}`;
