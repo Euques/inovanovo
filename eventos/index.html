@@ -390,7 +390,7 @@
 
         function sendLinksLink(bday, event, bdayId) {
             const nomeNaListaLink = `https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}`;
-            const convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}#bday569`;
+            const convidadosLink = `https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}#bday569`;
             const flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayId}`;
             const nomeAniversariante = bday.nome || bday.apelido;
             const dataFormatada = formatEventDisplay(event.eventDate);
@@ -451,8 +451,8 @@
                                 <span class="bday-count-value">0 Aniversariantes</span>
                             </div>
                             <div class="event-buttons">
-                                <a href="https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}" target="_blank" class="btn-custom"><i class="fas fa-link"></i></a>
-                                <button class="copy-link" data-link="https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}"><i class="fas fa-copy"></i></button>
+                                <a href="https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}" target="_blank" class="btn-custom"><i class="fas fa-link"></i></a>
+                                <button class="copy-link" data-link="https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}"><i class="fas fa-copy"></i></button>
                             </div>
                         </div>
                     `;
