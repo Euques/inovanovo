@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aniversariantes Inova Bar</title>
+    <title>Festas - Inova Bar</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -38,6 +38,10 @@
             margin-bottom: 10px;
             color: #00aaff;
             padding-left: 15px;
+        }
+        .event-date .presentes {
+            color: #90ee90; /* Verde claro */
+            font-weight: bold;
         }
         .event-info {
             display: flex;
@@ -269,10 +273,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Aniversariantes Inova Bar</h1>
+        <h1>Festas - Inova Bar</h1>
         <div class="toggle-menu">
-            <div class="toggle-btn active" data-filter="ativos">Ativos</div>
-            <div class="toggle-btn" data-filter="todos">Todos</div>
+            <div class="toggle-btn active" data-filter="todos">Todos</div>
+            <div class="toggle-btn" data-filter="bday">B-day</div>
         </div>
         <div id="bdayContainer"></div>
     </div>
@@ -296,7 +300,7 @@
 
         var cliente = "inovabar";
         var eventosData = {};
-        var currentFilter = "ativos";
+        var currentFilter = "todos";
 
         function getDiaSemana(data) {
             var dias = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
@@ -375,11 +379,12 @@
             eventInfo.querySelector('.checkin-count-value').textContent = `${checkInCount}`;
         }
 
-        function updateBdayCount(eventId, section) {
+        function updateEventHeader(eventId, section) {
             var eventData = eventosData[eventId];
             if (section && section.querySelector('.event-date')) {
-                var bdayCount = countBdays(eventId);
-                section.querySelector('.event-date').textContent = `${formatEventDisplay(eventData.data)} - ${bdayCount} Aniversariante${bdayCount !== 1 ? 's' : ''}`;
+                var guestCount = countEventGuests(eventId);
+                var checkInCount = countEventCheckIns(eventId);
+                section.querySelector('.event-date').innerHTML = `${formatEventDisplay(eventData.data)} - ${guestCount} / <span class="presentes">${checkInCount}</span> nomes na lista`;
             } else {
                 console.warn(`Elemento .event-date não encontrado para o eventId: ${eventId}`);
             }
@@ -425,10 +430,11 @@
                     }
                 });
 
-                events.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
+                // Ordem crescente (mais recente primeiro)
+                events.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
 
                 events.forEach(function(event) {
-                    if (filter === "ativos" && event.bdays.length === 0) return;
+                    if (filter === "bday" && event.bdays.length === 0) return;
 
                     var section = document.createElement("div");
                     section.className = "event-section";
@@ -454,7 +460,7 @@
                             </div>
                         </div>
                     `;
-                    updateBdayCount(event.eventId, section);
+                    updateEventHeader(event.eventId, section);
                     updateEventCounts(event.eventId, eventInfo);
                     section.appendChild(eventInfo);
 
@@ -512,12 +518,13 @@
 
                     var bdayRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/bday`);
                     bdayRef.on("value", function(snapshot) {
-                        updateBdayCount(event.eventId, section);
+                        updateEventHeader(event.eventId, section);
                     });
 
                     var ausentesRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/listas/geral/ausentes`);
                     ausentesRef.on("value", function(snapshot) {
                         eventosData[event.eventId].listas.geral.ausentes = snapshot.val() || {};
+                        updateEventHeader(event.eventId, section);
                         updateEventCounts(event.eventId, eventInfo);
                         event.bdays.forEach(function(bdayInfo) {
                             var bday = bdayInfo.data;
