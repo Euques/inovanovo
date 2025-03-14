@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt_BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Festas - Inova Bar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        h1 {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.8rem;
+        }
+        .event-section {
+            padding: 5px 0;
+            margin-top: 15px;
+            background: #141414;
+            border-radius: 10px;
+            padding: 20px 7px 1px;
+        }
+        .event-date {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #00aaff;
+            padding-left: 15px;
+        }
+        .event-date .presentes {
+            color: #fff;
+            font-weight: bold;
+        }
+        .event-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding-left: 15px;
+            margin-bottom: 15px;
+        }
+        .event-flyer img {
+            max-width: 150px;
+            border-radius: 5px;
+            height: auto;
+        }
+        .event-details {
+            flex: 1;
+        }
+        .event-description,
+        .event-rules {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+        .event-counts {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #ccc;
+        }
+        .event-buttons {
+            margin-top: 10px;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        .bday-group {
+            margin-top: 15px;
+            border-radius: 10px;
+        }
+        .bday-list {
+            display: flow;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .bday-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #222;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .bday-images {
+            display: flex;
+            gap: 10px;
+            margin-right: 15px;
+        }
+        .bday-photo {
+            object-fit: cover;
+            width: 80px;
+            height: 80px;
+            border: solid 2px #ffffffbd;
+            border-radius: 50%;
+        }
+        .bday-details {
+            flex: 1;
+            padding: 2px 0;
+            text-align: left;
+        }
+        .bday-name {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+        .bday-info {
+            font-size: 0.8rem;
+            color: #ccc;
+            margin-bottom: 5px;
+        }
+        .counts {
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+        .guest-count { color: #ffd700; }
+        .checkin-count { color: #32cd32; }
+        .bday-buttons {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        .btn-custom {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+            background: #444;
+            color: #fff;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .btn-custom:hover {
+            opacity: 0.8;
+        }
+        .btn-custom i {
+            color: #fff;
+        }
+        .copy-link {
+            background: #444;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            padding: 0;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: opacity 0.2s;
+        }
+        .copy-link:hover {
+            opacity: 0.8;
+        }
+        .toggle-menu {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .toggle-btn {
+            background: #444;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .toggle-btn.active {
+            background: #00aaff;
+        }
+        .toggle-btn:hover {
+            background: #666;
+        }
+        @media (min-width: 769px) {
+            .bday-card {
+                min-height: 80px;
+                flex-direction: row;
+                align-items: center;
+            }
+            .bday-images {
+                justify-content: flex-start;
+            }
+            .bday-details {
+                text-align: left;
+            }
+            .bday-buttons {
+                margin-left: auto;
+                flex-wrap: nowrap;
+            }
+            .event-info {
+                flex-direction: flow;
+            }
+        }
+        @media (max-width: 768px) {
+            .bday-card {
+                flex-direction: row;
+                align-items: center;
+                padding: 10px;
+                text-align: center;
+            }
+            .bday-images {
+                margin-bottom: 10px;
+                justify-content: center;
+            }
+            .bday-details {
+                width: 100%;
+                text-align: left;
+            }
+            .counts {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 10px;
+                justify-content: left;
+            }
+            .bday-buttons {
+                justify-content: center;
+                width: 100%;
+            }
+            .event-info {
+                flex-direction: flow;
+                align-items: stretch;
+            }
+            .event-flyer img {
+                max-width: 150px;
+            }
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 5px;
+            }
+            .event-flyer img {
+                max-width: 100px;
+            }
+            .bday-photo {
+                width: 80px;
+                height: 80px;
+                border: solid 2px #ffffffbd;
+            }
+            .bday-name {
+                font-size: 0.9rem;
+            }
+            .bday-info {
+                font-size: 0.7rem;
+            }
+            .event-date {
+                font-size: 0.9rem;
+            }
+            .btn-custom {
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+            }
+            .copy-link {
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Festas - Inova Bar</h1>
+        <div class="toggle-menu">
+            <div class="toggle-btn active" data-filter="todos">Todos</div>
+            <div class="toggle-btn" data-filter="bday">B-day</div>
+        </div>
+        <div id="bdayContainer"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyCLEyAd_4-2n2ID0xTjwS1ouip9G9C6JDs",
+            authDomain: "blacknight-600de.firebaseapp.com",
+            databaseURL: "https://blacknight-600de.firebaseio.com",
+            projectId: "blacknight-600de",
+            storageBucket: "blacknight-600de.appspot.com",
+            messagingSenderId: "588926432348",
+            appId: "1:588926432348:web:47b2b4a1b421d4b2a0e299",
+            measurementId: "G-559VYPVJ5Q"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        var cliente = "inovabar";
+        var eventosData = {};
+        var currentFilter = "todos";
+
+        function getDiaSemana(data) {
+            var dias = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
+            return dias[new Date(data).getDay()];
+        }
+
+        function getMesAbrev(data) {
+            var meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+            return meses[new Date(data).getMonth()];
+        }
+
+        function formatEventDisplay(data) {
+            var eventDate = new Date(data);
+            var dia = eventDate.getDate().toString().padStart(2, '0');
+            var mes = getMesAbrev(data);
+            var diaSemana = getDiaSemana(data);
+            var horas = eventDate.getHours().toString().padStart(2, '0');
+            eventDate.setHours(eventDate.getHours() - 3);
+            return `${diaSemana} ${dia} ${mes} ${horas}H`.trim();
+        }
+
+        function formatWhatsNumber(whats) {
+            if (!whats) return "WhatsApp não informado";
+            return whats.replace(/\D/g, '');
+        }
+
+        function countBdayGuests(eventId, bdayApelido) {
+            var eventData = eventosData[eventId];
+            if (!eventData || !eventData.listas || !eventData.listas.geral || !eventData.listas.geral.ausentes) return 0;
+            var guests = eventData.listas.geral.ausentes;
+            return Object.values(guests).filter(guest => 
+                guest && guest.promoter && guest.promoter === bdayApelido
+            ).length;
+        }
+
+        function countBdayCheckIns(eventId, bdayApelido) {
+            var eventData = eventosData[eventId];
+            if (!eventData || !eventData.listas || !eventData.listas.geral || !eventData.listas.geral.ausentes) return 0;
+            var guests = eventData.listas.geral.ausentes;
+            return Object.values(guests).filter(guest => 
+                guest && guest.promoter === bdayApelido && guest.nome && guest.nome.includes("✅")
+            ).length;
+        }
+
+        function countEventGuests(eventId) {
+            var eventData = eventosData[eventId];
+            if (!eventData || !eventData.listas || !eventData.listas.geral || !eventData.listas.geral.ausentes) return 0;
+            return Object.keys(eventData.listas.geral.ausentes).length;
+        }
+
+        function countEventCheckIns(eventId) {
+            var eventData = eventosData[eventId];
+            if (!eventData || !eventData.listas || !eventData.listas.geral || !eventData.listas.geral.ausentes) return 0;
+            var guests = eventData.listas.geral.ausentes;
+            return Object.values(guests).filter(guest => 
+                guest && guest.nome && guest.nome.includes("✅")
+            ).length;
+        }
+
+        function countBdays(eventId) {
+            var eventData = eventosData[eventId];
+            return eventData && eventData.bday ? Object.keys(eventData.bday).length : 0;
+        }
+
+        function updateBdayCounts(eventId, bdayApelido, item) {
+            var guestCount = countBdayGuests(eventId, bdayApelido);
+            var checkInCount = countBdayCheckIns(eventId, bdayApelido);
+            item.querySelector('.guest-count').textContent = `Convidados: ${guestCount}`;
+            item.querySelector('.checkin-count').textContent = `Presentes: ${checkInCount}`;
+        }
+
+        function updateEventCounts(eventId, eventInfo) {
+            var bdayCount = countBdays(eventId);
+            eventInfo.querySelector('.bday-count-value').innerHTML = `<strong>${bdayCount}</strong> Aniversariantes`;
+        }
+
+        function updateEventHeader(eventId, section) {
+            var eventData = eventosData[eventId];
+            if (section && section.querySelector('.event-date')) {
+                var guestCount = countEventGuests(eventId);
+                var checkInCount = countEventCheckIns(eventId);
+                section.querySelector('.event-date').innerHTML = `${formatEventDisplay(eventData.data)} - ${guestCount} / <span class="presentes">${checkInCount}</span> nomes na lista`;
+            } else {
+                console.warn(`Elemento .event-date não encontrado para o eventId: ${eventId}`);
+            }
+        }
+
+        function sendLinksLink(bday, event, bdayId) {
+            const nomeNaListaLink = `https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}`;
+            const convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}#bday569`;
+            const flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayId}`;
+            const nomeAniversariante = bday.nome || bday.apelido;
+            const dataFormatada = formatEventDisplay(event.eventDate);
+            const mensagem = `Olá, ${nomeAniversariante}, tudo pronto para seu grande dia no Inova Bar ${dataFormatada}!\nAqui vai alguns links para você mandar bem na divulgação:\n\nLista para convidar seus amigos:\n${nomeNaListaLink}\n\nPara ver quais amigos colocaram o nome na lista:\n${convidadosLink}\n\nSeu Flyer Personalizado:\n${flyerLink}\n\nFeliz Aniversário, vai ser o máximo! 😍`;
+            return `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=${encodeURIComponent(mensagem)}`;
+        }
+
+        function sendEventWhatsLink(event) {
+            const dataFormatada = formatEventDisplay(event.eventDate);
+            const eventLink = `https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}`;
+            const mensagem = `😃 Oi, tem ${event.descricao || 'festa'}.\n\n${dataFormatada}.\n\nPromoção ENTRADA VIP:\nVIP a noite toda com o nome na lista do site\n\nInova Bar: Rua Eduardo Espínola Filho, 72 - Jardim São Paulo, São Paulo - SP\n\nColoque seu nome na lista e convide os amigos em:\n${eventLink}`;
+            const whatsNumber = event.whats ? event.whats.replace(/\D/g, '') : '';
+            return whatsNumber ? `https://wa.me/55${whatsNumber}?text=${encodeURIComponent(mensagem)}` : '#';
+        }
+
+        function populateBdayList(filter = currentFilter) {
+            var bdayContainer = document.getElementById("bdayContainer");
+            var eventosRef = firebase.database().ref(cliente + "/eventos");
+
+            eventosRef.on("value", function(snapshot) {
+                eventosData = snapshot.val() || {};
+                bdayContainer.innerHTML = '';
+
+                var events = [];
+                snapshot.forEach(function(eventSnapshot) {
+                    var eventId = eventSnapshot.key;
+                    var evento = eventSnapshot.val();
+
+                    if (evento && evento.data) {
+                        var bdays = Object.keys(evento.bday || {}).map(bdayId => ({
+                            bdayId: bdayId,
+                            data: evento.bday[bdayId]
+                        }));
+
+                        events.push({
+                            eventId: eventId,
+                            eventDate: evento.data,
+                            flyer: evento.flyer,
+                            descricao: evento.descricao || 'Sem descrição',
+                            regras: evento.regra || 'Sem regras especificadas',
+                            whats: evento.whats || '',
+                            bdays: bdays
+                        });
+                    }
+                });
+
+                events.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+
+                events.forEach(function(event) {
+                    if (filter === "bday" && event.bdays.length === 0) return;
+
+                    var section = document.createElement("div");
+                    section.className = "event-section";
+                    section.setAttribute('data-event-id', event.eventId);
+                    section.innerHTML = `<div class="event-date"></div>`;
+
+                    const eventInfo = document.createElement("div");
+                    eventInfo.className = "event-info";
+                    eventInfo.innerHTML = `
+                        <div class="event-flyer">
+                            <img src="${event.flyer || ''}" class="flyer-img" onerror="this.style.display='none'" alt="Flyer do Evento" loading="lazy">
+                        </div>
+                        <div class="event-details">
+                            <div class="event-description">${event.descricao}</div>
+                            <div class="event-rules">${event.regras}</div>
+                            <div class="event-counts">
+                                <span class="bday-count-value">0 Aniversariantes</span>
+                            </div>
+                            <div class="event-buttons">
+                                <a href="https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}" target="_blank" class="btn-custom"><i class="fas fa-link"></i></a>
+                                <button class="copy-link" data-link="https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}"><i class="fas fa-copy"></i></button>
+                                <a href="${sendEventWhatsLink(event)}" target="_blank" class="btn-custom"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    `;
+                    updateEventHeader(event.eventId, section);
+                    updateEventCounts(event.eventId, eventInfo);
+                    section.appendChild(eventInfo);
+
+                    var bdayGroup = document.createElement("div");
+                    bdayGroup.className = "bday-group";
+                    var bdayList = document.createElement("div");
+                    bdayList.className = "bday-list";
+
+                    if (event.bdays.length === 0) {
+                        bdayList.innerHTML = '<div class="bday-card"><div class="bday-details">Nenhum aniversariante cadastrado</div></div>';
+                    } else {
+                        event.bdays.forEach(function(bdayInfo) {
+                            var bday = bdayInfo.data;
+                            var guestCount = countBdayGuests(event.eventId, bday.apelido);
+                            var checkInCount = countBdayCheckIns(event.eventId, bday.apelido);
+
+                            var nomeNaListaLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}`;
+                            var convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}#bday569`;
+                            var flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayInfo.bdayId}`;
+                            var whatsappLink = `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=oi,%20sobre%20o%20seu%20${encodeURIComponent(bday.apelido)}%20no%20${formatEventDisplay(event.eventDate)}%20com%20${encodeURIComponent(eventosData[event.eventId].descricao || 'festa')}%20no%20Inova%20Bar`;
+                            var linksLink = sendLinksLink(bday, event, bdayInfo.bdayId);
+
+                            var item = document.createElement("div");
+                            item.className = "bday-card";
+                            item.setAttribute('data-event-id', event.eventId);
+                            item.setAttribute('data-bday-apelido', bday.apelido);
+                            item.innerHTML = `
+                                <div class="bday-images">
+                                    <img src="${bday.foto || ''}" class="bday-photo" onerror="this.style.display='none'" alt="Foto" loading="lazy">
+                                </div>
+                                <div class="bday-details">
+                                    <div class="bday-name">${bday.nome || bday.apelido}</div>
+                                    <div class="bday-info">WhatsApp: ${formatWhatsNumber(bday.whats)}</div>
+                                    <div class="counts">
+                                        <span class="guest-count">Convidados: ${guestCount}</span>
+                                        <span class="checkin-count">Presentes: ${checkInCount}</span>
+                                    </div>
+                                </div>
+                                <div class="bday-buttons">
+                                    <a href="${nomeNaListaLink}" target="_blank" class="btn-custom"><i class="fas fa-list"></i></a>
+                                    <a href="${convidadosLink}" target="_blank" class="btn-custom"><i class="fas fa-users"></i></a>
+                                    <a href="${flyerLink}" target="_blank" class="btn-custom"><i class="fas fa-image"></i></a>
+                                    <a href="${whatsappLink}" target="_blank" class="btn-custom"><i class="fab fa-whatsapp"></i></a>
+                                    <a href="${linksLink}" target="_blank" class="btn-custom"><i class="fas fa-link"></i></a>
+                                </div>
+                            `;
+                            bdayList.appendChild(item);
+                            updateBdayCounts(event.eventId, bday.apelido, item);
+                        });
+                    }
+
+                    bdayGroup.appendChild(bdayList);
+                    section.appendChild(bdayGroup);
+                    bdayContainer.appendChild(section);
+
+                    var bdayRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/bday`);
+                    bdayRef.on("value", function(snapshot) {
+                        updateEventHeader(event.eventId, section);
+                        updateEventCounts(event.eventId, eventInfo);
+                    });
+
+                    var ausentesRef = firebase.database().ref(cliente + `/eventos/${event.eventId}/listas/geral/ausentes`);
+                    ausentesRef.on("value", function(snapshot) {
+                        eventosData[event.eventId].listas.geral.ausentes = snapshot.val() || {};
+                        updateEventHeader(event.eventId, section);
+                        updateEventCounts(event.eventId, eventInfo);
+                        event.bdays.forEach(function(bdayInfo) {
+                            var bday = bdayInfo.data;
+                            section.querySelectorAll(`.bday-card[data-bday-apelido="${bday.apelido}"]`).forEach(item => {
+                                if (item) updateBdayCounts(event.eventId, bday.apelido, item);
+                            });
+                        });
+                    });
+                });
+            }, function(error) {
+                console.error("Erro ao carregar dados: ", error);
+            });
+        }
+
+        window.onload = function() {
+            populateBdayList();
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.getAttribute('data-filter');
+                    populateBdayList(currentFilter);
+                });
+            });
+        };
+
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.copy-link')) {
+                const button = e.target.closest('.copy-link');
+                const link = button.getAttribute('data-link');
+                navigator.clipboard.writeText(link).then(() => {
+                    alert('Link copiado para a área de transferência!');
+                }).catch(err => {
+                    console.error('Erro ao copiar link: ', err);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
