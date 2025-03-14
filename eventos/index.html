@@ -473,8 +473,8 @@
                             var guestCount = countBdayGuests(event.eventId, bday.apelido);
                             var checkInCount = countBdayCheckIns(event.eventId, bday.apelido);
 
-                            var nomeNaListaLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}`;
-                            var convidadosLink = `https://lista.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}#bday569`;
+                            var nomeNaListaLink = `https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}`;
+                            var convidadosLink = `https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}#bday569`;
                             var flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayInfo.bdayId}`;
                             var whatsappLink = `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=oi,%20sobre%20o%20seu%20${encodeURIComponent(bday.apelido)}%20no%20${formatEventDisplay(event.eventDate)}%20com%20${encodeURIComponent(eventosData[event.eventId].descricao || 'festa')}%20no%20Inova%20Bar`;
                             var linksLink = sendLinksLink(bday, event, bdayInfo.bdayId);
