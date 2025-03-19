@@ -447,11 +447,16 @@
                     }
                 });
 
-                events.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+                // Ordenação condicional
+                if (filter === "todos") {
+                    events.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate)); // Ordem invertida (mais recente primeiro)
+                } else {
+                    events.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate)); // Ordem normal (mais próximo primeiro)
+                }
 
                 events.forEach(function(event) {
                     // Lógica de filtro
-                    if (filter === "proximas" && !isUpcomingEvent(event.eventDate)) return;
+                    if ((filter === "proximas" || filter === "bday") && !isUpcomingEvent(event.eventDate)) return;
                     if (filter === "bday" && event.bdays.length === 0) return;
 
                     var section = document.createElement("div");
