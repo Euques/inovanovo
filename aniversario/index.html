@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comemore seu Aniversário no Inova Bar</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Adicionado Font Awesome para o ícone -->
     <style>
         body {
             background-color: #000;
@@ -13,22 +14,22 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Garante que o conteúdo ocupe a altura total */
+            min-height: 100vh;
         }
         .container {
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
             border: none;
-            margin-top: 20px; /* Reduzido para alinhar mais ao topo */
-            flex-grow: 1; /* Faz o container crescer para empurrar o botão para baixo */
+            margin-top: 20px;
+            flex-grow: 1;
         }
         .event-list {
             list-style: none;
             padding: 0;
         }
         .event-item {
-            margin-bottom: 15px;
+            margin-bottom: 15-disciplinarypx;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -71,24 +72,36 @@
             min-height: 200px;
         }
         .loading-image {
-            width: 100px; /* Tamanho do carrega.gif */
+            width: 100px;
             height: 100px;
         }
-        .whatsapp-btn {
-            display: block;
-            width: 200px;
-            margin: 20px auto;
-            padding: 10px;
-            background-color: #25D366;
-            color: #fff;
+        .whatsapp-container {
             text-align: center;
+            margin: 20px 0;
+        }
+        .whatsapp-text {
+            color: #ccc; /* Cinza */
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 15px;
+            background-color: #333; /* Fundo discreto */
+            color: #fff;
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: background-color 0.3s;
         }
         .whatsapp-btn:hover {
-            background-color: #20b356;
+            background-color: #444;
             color: #fff;
+        }
+        .whatsapp-btn i {
+            margin-right: 5px;
+            color: #25D366; /* Verde do WhatsApp no ícone */
         }
     </style>
 </head>
@@ -100,7 +113,12 @@
                 <img src="../assets/carrega.gif" alt="Carregando..." class="loading-image">
             </div>
         </ul>
-        <a href="https://api.whatsapp.com/send?phone=55SEUNUMEROWHATSAPP&text=Olá,%20gostaria%20de%20mais%20informações%20sobre%20como%20comemorar%20meu%20aniversário%20aí%20no%20Inova%20Bar." class="whatsapp-btn" target="_blank">Mais Informações</a>
+        <div class="whatsapp-container">
+            <p class="whatsapp-text">Caso tenha alguma dúvida sobre como comemorar seu aniversário no Inova Bar, entre em contato.</p>
+            <a href="https://api.whatsapp.com/send?phone=5511999100893&text=Olá,%20gostaria%20de%20mais%20informações%20sobre%20como%20comemorar%20meu%20aniversário%20aí%20no%20Inova%20Bar." class="whatsapp-btn" target="_blank">
+                <i class="fab fa-whatsapp"></i> Mais Informações
+            </a>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -193,16 +211,6 @@
                     };
                     eventList.appendChild(item);
                 });
-
-                // Adiciona o botão de WhatsApp após carregar os eventos
-                if (!document.querySelector('.whatsapp-btn')) {
-                    var whatsappBtn = document.createElement('a');
-                    whatsappBtn.href = "https://api.whatsapp.com/send?phone=55SEUNUMEROWHATSAPP&text=Olá,%20gostaria%20de%20mais%20informações%20sobre%20como%20comemorar%20meu%20aniversário%20aí%20no%20Inova%20Bar.";
-                    whatsappBtn.className = "whatsapp-btn";
-                    whatsappBtn.target = "_blank";
-                    whatsappBtn.textContent = "Mais Informações";
-                    eventList.parentElement.appendChild(whatsappBtn);
-                }
             });
         }
 
