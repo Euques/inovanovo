@@ -12,12 +12,9 @@
     <meta name="theme-color" content="#000000">
     <title>Vem pro Inova!</title>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400&family=Roboto:wght@300;400;700&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="assets/images/favicon.png?v=72d21794">
+    <link rel="icon" type="image/png" href="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffavicon.png?alt=media&token=085f11bc-3d0e-4951-b91c-f1112b75a5c8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<link rel="icon" type="image/png" href="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Ffavicon.png?alt=media&amp;token=085f11bc-3d0e-4951-b91c-f1112b75a5c8">
-  
 
     <style>
         :root {
@@ -50,10 +47,10 @@
         }
 
         /* Header */
-       header {
-    padding: 4rem 0rem 0rem;
-    text-align: center;
-}
+        header {
+            padding: 4rem 0rem 0rem;
+            text-align: center;
+        }
 
         .logo img {
             max-width: 150px;
@@ -62,7 +59,7 @@
         /* Eventos Section */
         .eventos {
             padding: 2rem 0;
-text-align: center;
+            text-align: center;
         }
 
         .eventos h2 {
@@ -74,14 +71,14 @@ text-align: center;
             text-align: center;
         }
 
-.event-card {
-    background: #FFFFFF14;
-    border-radius: 15px 15px 27px 27px;
-    margin-bottom: 1.5rem;
-    padding: 0.5rem;
-    padding-bottom: 0.8rem;
-    text-align: center;
-}
+        .event-card {
+            background: #FFFFFF14;
+            border-radius: 15px 15px 27px 27px;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem;
+            padding-bottom: 0.8rem;
+            text-align: center;
+        }
 
         .event-card img {
             width: 100%;
@@ -90,28 +87,28 @@ text-align: center;
         }
 
         .event-card h3 {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-    text-transform: uppercase;
-    color: var(--text-light);
-    margin-bottom: 0.5rem;
-}
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
 
         .event-card .event-date {
-    font-family: 'Sora', sans-serif;
-    font-size: 1.5rem;
-    color: var(--secondary-color);
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-}
+            font-family: 'Sora', sans-serif;
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
 
         .event-card .event-description {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-    color: var(--text-muted);
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-}
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
 
         .event-card .event-vip {
             font-family: 'Roboto', sans-serif;
@@ -158,6 +155,16 @@ text-align: center;
             border-top: 1px solid var(--text-muted);
         }
 
+        /* Carregamento */
+        #carregando {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        #carregando img {
+            max-width: 150px; /* Ajuste o tamanho da imagem de carregamento, se necessário */
+        }
+
         /* Responsividade */
         @media (min-width: 992px) {
             .event-card {
@@ -182,9 +189,9 @@ text-align: center;
 
         @media (min-width: 768px) {
             .eventos {
-    padding: 2rem 0;
-    text-align: center;
-}
+                padding: 2rem 0;
+                text-align: center;
+            }
 
             .event-card h3 {
                 font-size: 1.5rem;
@@ -214,6 +221,9 @@ text-align: center;
 
     <div class="container">
         <h2 class="mt-4 eventos">Próximos Eventos</h2>
+        <div id="carregando">
+            <img src="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Fcarregando.gif?alt=media&token=7445b774-f39d-4323-8cee-e79b55453850" alt="Carregando...">
+        </div>
         <div id="eventCardList" class="d-flex flex-wrap" style="gap: 1rem;">
             <!-- Os cartões de eventos serão inseridos aqui dinamicamente -->
         </div>
@@ -242,6 +252,16 @@ text-align: center;
 
         const cliente = "inovabar";
         const eventCardList = document.getElementById("eventCardList");
+        const carregando = document.getElementById("carregando");
+
+        // Funções para mostrar/esconder o carregamento
+        function mostra(element) {
+            element.style.display = 'block';
+        }
+
+        function esconde(element) {
+            element.style.display = 'none';
+        }
 
         // Função para obter o dia da semana em formato abreviado
         function getDiaSemana(data) {
@@ -272,9 +292,11 @@ text-align: center;
                 if (!snapshot.exists()) {
                     console.error("Nenhum evento encontrado no Firebase.");
                     eventCardList.innerHTML = "<p>Nenhum evento disponível no momento.</p>";
+                    esconde(carregando);
                     return;
                 }
 
+                let hasEvents = false;
                 snapshot.forEach((childSnapshot) => {
                     const evento = childSnapshot.val();
                     const eventDateTime = new Date(evento.data);
@@ -283,11 +305,21 @@ text-align: center;
                     if (eventDateTimePlus7Hours >= new Date() && evento.club === false) {
                         const card = createEventCard(evento);
                         eventCardList.appendChild(card);
+                        hasEvents = true;
                     }
                 });
+
+                // Esconder o carregamento após processar todos os eventos
+                if (hasEvents) {
+                    esconde(carregando);
+                } else {
+                    eventCardList.innerHTML = "<p>Nenhum evento futuro disponível.</p>";
+                    esconde(carregando);
+                }
             }, (error) => {
                 console.error("Erro ao carregar eventos do Firebase:", error);
                 eventCardList.innerHTML = "<p>Erro ao carregar eventos. Tente novamente mais tarde.</p>";
+                esconde(carregando);
             });
         }
 
