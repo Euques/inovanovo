@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promoção Exclusiva</title>
+  <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/2025%2Finovabar%2FfotoEvento_1741880836548.jpg?alt=media&token=68bed2e6-5e6a-46e9-b850-d0f92370da3d">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      background: #121212;
+      color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #bb86fc;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      background: #2c2c2c;
+      border: none;
+      border-radius: 5px;
+      color: #e0e0e0;
+      font-size: 1rem;
+      outline: none;
+      transition: box-shadow 0.3s;
+      text-transform: uppercase;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 0 8px #bb86fc;
+    }
+
+    button {
+      background: #bb86fc;
+      color: #121212;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+      display: none;
+      margin-top: 15px;
+    }
+
+    button:hover {
+      background: #9f4ed6;
+    }
+
+    .promo-container {
+      margin-top: 20px;
+      display: none;
+    }
+
+    .promo-image {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
+
+    .error {
+      color: #cf6679;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .promo-ended {
+      color: #cf6679;
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      input[type="text"], button {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Promoção Exclusiva</h1>
+    <div class="input-group">
+      <input type="text" id="promoCode" placeholder="Coloque seu código da promoção" oninput="checkPromo()">
+    </div>
+    <div class="error" id="errorMessage">Código inválido! Tente novamente.</div>
+    <div class="promo-container" id="promoContainer">
+      <div class="promo-ended" id="promoEnded">Promoção Encerrada</div>
+      <a href="https://www.sympla.com.br/evento/black-party-show-marquinhos-sensaca0/2879666?_gl=1*p47pik*_gcl_au*MjAxMTgyMDIwNi4xNzQyMzk4NzQ3*_ga*MjM0NzY2NTg0LjE3NDIzOTg3NDk.*_ga_KXH10SQTZF*MTc0MjQ3NTk1OC43LjEuMTc0MjQ3ODI0OS4yMy4wLjEzODk5MDMxNA&referrer=inovabar.com.br&share_id=copiarlink">
+        <img src="https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/2025%2Finovabar%2FfotoEvento_1741880836548.jpg?alt=media&token=68bed2e6-5e6a-46e9-b850-d0f92370da3d" alt="Black Party" class="promo-image" onerror="this.src='https://via.placeholder.com/600x400?text=Imagem+do+Evento'">
+      </a>
+      <button id="promoButton" onclick="window.location.href='https://www.sympla.com.br/evento/black-party-show-marquinhos-sensaca0/2879666?_gl=1*p47pik*_gcl_au*MjAxMTgyMDIwNi4xNzQyMzk4NzQ3*_ga*MjM0NzY2NTg0LjE3NDIzOTg3NDk.*_ga_KXH10SQTZF*MTc0MjQ3NTk1OC43LjEuMTc0MjQ3ODI0OS4yMy4wLjEzODk5MDMxNA&referrer=inovabar.com.br&share_id=copiarlink'">Comprar Ingresso</button>
+    </div>
+  </div>
+
+  <script>
+    function checkPromo() {
+      const promoCode = document.getElementById('promoCode').value.trim().toLowerCase();
+      const validCode = 'viptime21';
+      const promoContainer = document.getElementById('promoContainer');
+      const promoButton = document.getElementById('promoButton');
+      const promoEnded = document.getElementById('promoEnded');
+      const errorMessage = document.getElementById('errorMessage');
+
+      if (promoCode === validCode) {
+        promoContainer.style.display = 'block';
+        promoButton.style.display = 'inline-block';
+        promoEnded.style.display = 'block';
+        errorMessage.style.display = 'none';
+      } else {
+        promoContainer.style.display = 'none';
+        promoButton.style.display = 'none';
+        promoEnded.style.display = 'none';
+        errorMessage.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
