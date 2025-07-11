@@ -100,7 +100,7 @@
         firebase.initializeApp(firebaseConfig);
 
         // Defina a constante cliente para reutilização
-        var cliente = "inovabar"; // Substitua pelo nome do cliente
+        var cliente = "estacao"; // Substitua pelo nome do cliente
 
         // Função para preencher o menu suspenso com eventos do Firebase Realtime Database e atualizar em tempo real
         function populateEventDropdown() {
@@ -275,6 +275,7 @@
                     // Limpar campos após a atualização
                     document.getElementById("selectEvento").value = "";
                     selectEvent();
+                    location.reload();
                 })
                 .catch(function (error) {
                     alert("Erro ao atualizar o evento: " + error.message);
