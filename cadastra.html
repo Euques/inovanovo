@@ -158,7 +158,7 @@
             </div>
             <div class="form-group">
                 <label for="buttonTitle" class="form-label">Título do Botão</label>
-                <input type="text" class="form-control custom-placeholder" id="buttonTitle" placeholder="Lista Inova" value="Lista Inova">
+                <input type="text" class="form-control custom-placeholder" id="buttonTitle" placeholder="Lista Estação" value="Lista Estação">
             </div>
             <div class="form-group toggle-dark-mode">
                 <label for="clubCheckbox" class="form-check-label">Club de clientes</label>
@@ -188,7 +188,7 @@
 
         firebase.initializeApp(firebaseConfig);
 
-        const cliente = "inovabar";
+        const cliente = "estacao";
         const eventoForm = document.getElementById("eventoForm");
         const fotoEventoInput = document.getElementById("fotoEvento");
         let cropper;
@@ -273,7 +273,7 @@
 
                 const eventoData = {
                     data: dataTimestamp,
-                    foto: "https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/inovabar%2Fviptime18.png?alt=media&token=0214d851-b4de-40b4-a7ad-20196042b8d1",
+                    foto: "https://firebasestorage.googleapis.com/v0/b/blacknight-600de.appspot.com/o/estacao%2Fviptime18.png?alt=media&token=0214d851-b4de-40b4-a7ad-20196042b8d1",
                     flyer: downloadURL,
                     descricao: descricao,
                     promocao: promocao,
@@ -281,7 +281,7 @@
                     link: null,
                     buttonTitle: buttonTitle,
                     club: club,
-                    apelido: "Inova",
+                    apelido: "Estação",
                     status: "Promoção",
                     whats: "11999100893",
                     promo: promocaoData,
@@ -290,7 +290,7 @@
                 const eventosRef = firebase.database().ref(`${cliente}/eventos`);
                 const eventoRef = eventosRef.push();
 
-                eventoData.link = `https://link.inovabar.com.br/?p=inovabar/eventos/${eventoRef.key}`;
+                eventoData.link = `https://link.estacao.com.br/?p=estacao/eventos/${eventoRef.key}`;
 
                 eventoRef
                     .set(eventoData)
