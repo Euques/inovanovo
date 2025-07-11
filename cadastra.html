@@ -290,7 +290,7 @@
                 const eventosRef = firebase.database().ref(`${cliente}/eventos`);
                 const eventoRef = eventosRef.push();
 
-                eventoData.link = `https://link.estacao.com.br/?p=estacao/eventos/${eventoRef.key}`;
+                eventoData.link = `https://lista.estacao.com.br/?p=estacao/eventos/${eventoRef.key}`;
 
                 eventoRef
                     .set(eventoData)
