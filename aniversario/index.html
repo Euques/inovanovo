@@ -161,7 +161,7 @@
         };
         firebase.initializeApp(firebaseConfig);
 
-        var cliente = "inovabar";
+        var cliente = "estacao";
         var eventosData = {};
 
         // Função para obter o dia da semana em formato abreviado
@@ -230,7 +230,7 @@
                     `;
                     item.onclick = function() {
                         // Sempre redireciona para o link de cadastro de aniversariantes
-                        window.location.href = `https://adm.inovabar.com.br/corte.html?a=inovabar/eventos/${evento.id}`;
+                        window.location.href = `https://adm.estacao.com.br/corte.html?a=estacao/eventos/${evento.id}`;
                     };
                     eventList.appendChild(item);
                 });
