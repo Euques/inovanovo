@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eventos - Inova Bar</title>
+    <title>Eventos - Estacao Bar</title>
     <link rel="icon" type="image/png" href="../assets/favicon.png">
     <!-- Tags Open Graph -->
-    <meta property="og:title" content="Eventos - Inova Bar">
+    <meta property="og:title" content="Eventos - Estacao Bar">
     <meta property="og:description" content="Balanço dos eventos">
-    <meta property="og:image" content="https://adm.inovabar.com.br/assets/eventos.jpg">
+    <meta property="og:image" content="https://adm.estacaomart.com.br/assets/eventos.jpg">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="pt_BR">
     <meta name="robots" content="noindex"> <!-- Tag para não indexar -->
@@ -295,7 +295,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Eventos - Inova Bar</h1>
+        <h1>Eventos - Estacao Bar</h1>
         <div class="toggle-menu">
             <div class="toggle-btn active" data-filter="proximas">Próximas</div>
             <div class="toggle-btn" data-filter="bday">B-day</div>
@@ -325,7 +325,7 @@
         };
         firebase.initializeApp(firebaseConfig);
 
-        var cliente = "inovabar";
+        var cliente = "estacao";
         var eventosData = {};
         var currentFilter = "proximas";
 
@@ -416,12 +416,12 @@
         }
 
         function sendLinksLink(bday, event, bdayId) {
-            const nomeNaListaLink = `https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}`;
-            const convidadosLink = `https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayId}#bday569`;
-            const flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayId}`;
+            const nomeNaListaLink = `https://link.estacaomart.com.br/?p=estacao/eventos/${event.eventId}/bday/${bdayId}`;
+            const convidadosLink = `https://link.estacaomart.com.br/?p=estacao/eventos/${event.eventId}/bday/${bdayId}#bday569`;
+            const flyerLink = `https://adm.estacaomart.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayId}`;
             const nomeAniversariante = bday.nome || bday.apelido;
             const dataFormatada = formatEventDisplay(event.eventDate);
-            const mensagem = `Olá, ${nomeAniversariante}, tudo pronto para seu grande dia no Inova Bar ${dataFormatada}!\nAqui vai alguns links para você mandar bem na divulgação:\n\nLista para convidar seus amigos:\n${nomeNaListaLink}\n\nPara ver quais amigos colocaram o nome na lista:\n${convidadosLink}\n\nSeu Flyer Personalizado:\n${flyerLink}\n\nFeliz Aniversário, vai ser o máximo! 😍`;
+            const mensagem = `Olá, ${nomeAniversariante}, tudo pronto para seu grande dia no Estacao Bar ${dataFormatada}!\nAqui vai alguns links para você mandar bem na divulgação:\n\nLista para convidar seus amigos:\n${nomeNaListaLink}\n\nPara ver quais amigos colocaram o nome na lista:\n${convidadosLink}\n\nSeu Flyer Personalizado:\n${flyerLink}\n\nFeliz Aniversário, vai ser o máximo! 😍`;
             return `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=${encodeURIComponent(mensagem)}`;
         }
 
@@ -492,8 +492,8 @@
                                 <span class="bday-count-value">0 Aniversariantes</span>
                             </div>
                             <div class="event-buttons">
-                                <a href="https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}" target="_blank" class="btn-custom"><i class="fas fa-link"></i></a>
-                                <button class="copy-link" data-link="https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}"><i class="fas fa-copy"></i></button>
+                                <a href="https://link.estacaomart.com.br/?p=estacao/eventos/${event.eventId}" target="_blank" class="btn-custom"><i class="fas fa-link"></i></a>
+                                <button class="copy-link" data-link="https://link.estacaomart.com.br/?p=estacao/eventos/${event.eventId}"><i class="fas fa-copy"></i></button>
                             </div>
                         </div>
                     `;
@@ -514,10 +514,10 @@
                             var guestCount = countBdayGuests(event.eventId, bday.apelido);
                             var checkInCount = countBdayCheckIns(event.eventId, bday.apelido);
 
-                            var nomeNaListaLink = `https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}`;
-                            var convidadosLink = `https://link.inovabar.com.br/?p=inovabar/eventos/${event.eventId}/bday/${bdayInfo.bdayId}#bday569`;
-                            var flyerLink = `https://adm.inovabar.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayInfo.bdayId}`;
-                            var whatsappLink = `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=oi,%20sobre%20o%20seu%20${encodeURIComponent(bday.apelido)}%20no%20${formatEventDisplay(event.eventDate)}%20com%20${encodeURIComponent(eventosData[event.eventId].descricao || 'festa')}%20no%20Inova%20Bar`;
+                            var nomeNaListaLink = `https://link.estacaomart.com.br/?p=estacao/eventos/${event.eventId}/bday/${bdayInfo.bdayId}`;
+                            var convidadosLink = `https://link.estacaomart.com.br/?p=estacao/eventos/${event.eventId}/bday/${bdayInfo.bdayId}#bday569`;
+                            var flyerLink = `https://adm.estacaomart.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayInfo.bdayId}`;
+                            var whatsappLink = `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=oi,%20sobre%20o%20seu%20${encodeURIComponent(bday.apelido)}%20no%20${formatEventDisplay(event.eventDate)}%20com%20${encodeURIComponent(eventosData[event.eventId].descricao || 'festa')}%20no%20Estacao%20Bar`;
                             var linksLink = sendLinksLink(bday, event, bdayInfo.bdayId);
 
                             var item = document.createElement("div");
