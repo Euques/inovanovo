@@ -416,8 +416,8 @@
         }
 
         function sendLinksLink(bday, event, bdayId) {
-            const nomeNaListaLink = `https://link.estacaomart.com.br/?p=estacao/eventos/${event.eventId}/bday/${bdayId}`;
-            const convidadosLink = `https://link.estacaomart.com.br/?p=estacao/eventos/${event.eventId}/bday/${bdayId}#bday569`;
+            const nomeNaListaLink = `https://lista.estacaomart.com.br/?p=estacao/eventos/${event.eventId}/bday/${bdayId}`;
+            const convidadosLink = `https://lista.estacaomart.com.br/?p=estacao/eventos/${event.eventId}/bday/${bdayId}#bday569`;
             const flyerLink = `https://adm.estacaomart.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayId}`;
             const nomeAniversariante = bday.nome || bday.apelido;
             const dataFormatada = formatEventDisplay(event.eventDate);
@@ -492,8 +492,8 @@
                                 <span class="bday-count-value">0 Aniversariantes</span>
                             </div>
                             <div class="event-buttons">
-                                <a href="https://link.estacaomart.com.br/?p=estacao/eventos/${event.eventId}" target="_blank" class="btn-custom"><i class="fas fa-link"></i></a>
-                                <button class="copy-link" data-link="https://link.estacaomart.com.br/?p=estacao/eventos/${event.eventId}"><i class="fas fa-copy"></i></button>
+                                <a href="https://lista.estacaomart.com.br/?p=estacao/eventos/${event.eventId}" target="_blank" class="btn-custom"><i class="fas fa-link"></i></a>
+                                <button class="copy-link" data-link="https://lista.estacaomart.com.br/?p=estacao/eventos/${event.eventId}"><i class="fas fa-copy"></i></button>
                             </div>
                         </div>
                     `;
@@ -514,8 +514,8 @@
                             var guestCount = countBdayGuests(event.eventId, bday.apelido);
                             var checkInCount = countBdayCheckIns(event.eventId, bday.apelido);
 
-                            var nomeNaListaLink = `https://link.estacaomart.com.br/?p=estacao/eventos/${event.eventId}/bday/${bdayInfo.bdayId}`;
-                            var convidadosLink = `https://link.estacaomart.com.br/?p=estacao/eventos/${event.eventId}/bday/${bdayInfo.bdayId}#bday569`;
+                            var nomeNaListaLink = `https://lista.estacaomart.com.br/?p=estacao/eventos/${event.eventId}/bday/${bdayInfo.bdayId}`;
+                            var convidadosLink = `https://lista.estacaomart.com.br/?p=estacao/eventos/${event.eventId}/bday/${bdayInfo.bdayId}#bday569`;
                             var flyerLink = `https://adm.estacaomart.com.br/flyer.html?eventId=${event.eventId}&bdayId=${bdayInfo.bdayId}`;
                             var whatsappLink = `https://wa.me/55${bday.whats.replace(/\D/g, '')}?text=oi,%20sobre%20o%20seu%20${encodeURIComponent(bday.apelido)}%20no%20${formatEventDisplay(event.eventDate)}%20com%20${encodeURIComponent(eventosData[event.eventId].descricao || 'festa')}%20no%20Estacao%20Bar`;
                             var linksLink = sendLinksLink(bday, event, bdayInfo.bdayId);
